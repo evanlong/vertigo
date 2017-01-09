@@ -1,0 +1,10 @@
+# Xcode / iOS
+*.pbxuser
+build/
+DerivedData/
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+*.moved-aside
+*.xcuserstate
