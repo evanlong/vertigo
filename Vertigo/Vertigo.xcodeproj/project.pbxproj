@@ -13,6 +13,10 @@
 		FF0B62311E20567B003BCDB3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FF0B622F1E20567B003BCDB3 /* LaunchScreen.storyboard */; };
 		FF0B623A1E2057A4003BCDB3 /* VTMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF0B62391E2057A4003BCDB3 /* VTMainViewController.m */; };
 		FF0B623F1E2092B3003BCDB3 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF0B623E1E2092B3003BCDB3 /* AVFoundation.framework */; };
+		FF0F26F91E241B5500D98C90 /* AVCamPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = FF0F26F81E241B5500D98C90 /* AVCamPreviewView.m */; };
+		FF0F26FC1E2421AF00D98C90 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF0F26FB1E2421AF00D98C90 /* UIKit.framework */; };
+		FF2EE31F1E24ABA1007D5E6C /* VTCaptureModel.m in Sources */ = {isa = PBXBuildFile; fileRef = FF2EE31E1E24ABA1007D5E6C /* VTCaptureModel.m */; };
+		FF2EE3211E24B0EC007D5E6C /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF2EE3201E24B0EC007D5E6C /* Photos.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +30,13 @@
 		FF0B62381E2057A4003BCDB3 /* VTMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTMainViewController.h; sourceTree = "<group>"; };
 		FF0B62391E2057A4003BCDB3 /* VTMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTMainViewController.m; sourceTree = "<group>"; };
 		FF0B623E1E2092B3003BCDB3 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		FF0F26F71E241B5500D98C90 /* AVCamPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVCamPreviewView.h; sourceTree = "<group>"; };
+		FF0F26F81E241B5500D98C90 /* AVCamPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AVCamPreviewView.m; sourceTree = "<group>"; };
+		FF0F26FA1E24216900D98C90 /* VertigoPrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VertigoPrefixHeader.pch; sourceTree = "<group>"; };
+		FF0F26FB1E2421AF00D98C90 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		FF2EE31D1E24ABA1007D5E6C /* VTCaptureModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTCaptureModel.h; sourceTree = "<group>"; };
+		FF2EE31E1E24ABA1007D5E6C /* VTCaptureModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTCaptureModel.m; sourceTree = "<group>"; };
+		FF2EE3201E24B0EC007D5E6C /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +44,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF2EE3211E24B0EC007D5E6C /* Photos.framework in Frameworks */,
+				FF0F26FC1E2421AF00D98C90 /* UIKit.framework in Frameworks */,
 				FF0B623F1E2092B3003BCDB3 /* AVFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -62,6 +75,8 @@
 			children = (
 				FF0B62241E20567B003BCDB3 /* VTAppDelegate.h */,
 				FF0B62251E20567B003BCDB3 /* VTAppDelegate.m */,
+				FF2EE31C1E24AB7D007D5E6C /* Model */,
+				FF0F26F61E241B4800D98C90 /* Views */,
 				FF0B623B1E2057A8003BCDB3 /* ViewControllers */,
 				FF0B623C1E2057CA003BCDB3 /* Resources */,
 				FF0B62211E20567B003BCDB3 /* Supporting Files */,
@@ -73,6 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				FF0B62221E20567B003BCDB3 /* main.m */,
+				FF0F26FA1E24216900D98C90 /* VertigoPrefixHeader.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -99,9 +115,29 @@
 		FF0B623D1E2092B3003BCDB3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FF2EE3201E24B0EC007D5E6C /* Photos.framework */,
+				FF0F26FB1E2421AF00D98C90 /* UIKit.framework */,
 				FF0B623E1E2092B3003BCDB3 /* AVFoundation.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FF0F26F61E241B4800D98C90 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				FF0F26F71E241B5500D98C90 /* AVCamPreviewView.h */,
+				FF0F26F81E241B5500D98C90 /* AVCamPreviewView.m */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		FF2EE31C1E24AB7D007D5E6C /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				FF2EE31D1E24ABA1007D5E6C /* VTCaptureModel.h */,
+				FF2EE31E1E24ABA1007D5E6C /* VTCaptureModel.m */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -176,6 +212,8 @@
 			files = (
 				FF0B62261E20567B003BCDB3 /* VTAppDelegate.m in Sources */,
 				FF0B62231E20567B003BCDB3 /* main.m in Sources */,
+				FF0F26F91E241B5500D98C90 /* AVCamPreviewView.m in Sources */,
+				FF2EE31F1E24ABA1007D5E6C /* VTCaptureModel.m in Sources */,
 				FF0B623A1E2057A4003BCDB3 /* VTMainViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -287,7 +325,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 8J2J47QA72;
+				GCC_PREFIX_HEADER = Vertigo/VertigoPrefixHeader.pch;
 				INFOPLIST_FILE = Vertigo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.evanlong.Vertigo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -299,7 +339,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 8J2J47QA72;
+				GCC_PREFIX_HEADER = Vertigo/VertigoPrefixHeader.pch;
 				INFOPLIST_FILE = Vertigo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.evanlong.Vertigo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -325,6 +367,7 @@
 				FF0B62371E20567B003BCDB3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

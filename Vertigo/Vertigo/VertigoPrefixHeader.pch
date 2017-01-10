@@ -1,0 +1,30 @@
+//
+//  VertigoPrefixHeader.pch
+//  Vertigo
+//
+//  Created by Evan Long on 1/9/17.
+//
+//
+
+#ifndef VertigoPrefixHeader_pch
+#define VertigoPrefixHeader_pch
+
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
+#ifndef ISA
+    #define ISA(object, class) [object isKindOfClass:class]
+#endif
+
+// Logging
+#ifndef VTLog
+
+    #define VTLog NSLog
+    #define VTLogObject(object) NSLog(@"%s = %@", #object object)
+    #define VTLogFunction NSLog(@"%s", __PRETTY_FUNCTION__)
+    #define VTLogFunctionWithObject(object) NSLog(@"%s - %s = %@", __PRETTY_FUNCTION__, #object, object)
+
+#endif
+
+
+#endif /* VertigoPrefixHeader_pch */
