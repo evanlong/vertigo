@@ -26,10 +26,12 @@ inputs and outputs
 
 - Looping Mode
 - Manual setting of:
-    + min/max zoom
-    + push OR pull
-    + time
-    + zoom curve
+    + Min/Max Zoom
+    + Push OR Pull
+    + Time
+    + Zoom Curve
+
+- CaptureConfig object when "run" can send output to another object that implements a protocol so we can test it with command line easily enough, without AVFoundation code getting in the way. Concrete implementation could use
 
 # Issues
 
@@ -37,14 +39,14 @@ inputs and outputs
     + don't clip to bounds on the view when rotating
 - output content to a file
 - save to camera roll
-- Model / Controls describing effect
-- Record the effect using model
-- Don't take up whole screen with preview layer
-    + 
+>> - feedback that recording is taking place, UI control overlay
+- Model / Controls describing effect, pass model off to something to perform the recording using config and recorder
+- Don't take up whole screen with preview layer, or at least learn limits of the various scaling of this layer
 - Improvements
     + which input device to use etc...
     + audio / video. video required, audio optional with ability to mute!
 - iOS Gotchas
+    - User denies photo library permission. Need to provide UI to delete / share video in some other way?
     -  errors and interruptions (see AV sample code)
     -  background mode to complete and save the recording if home button is pressed etc...
     -  Audio / Video permissions
@@ -53,4 +55,7 @@ inputs and outputs
     -  running on iPad with multiple app mode
         +  Info.plist - UIRequiresFullScreen => YES
 
+# Features
 
+- Video explorer when they deny photo access. When video is taken, provide a way to save off or share at that moment, if they don't the video will just be deleted, which seems fine given ephemeral nature of the app
+- 
