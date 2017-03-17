@@ -16,6 +16,7 @@
 @interface VTMainViewController () <AVCaptureFileOutputRecordingDelegate>
 
 @property (nonatomic, strong) AVCaptureSession *captureSession;
+@property (nonatomic, strong) dispatch_queue_t sessionQueue;
 @property (nonatomic, strong) AVCaptureDevice *videoCaptureDevice;
 @property (nonatomic, strong) AVCamPreviewView *previewView;
 @property (nonatomic, strong) AVCaptureMovieFileOutput *movieFileOutput;
@@ -44,14 +45,18 @@
         // Need permission? Failure reasons?
     }
     
+    VTLogFunctionWithObject(@([AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo]));
+
     // 2. Provide User Preview of Input
     self.previewView = [[AVCamPreviewView alloc] init];
-    self.previewView.frame = self.view.bounds;
+    self.previewView.bounds = self.view.bounds;
+    self.previewView.center = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
+
     self.previewView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
     self.previewView.clipsToBounds = NO;
     self.previewView.session = self.captureSession;
     [self.view addSubview:self.previewView];
-    
+
     UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
     if (orientation != UIInterfaceOrientationUnknown)
     {

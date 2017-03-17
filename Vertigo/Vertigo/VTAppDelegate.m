@@ -9,6 +9,7 @@
 #import "VTAppDelegate.h"
 
 #import "VTMainViewController.h"
+#import "VTRootViewController.h"
 
 @interface VTAppDelegate ()
 
@@ -20,7 +21,11 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     
+#if 0
     VTMainViewController *mainVC = [[VTMainViewController alloc] init];
+#else
+    VTRootViewController *mainVC = [[VTRootViewController alloc] init];
+#endif
     self.window.rootViewController = mainVC;
     [self.window makeKeyAndVisible];
     

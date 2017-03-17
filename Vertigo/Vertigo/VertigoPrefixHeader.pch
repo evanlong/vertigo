@@ -22,7 +22,14 @@
     #define VTLog NSLog
     #define VTLogObject(object) NSLog(@"%s = %@", #object object)
     #define VTLogFunction NSLog(@"%s", __PRETTY_FUNCTION__)
+    #define VTLogFunctionMsg(msg) NSLog(@"%s - %@", __PRETTY_FUNCTION__, msg)
     #define VTLogFunctionWithObject(object) NSLog(@"%s - %s = %@", __PRETTY_FUNCTION__, #object, object)
+
+#endif
+
+#ifndef VTSetBorderColor
+
+    #define VTSetBorder(view, color, width) view.layer.borderColor = [UIColor color].CGColor; view.layer.borderWidth = width
 
 #endif
 

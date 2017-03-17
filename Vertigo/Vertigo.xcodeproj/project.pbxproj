@@ -17,6 +17,8 @@
 		FF0F26FC1E2421AF00D98C90 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF0F26FB1E2421AF00D98C90 /* UIKit.framework */; };
 		FF2EE31F1E24ABA1007D5E6C /* VTCaptureModel.m in Sources */ = {isa = PBXBuildFile; fileRef = FF2EE31E1E24ABA1007D5E6C /* VTCaptureModel.m */; };
 		FF2EE3211E24B0EC007D5E6C /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF2EE3201E24B0EC007D5E6C /* Photos.framework */; };
+		FF4440491E7AEFFA002B6F67 /* VTRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF4440481E7AEFFA002B6F67 /* VTRootViewController.m */; };
+		FF44404B1E7B1883002B6F67 /* VertigoStrings.strings in Resources */ = {isa = PBXBuildFile; fileRef = FF44404A1E7B1883002B6F67 /* VertigoStrings.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +39,9 @@
 		FF2EE31D1E24ABA1007D5E6C /* VTCaptureModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTCaptureModel.h; sourceTree = "<group>"; };
 		FF2EE31E1E24ABA1007D5E6C /* VTCaptureModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTCaptureModel.m; sourceTree = "<group>"; };
 		FF2EE3201E24B0EC007D5E6C /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
+		FF4440471E7AEFFA002B6F67 /* VTRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTRootViewController.h; sourceTree = "<group>"; };
+		FF4440481E7AEFFA002B6F67 /* VTRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTRootViewController.m; sourceTree = "<group>"; };
+		FF44404A1E7B1883002B6F67 /* VertigoStrings.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = VertigoStrings.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +103,8 @@
 			children = (
 				FF0B62381E2057A4003BCDB3 /* VTMainViewController.h */,
 				FF0B62391E2057A4003BCDB3 /* VTMainViewController.m */,
+				FF4440471E7AEFFA002B6F67 /* VTRootViewController.h */,
+				FF4440481E7AEFFA002B6F67 /* VTRootViewController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -108,6 +115,7 @@
 				FF0B622D1E20567B003BCDB3 /* Assets.xcassets */,
 				FF0B622F1E20567B003BCDB3 /* LaunchScreen.storyboard */,
 				FF0B62321E20567B003BCDB3 /* Info.plist */,
+				FF44404A1E7B1883002B6F67 /* VertigoStrings.strings */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -200,6 +208,7 @@
 			files = (
 				FF0B62311E20567B003BCDB3 /* LaunchScreen.storyboard in Resources */,
 				FF0B622E1E20567B003BCDB3 /* Assets.xcassets in Resources */,
+				FF44404B1E7B1883002B6F67 /* VertigoStrings.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -214,6 +223,7 @@
 				FF0B62231E20567B003BCDB3 /* main.m in Sources */,
 				FF0F26F91E241B5500D98C90 /* AVCamPreviewView.m in Sources */,
 				FF2EE31F1E24ABA1007D5E6C /* VTCaptureModel.m in Sources */,
+				FF4440491E7AEFFA002B6F67 /* VTRootViewController.m in Sources */,
 				FF0B623A1E2057A4003BCDB3 /* VTMainViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

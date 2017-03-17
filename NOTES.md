@@ -36,12 +36,18 @@ inputs and outputs
 # Issues
 
 - Rotation with preview layer
-    + don't clip to bounds on the view when rotating
+    + resolved: don't clip to bounds on the view when rotating
 - output content to a file
 - save to camera roll
->> - feedback that recording is taking place, UI control overlay
+
+- !!! feedback that recording is taking place, UI control overlay
+
+- Handle AV Session code on seperate queue since it could be blocking
+    - UI isn't enabled until it is "ready"
+
 - Model / Controls describing effect, pass model off to something to perform the recording using config and recorder
 - Don't take up whole screen with preview layer, or at least learn limits of the various scaling of this layer
+    + sessionPreset can change "size" of what's output. But the layer is really a presentation of what will be captured. Resizing the view/layer causes the realtime video output of camera to be rerendered
 - Improvements
     + which input device to use etc...
     + audio / video. video required, audio optional with ability to mute!
