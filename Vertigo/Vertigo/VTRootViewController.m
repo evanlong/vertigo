@@ -12,17 +12,29 @@
 #import <Photos/Photos.h>
 
 #import "AVCamPreviewView.h"
+#import "VTCameraController.h"
+#import "VTCameraControlView.h"
+#import "VTRequiresCameraPermissionView.h"
 
-@interface VTRootViewController () // <AVCaptureFileOutputRecordingDelegate>
+typedef NS_ENUM(NSInteger, VTRecordingState) {
+    VTRecordingStateWaiting,
+    VTRecordingStateTransitionToRecording,
+    VTRecordingStateRecording,
+    VTRecordingStateTransitionToWaiting,
+};
 
-// AV capture and session
-@property (nonatomic, strong) dispatch_queue_t sessionQueue;
+@interface VTRootViewController () <VTCameraControlViewDelegate, VTCameraControllerDelegate>
+
 @property (nonatomic, strong) AVCaptureSession *captureSession;
 @property (nonatomic, strong) AVCaptureDevice *videoCaptureDevice;
 @property (nonatomic, strong) AVCaptureMovieFileOutput *movieFileOutput;
 
+@property (nonatomic, strong) VTCameraController *cameraController;
+@property (nonatomic, assign) VTRecordingState recordingState;
+
 // Views
-@property (nonatomic, strong) UIView *previewView;
+@property (nonatomic, strong) AVCamPreviewView *previewView; // camera preview
+@property (nonatomic, strong) VTCameraControlView *cameraControlView; // fixed controls are placed in here
 
 @end
 
@@ -33,30 +45,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    CGRect viewBounds = self.view.bounds;
-    
-    // Setup Default UI Pieces
-    self.previewView = [[UIView alloc] init];
-    self.previewView.frame = viewBounds;
-    self.previewView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-    self.previewView.clipsToBounds = NO;
-    self.previewView.backgroundColor = [UIColor magentaColor];
-    [self.view addSubview:self.previewView];
-    
+
     // Request permission if needed but otherwise configure rest of UI given video permission state
-    [self _setupViewsFromUnknownVideoPermissionState];
-}
-
-- (BOOL)prefersStatusBarHidden
-{
-    return YES;
-}
-
-#pragma mark - Private
-
-- (void)_setupViewsFromUnknownVideoPermissionState
-{
     AVAuthorizationStatus videoAuthStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
     if (videoAuthStatus == AVAuthorizationStatusNotDetermined)
     {
@@ -73,21 +63,185 @@
     }
 }
 
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
+    if (UIDeviceOrientationIsPortrait(deviceOrientation) || UIDeviceOrientationIsLandscape(deviceOrientation))
+    {
+        self.previewView.videoPreviewLayer.connection.videoOrientation = (AVCaptureVideoOrientation)deviceOrientation;
+    }
+}
+
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
+}
+
+- (BOOL)shouldAutorotate
+{
+    // EL TODO: Sample app AVCam app reads from movieFileOutput.isRecording even though object
+    // seems to have affinity for the sessionQueue. Seems like a race condition.
+    // Could return should rotate YES, but setup output connection with previous value instead of one we are rotating too...
+    // Fix would be to fix the state of view when start recording button is pressed...
+    // also sample code does app backgrounding stuff on the session queue... hmmm...
+//    return !self.movieFileOutput.isRecording;
+
+    return (self.recordingState == VTRecordingStateWaiting);
+}
+
+#pragma mark - VTRootViewController
+
+- (void)setRecordingState:(VTRecordingState)recordingState
+{
+    if (_recordingState != recordingState)
+    {
+        _recordingState = recordingState;
+        [self _updateCameraControlView];
+    }
+}
+
+#pragma mark - VTCameraControlViewDelegate
+
+- (void)didPressRecordButton:(VTCameraControlView *)cameraControlView
+{
+    VTLogObject(@(self.cameraControlView.direction));
+    VTLogObject(@(self.cameraControlView.duration));
+    
+    VTRecordingState recordingState = self.recordingState;
+    if (recordingState == VTRecordingStateWaiting)
+    {
+        AVCaptureVideoOrientation orientation = self.previewView.videoPreviewLayer.connection.videoOrientation;
+        [self.cameraController startRecordingWithOrientation:orientation];
+        self.recordingState = VTRecordingStateTransitionToRecording;
+    }
+    else if (recordingState == VTRecordingStateRecording)
+    {
+        [self.cameraController stopRecording];
+        self.recordingState = VTRecordingStateTransitionToWaiting;
+    }
+    // else: nop transitioning between recording <-> waiting states
+}
+
+#pragma mark - VTCameraControllerDelegate
+
+- (void)cameraControllerDidStartRunning:(VTCameraController *)cameraController
+{
+    VTLogFunction;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // Following AVCam state here, since it started running successfully make sure previewLayer connection has write orientation
+        UIInterfaceOrientation statusBarOrientation = [UIApplication sharedApplication].statusBarOrientation;
+        AVCaptureVideoOrientation initialVideoOrientation = AVCaptureVideoOrientationPortrait;
+        if (statusBarOrientation != UIInterfaceOrientationUnknown)
+        {
+            initialVideoOrientation = (AVCaptureVideoOrientation)statusBarOrientation;
+        }
+        
+        self.previewView.videoPreviewLayer.connection.videoOrientation = initialVideoOrientation;
+    });
+}
+
+- (void)cameraControllerDidStopRunning:(VTCameraController *)cameraController
+{
+    VTLogFunction;
+}
+
+- (void)cameraController:(VTCameraController *)cameraController didStartRecordingToOutputFileAtURL:(NSURL *)fileURL
+{
+    VTLogFunctionWithObject(fileURL);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.recordingState = VTRecordingStateRecording;
+    });
+}
+
+- (void)cameraController:(VTCameraController *)cameraController didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
+{
+    VTLogFunctionWithObject(outputFileURL);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [PHPhotoLibrary requestAuthorization:^( PHAuthorizationStatus status ) {
+            if (status == PHAuthorizationStatusAuthorized)
+            {
+                // Save the movie file to the photo library and cleanup.
+                [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+                    PHAssetResourceCreationOptions *options = [[PHAssetResourceCreationOptions alloc] init];
+                    options.shouldMoveFile = YES;
+                    PHAssetCreationRequest *creationRequest = [PHAssetCreationRequest creationRequestForAsset];
+                    [creationRequest addResourceWithType:PHAssetResourceTypeVideo fileURL:outputFileURL options:options];
+                } completionHandler:^( BOOL success, NSError *error ) {
+                    if (!success)
+                    {
+                        NSLog( @"Could not save movie to photo library: %@", error );
+                    }
+                    // cleanup();
+                }];
+            }
+            else
+            {
+                // cleanup();
+            }
+        }];
+
+        self.recordingState = VTRecordingStateWaiting;
+    });
+
+    // EL TODO: cleanup of files in /tmp
+    // Check for errors as a result of the recording
+}
+
+#pragma mark - Private (Setup)
+
 - (void)_setupViewsWithVideoPermissionState:(BOOL)granted
 {
     if (granted)
     {
-        self.previewView.backgroundColor = [UIColor greenColor];
+        [self _setupForGrantedPermission];
     }
     else
     {
-        self.previewView.backgroundColor = [UIColor redColor];
+        [self _setupForPermissionRequired];
     }
 }
 
-- (void)_handleTapToSettings
+- (void)_setupForGrantedPermission
 {
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString] options:@{} completionHandler:NULL];
+    // 1. Setup Camera Controller
+    self.cameraController = [[VTCameraController alloc] init];
+    self.cameraController.delegate = self;
+
+    // 2. Setup Camera Preview and Connect
+    CGRect viewBounds = self.view.bounds;
+    self.previewView = [[AVCamPreviewView alloc] init];
+    self.previewView.frame = viewBounds;
+    self.previewView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+    self.previewView.clipsToBounds = NO;
+    [self.view addSubview:self.previewView];
+    self.previewView.session = self.cameraController.captureSession;
+    
+    // 3. Control Host View
+    self.cameraControlView = [[VTCameraControlView alloc] init];
+    self.cameraControlView.delegate = self;
+    self.cameraControlView.frame = viewBounds;
+    self.cameraControlView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+    [self.view addSubview:self.cameraControlView];
+
+    [self.cameraController startRunning];
+}
+
+- (void)_setupForPermissionRequired
+{
+    VTRequiresCameraPermissionView *requirePermissionView = [[VTRequiresCameraPermissionView alloc] init];
+    requirePermissionView.frame = self.view.bounds;
+    requirePermissionView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+    [self.view addSubview:requirePermissionView];
+}
+
+#pragma mark - Private
+
+- (void)_updateCameraControlView
+{
+    // maybe we put up a spinner if we are transitioning?
+    self.cameraControlView.recording = (self.recordingState == VTRecordingStateRecording);
 }
 
 @end

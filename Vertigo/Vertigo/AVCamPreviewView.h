@@ -6,8 +6,6 @@
 	Application preview view.
 */
 
-#import <UIKit/UIKit.h>
-
 @class AVCaptureSession;
 
 @interface AVCamPreviewView : UIView

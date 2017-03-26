@@ -2,6 +2,7 @@
 
 inputs and outputs
 
+- Think of a "connection" as a "stream" of data
 - Attach them all, and hook up a video output, then need to make a call to "startRecordingToOutputFileURL"
 - looks like the session code can happen on a session specific queue
 - don't auto rotate when recording active
@@ -57,11 +58,36 @@ inputs and outputs
     -  background mode to complete and save the recording if home button is pressed etc...
     -  Audio / Video permissions
     -  Device rotation while recording
-    -  dynamic fonts
+    -  dynamic fonts size changes
     -  running on iPad with multiple app mode
         +  Info.plist - UIRequiresFullScreen => YES
 
 # Features
 
 - Video explorer when they deny photo access. When video is taken, provide a way to save off or share at that moment, if they don't the video will just be deleted, which seems fine given ephemeral nature of the app
-- 
+
+
+# Next to investigate
+
+- AVCaptureSession and app background and resume...
+    + I don't think viewDidAppear and disappear get called for app backgrounding
+
+
+
+Recorder object
+UI state while recording 
+Experiment with ramp vs display link maybe or timers on main queue.  Yuck
+
+Recorder would not expose a view but the session performing the recording. The recorder should take care of threading and dispatch to main queue or to an arbitrary queue and let owner or delegate get back to main queue 
+
+The ramping up and down code of the recorder wouldn't need to depend on actual AV items just some protocol to them...
+
+Able to perform the camera manip without recording
+
+Ability to test output it produces without AV objects involved
+
+startRecordingWithSettings...
+    - orientation
+    - duration
+    - push/pull etc...
+

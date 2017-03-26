@@ -15,10 +15,16 @@
 		FF0B623F1E2092B3003BCDB3 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF0B623E1E2092B3003BCDB3 /* AVFoundation.framework */; };
 		FF0F26F91E241B5500D98C90 /* AVCamPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = FF0F26F81E241B5500D98C90 /* AVCamPreviewView.m */; };
 		FF0F26FC1E2421AF00D98C90 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF0F26FB1E2421AF00D98C90 /* UIKit.framework */; };
+		FF19EE701E8841840001AFC4 /* VTCaptureTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = FF19EE6F1E8841840001AFC4 /* VTCaptureTypes.m */; };
+		FF1E036C1E8443110015A004 /* VTToggleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = FF1E036B1E8443110015A004 /* VTToggleButton.m */; };
+		FF1F2F5A1E81ACF0009F4510 /* VTRequiresCameraPermissionView.m in Sources */ = {isa = PBXBuildFile; fileRef = FF1F2F591E81ACF0009F4510 /* VTRequiresCameraPermissionView.m */; };
+		FF1F2F5E1E81B67A009F4510 /* VTMath.m in Sources */ = {isa = PBXBuildFile; fileRef = FF1F2F5D1E81B67A009F4510 /* VTMath.m */; };
+		FF1F2F671E81BEE7009F4510 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FF1F2F691E81BEE7009F4510 /* Localizable.strings */; };
+		FF1F2F8F1E82F86C009F4510 /* VTCameraControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = FF1F2F8E1E82F86C009F4510 /* VTCameraControlView.m */; };
 		FF2EE31F1E24ABA1007D5E6C /* VTCaptureModel.m in Sources */ = {isa = PBXBuildFile; fileRef = FF2EE31E1E24ABA1007D5E6C /* VTCaptureModel.m */; };
 		FF2EE3211E24B0EC007D5E6C /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF2EE3201E24B0EC007D5E6C /* Photos.framework */; };
 		FF4440491E7AEFFA002B6F67 /* VTRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF4440481E7AEFFA002B6F67 /* VTRootViewController.m */; };
-		FF44404B1E7B1883002B6F67 /* VertigoStrings.strings in Resources */ = {isa = PBXBuildFile; fileRef = FF44404A1E7B1883002B6F67 /* VertigoStrings.strings */; };
+		FF74E2621E85951B00C6969F /* VTCameraController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF74E2611E85951B00C6969F /* VTCameraController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,12 +42,24 @@
 		FF0F26F81E241B5500D98C90 /* AVCamPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AVCamPreviewView.m; sourceTree = "<group>"; };
 		FF0F26FA1E24216900D98C90 /* VertigoPrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VertigoPrefixHeader.pch; sourceTree = "<group>"; };
 		FF0F26FB1E2421AF00D98C90 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		FF19EE6E1E8841840001AFC4 /* VTCaptureTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTCaptureTypes.h; sourceTree = "<group>"; };
+		FF19EE6F1E8841840001AFC4 /* VTCaptureTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTCaptureTypes.m; sourceTree = "<group>"; };
+		FF1E036A1E8443110015A004 /* VTToggleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTToggleButton.h; sourceTree = "<group>"; };
+		FF1E036B1E8443110015A004 /* VTToggleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTToggleButton.m; sourceTree = "<group>"; };
+		FF1F2F581E81ACF0009F4510 /* VTRequiresCameraPermissionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTRequiresCameraPermissionView.h; sourceTree = "<group>"; };
+		FF1F2F591E81ACF0009F4510 /* VTRequiresCameraPermissionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTRequiresCameraPermissionView.m; sourceTree = "<group>"; };
+		FF1F2F5C1E81B67A009F4510 /* VTMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTMath.h; sourceTree = "<group>"; };
+		FF1F2F5D1E81B67A009F4510 /* VTMath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTMath.m; sourceTree = "<group>"; };
+		FF1F2F681E81BEE7009F4510 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		FF1F2F8D1E82F86C009F4510 /* VTCameraControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTCameraControlView.h; sourceTree = "<group>"; };
+		FF1F2F8E1E82F86C009F4510 /* VTCameraControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTCameraControlView.m; sourceTree = "<group>"; };
 		FF2EE31D1E24ABA1007D5E6C /* VTCaptureModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTCaptureModel.h; sourceTree = "<group>"; };
 		FF2EE31E1E24ABA1007D5E6C /* VTCaptureModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTCaptureModel.m; sourceTree = "<group>"; };
 		FF2EE3201E24B0EC007D5E6C /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 		FF4440471E7AEFFA002B6F67 /* VTRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTRootViewController.h; sourceTree = "<group>"; };
 		FF4440481E7AEFFA002B6F67 /* VTRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTRootViewController.m; sourceTree = "<group>"; };
-		FF44404A1E7B1883002B6F67 /* VertigoStrings.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = VertigoStrings.strings; sourceTree = "<group>"; };
+		FF74E2601E85951B00C6969F /* VTCameraController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTCameraController.h; sourceTree = "<group>"; };
+		FF74E2611E85951B00C6969F /* VTCameraController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTCameraController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,9 +98,11 @@
 			children = (
 				FF0B62241E20567B003BCDB3 /* VTAppDelegate.h */,
 				FF0B62251E20567B003BCDB3 /* VTAppDelegate.m */,
+				FF74E25F1E8594EB00C6969F /* Controller */,
 				FF2EE31C1E24AB7D007D5E6C /* Model */,
 				FF0F26F61E241B4800D98C90 /* Views */,
 				FF0B623B1E2057A8003BCDB3 /* ViewControllers */,
+				FF1F2F5B1E81B668009F4510 /* Utils */,
 				FF0B623C1E2057CA003BCDB3 /* Resources */,
 				FF0B62211E20567B003BCDB3 /* Supporting Files */,
 			);
@@ -115,7 +135,7 @@
 				FF0B622D1E20567B003BCDB3 /* Assets.xcassets */,
 				FF0B622F1E20567B003BCDB3 /* LaunchScreen.storyboard */,
 				FF0B62321E20567B003BCDB3 /* Info.plist */,
-				FF44404A1E7B1883002B6F67 /* VertigoStrings.strings */,
+				FF1F2F691E81BEE7009F4510 /* Localizable.strings */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -133,10 +153,33 @@
 		FF0F26F61E241B4800D98C90 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				FF1E03691E8440DB0015A004 /* CameraControls */,
 				FF0F26F71E241B5500D98C90 /* AVCamPreviewView.h */,
 				FF0F26F81E241B5500D98C90 /* AVCamPreviewView.m */,
+				FF1F2F581E81ACF0009F4510 /* VTRequiresCameraPermissionView.h */,
+				FF1F2F591E81ACF0009F4510 /* VTRequiresCameraPermissionView.m */,
 			);
 			name = Views;
+			sourceTree = "<group>";
+		};
+		FF1E03691E8440DB0015A004 /* CameraControls */ = {
+			isa = PBXGroup;
+			children = (
+				FF1F2F8D1E82F86C009F4510 /* VTCameraControlView.h */,
+				FF1F2F8E1E82F86C009F4510 /* VTCameraControlView.m */,
+				FF1E036A1E8443110015A004 /* VTToggleButton.h */,
+				FF1E036B1E8443110015A004 /* VTToggleButton.m */,
+			);
+			name = CameraControls;
+			sourceTree = "<group>";
+		};
+		FF1F2F5B1E81B668009F4510 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				FF1F2F5C1E81B67A009F4510 /* VTMath.h */,
+				FF1F2F5D1E81B67A009F4510 /* VTMath.m */,
+			);
+			name = Utils;
 			sourceTree = "<group>";
 		};
 		FF2EE31C1E24AB7D007D5E6C /* Model */ = {
@@ -144,8 +187,19 @@
 			children = (
 				FF2EE31D1E24ABA1007D5E6C /* VTCaptureModel.h */,
 				FF2EE31E1E24ABA1007D5E6C /* VTCaptureModel.m */,
+				FF19EE6E1E8841840001AFC4 /* VTCaptureTypes.h */,
+				FF19EE6F1E8841840001AFC4 /* VTCaptureTypes.m */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		FF74E25F1E8594EB00C6969F /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				FF74E2601E85951B00C6969F /* VTCameraController.h */,
+				FF74E2611E85951B00C6969F /* VTCameraController.m */,
+			);
+			name = Controller;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -208,7 +262,7 @@
 			files = (
 				FF0B62311E20567B003BCDB3 /* LaunchScreen.storyboard in Resources */,
 				FF0B622E1E20567B003BCDB3 /* Assets.xcassets in Resources */,
-				FF44404B1E7B1883002B6F67 /* VertigoStrings.strings in Resources */,
+				FF1F2F671E81BEE7009F4510 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -220,11 +274,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				FF0B62261E20567B003BCDB3 /* VTAppDelegate.m in Sources */,
+				FF1F2F8F1E82F86C009F4510 /* VTCameraControlView.m in Sources */,
 				FF0B62231E20567B003BCDB3 /* main.m in Sources */,
+				FF74E2621E85951B00C6969F /* VTCameraController.m in Sources */,
+				FF1E036C1E8443110015A004 /* VTToggleButton.m in Sources */,
 				FF0F26F91E241B5500D98C90 /* AVCamPreviewView.m in Sources */,
 				FF2EE31F1E24ABA1007D5E6C /* VTCaptureModel.m in Sources */,
 				FF4440491E7AEFFA002B6F67 /* VTRootViewController.m in Sources */,
 				FF0B623A1E2057A4003BCDB3 /* VTMainViewController.m in Sources */,
+				FF1F2F5A1E81ACF0009F4510 /* VTRequiresCameraPermissionView.m in Sources */,
+				FF19EE701E8841840001AFC4 /* VTCaptureTypes.m in Sources */,
+				FF1F2F5E1E81B67A009F4510 /* VTMath.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,6 +297,14 @@
 				FF0B62301E20567B003BCDB3 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		FF1F2F691E81BEE7009F4510 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FF1F2F681E81BEE7009F4510 /* en */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

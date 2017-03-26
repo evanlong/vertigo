@@ -1,0 +1,13 @@
+/* 
+  VertigoStrings.strings
+  Vertigo
+
+  Created by Evan Long on 3/21/17.
+
+*/
+
+"RequiresCameraPermission" = "Vertigo requires camera permission";
+"RequiresCameraPermissionTapHere" = "Tap here to enable camera permissions in Settings";
+"SegmentPush" = "Push";
+"SegmentPull" = "Pull";
+"DurationToggleSeconds" = "%ds";

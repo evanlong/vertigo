@@ -6,7 +6,7 @@
 //
 //
 
-#import <Foundation/Foundation.h>
+#import "VTCaptureTypes.h"
 
 @interface VTCaptureModel : NSObject
 
