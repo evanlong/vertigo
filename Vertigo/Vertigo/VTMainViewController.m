@@ -45,8 +45,6 @@
         // Need permission? Failure reasons?
     }
     
-    VTLogFunctionWithObject(@([AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo]));
-
     // 2. Provide User Preview of Input
     self.previewView = [[AVCamPreviewView alloc] init];
     self.previewView.bounds = self.view.bounds;
@@ -192,13 +190,10 @@
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didStartRecordingToOutputFileAtURL:(NSURL *)fileURL fromConnections:(NSArray *)connections
 {
-    VTLogFunctionWithObject(fileURL);
 }
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)error
 {
-    VTLogFunctionWithObject(outputFileURL);
-    
     // EL TODO: cleanup of files in /tmp
     // Check for errors as a result of the recording
     [PHPhotoLibrary requestAuthorization:^( PHAuthorizationStatus status ) {

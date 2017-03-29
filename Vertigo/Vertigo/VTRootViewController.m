@@ -80,13 +80,6 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 
 - (BOOL)shouldAutorotate
 {
-    // EL TODO: Sample app AVCam app reads from movieFileOutput.isRecording even though object
-    // seems to have affinity for the sessionQueue. Seems like a race condition.
-    // Could return should rotate YES, but setup output connection with previous value instead of one we are rotating too...
-    // Fix would be to fix the state of view when start recording button is pressed...
-    // also sample code does app backgrounding stuff on the session queue... hmmm...
-//    return !self.movieFileOutput.isRecording;
-
     return (self.recordingState == VTRecordingStateWaiting);
 }
 
@@ -105,9 +98,6 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 
 - (void)didPressRecordButton:(VTCameraControlView *)cameraControlView
 {
-//    VTLogObject(@(self.cameraControlView.direction));
-//    VTLogObject(@(self.cameraControlView.duration));
-    
     VTRecordingState recordingState = self.recordingState;
     if (recordingState == VTRecordingStateWaiting)
     {
@@ -127,8 +117,6 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 
 - (void)cameraControllerDidStartRunning:(VTCameraController *)cameraController
 {
-    VTLogFunction;
-    
     dispatch_async(dispatch_get_main_queue(), ^{
         // Following AVCam state here, since it started running successfully make sure previewLayer connection has write orientation
         UIInterfaceOrientation statusBarOrientation = [UIApplication sharedApplication].statusBarOrientation;
@@ -144,12 +132,10 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 
 - (void)cameraControllerDidStopRunning:(VTCameraController *)cameraController
 {
-    VTLogFunction;
 }
 
 - (void)cameraController:(VTCameraController *)cameraController didStartRecordingToOutputFileAtURL:(NSURL *)fileURL
 {
-    VTLogFunctionWithObject(fileURL);
     dispatch_async(dispatch_get_main_queue(), ^{
         self.recordingState = VTRecordingStateRecording;
     });
@@ -157,7 +143,6 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 
 - (void)cameraController:(VTCameraController *)cameraController didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
 {
-    VTLogFunctionWithObject(outputFileURL);
     dispatch_async(dispatch_get_main_queue(), ^{
         [PHPhotoLibrary requestAuthorization:^( PHAuthorizationStatus status ) {
             if (status == PHAuthorizationStatusAuthorized)
