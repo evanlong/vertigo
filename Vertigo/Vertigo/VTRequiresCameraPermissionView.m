@@ -29,29 +29,29 @@ static const CGFloat VTRequiresCameraPermissionViewTextPadding = 10.0;
         self.backgroundColor = [UIColor whiteColor];
 
         _requirePermissionLabel = [[UILabel alloc] init];
-        VTAllowAutolayoutForView(self.requirePermissionLabel);
-        self.requirePermissionLabel.numberOfLines = 0;
-        self.requirePermissionLabel.textAlignment = NSTextAlignmentCenter;
-        self.requirePermissionLabel.text = NSLocalizedString(@"RequiresCameraPermission", nil);
-        [self addSubview:self.requirePermissionLabel];
+        VTAllowAutolayoutForView(_requirePermissionLabel);
+        _requirePermissionLabel.numberOfLines = 0;
+        _requirePermissionLabel.textAlignment = NSTextAlignmentCenter;
+        _requirePermissionLabel.text = NSLocalizedString(@"RequiresCameraPermission", nil);
+        [self addSubview:_requirePermissionLabel];
         
         _openSettingsButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        VTAllowAutolayoutForView(self.openSettingsButton);
-        self.openSettingsButton.titleLabel.numberOfLines = 0;
-        self.openSettingsButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-        [self.openSettingsButton setTitle:NSLocalizedString(@"RequiresCameraPermissionTapHere", nil) forState:UIControlStateNormal];
-        [self.openSettingsButton addTarget:self action:@selector(_handleTapToSettings) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:self.openSettingsButton];
+        VTAllowAutolayoutForView(_openSettingsButton);
+        _openSettingsButton.titleLabel.numberOfLines = 0;
+        _openSettingsButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+        [_openSettingsButton setTitle:NSLocalizedString(@"RequiresCameraPermissionTapHere", nil) forState:UIControlStateNormal];
+        [_openSettingsButton addTarget:self action:@selector(_handleTapToSettings) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:_openSettingsButton];
 
         [self _updateLabelFonts];
         
-        [self.requirePermissionLabel.centerXAnchor constraintEqualToAnchor:self.centerXAnchor].active = YES;
-        [self.requirePermissionLabel.bottomAnchor constraintEqualToAnchor:self.centerYAnchor constant:-VTRequiresCameraPermissionViewTextPadding].active = YES;
-        [self.requirePermissionLabel.widthAnchor constraintLessThanOrEqualToAnchor:self.widthAnchor multiplier:0.90].active = YES;
+        [_requirePermissionLabel.centerXAnchor constraintEqualToAnchor:self.centerXAnchor].active = YES;
+        [_requirePermissionLabel.bottomAnchor constraintEqualToAnchor:self.centerYAnchor constant:-VTRequiresCameraPermissionViewTextPadding].active = YES;
+        [_requirePermissionLabel.widthAnchor constraintLessThanOrEqualToAnchor:self.widthAnchor multiplier:0.90].active = YES;
         
-        [self.openSettingsButton.centerXAnchor constraintEqualToAnchor:self.centerXAnchor].active = YES;
-        [self.openSettingsButton.topAnchor constraintEqualToAnchor:self.centerYAnchor constant:VTRequiresCameraPermissionViewTextPadding].active = YES;
-        [self.openSettingsButton.widthAnchor constraintLessThanOrEqualToAnchor:self.widthAnchor multiplier:0.90].active = YES;
+        [_openSettingsButton.centerXAnchor constraintEqualToAnchor:self.centerXAnchor].active = YES;
+        [_openSettingsButton.topAnchor constraintEqualToAnchor:self.centerYAnchor constant:VTRequiresCameraPermissionViewTextPadding].active = YES;
+        [_openSettingsButton.widthAnchor constraintLessThanOrEqualToAnchor:self.widthAnchor multiplier:0.90].active = YES;
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleContentSizeChange:) name:UIContentSizeCategoryDidChangeNotification object:nil];
     }

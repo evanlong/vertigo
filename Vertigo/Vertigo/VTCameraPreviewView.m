@@ -1,16 +1,12 @@
 /*
 	Copyright (C) 2016 Apple Inc. All Rights Reserved.
-	See LICENSE.txt for this sample’s licensing information
-	
-	Abstract:
-	Application preview view.
+
+  Renaming of "AVCamPreviewView"
 */
 
-@import AVFoundation;
+#import "VTCameraPreviewView.h"
 
-#import "AVCamPreviewView.h"
-
-@implementation AVCamPreviewView
+@implementation VTCameraPreviewView
 
 + (Class)layerClass
 {

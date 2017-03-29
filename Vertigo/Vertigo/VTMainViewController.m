@@ -11,14 +11,14 @@
 #import <AVFoundation/AVFoundation.h>
 #import <Photos/Photos.h>
 
-#import "AVCamPreviewView.h"
+#import "VTCameraPreviewView.h"
 
 @interface VTMainViewController () <AVCaptureFileOutputRecordingDelegate>
 
 @property (nonatomic, strong) AVCaptureSession *captureSession;
 @property (nonatomic, strong) dispatch_queue_t sessionQueue;
 @property (nonatomic, strong) AVCaptureDevice *videoCaptureDevice;
-@property (nonatomic, strong) AVCamPreviewView *previewView;
+@property (nonatomic, strong) VTCameraPreviewView *previewView;
 @property (nonatomic, strong) AVCaptureMovieFileOutput *movieFileOutput;
 
 @end
@@ -46,7 +46,7 @@
     }
     
     // 2. Provide User Preview of Input
-    self.previewView = [[AVCamPreviewView alloc] init];
+    self.previewView = [[VTCameraPreviewView alloc] init];
     self.previewView.bounds = self.view.bounds;
     self.previewView.center = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
 

@@ -39,9 +39,9 @@
         _sessionQueue = dispatch_queue_create("vertigo.sessionQueue", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
         _captureSession = [[AVCaptureSession alloc] init];
 #if USE_VT_ZOOM_EFFECT
-        self.zoomEffect = [[VTZoomEffect alloc] init];
-        self.zoomEffect.queue = self.sessionQueue;
-        self.zoomEffect.delegate = self;
+        _zoomEffect = [[VTZoomEffect alloc] init];
+        _zoomEffect.queue = _sessionQueue;
+        _zoomEffect.delegate = self;
 #endif
     }
     return self;

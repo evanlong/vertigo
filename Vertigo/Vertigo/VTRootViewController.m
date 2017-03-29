@@ -11,7 +11,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <Photos/Photos.h>
 
-#import "AVCamPreviewView.h"
+#import "VTCameraPreviewView.h"
 #import "VTCameraController.h"
 #import "VTCameraControlView.h"
 #import "VTRequiresCameraPermissionView.h"
@@ -33,7 +33,7 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 @property (nonatomic, assign) VTRecordingState recordingState;
 
 // Views
-@property (nonatomic, strong) AVCamPreviewView *previewView; // camera preview
+@property (nonatomic, strong) VTCameraPreviewView *previewView; // camera preview
 @property (nonatomic, strong) VTCameraControlView *cameraControlView; // fixed controls are placed in here
 
 @end
@@ -196,7 +196,7 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 
     // 2. Setup Camera Preview and Connect
     CGRect viewBounds = self.view.bounds;
-    self.previewView = [[AVCamPreviewView alloc] init];
+    self.previewView = [[VTCameraPreviewView alloc] init];
     self.previewView.frame = viewBounds;
     self.previewView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
     self.previewView.clipsToBounds = NO;

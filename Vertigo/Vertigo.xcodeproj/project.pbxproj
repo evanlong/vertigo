@@ -13,7 +13,7 @@
 		FF0B62311E20567B003BCDB3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FF0B622F1E20567B003BCDB3 /* LaunchScreen.storyboard */; };
 		FF0B623A1E2057A4003BCDB3 /* VTMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF0B62391E2057A4003BCDB3 /* VTMainViewController.m */; };
 		FF0B623F1E2092B3003BCDB3 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF0B623E1E2092B3003BCDB3 /* AVFoundation.framework */; };
-		FF0F26F91E241B5500D98C90 /* AVCamPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = FF0F26F81E241B5500D98C90 /* AVCamPreviewView.m */; };
+		FF0F26F91E241B5500D98C90 /* VTCameraPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = FF0F26F81E241B5500D98C90 /* VTCameraPreviewView.m */; };
 		FF0F26FC1E2421AF00D98C90 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF0F26FB1E2421AF00D98C90 /* UIKit.framework */; };
 		FF19EE701E8841840001AFC4 /* VTCaptureTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = FF19EE6F1E8841840001AFC4 /* VTCaptureTypes.m */; };
 		FF1E036C1E8443110015A004 /* VTToggleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = FF1E036B1E8443110015A004 /* VTToggleButton.m */; };
@@ -40,8 +40,8 @@
 		FF0B62381E2057A4003BCDB3 /* VTMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTMainViewController.h; sourceTree = "<group>"; };
 		FF0B62391E2057A4003BCDB3 /* VTMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTMainViewController.m; sourceTree = "<group>"; };
 		FF0B623E1E2092B3003BCDB3 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		FF0F26F71E241B5500D98C90 /* AVCamPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVCamPreviewView.h; sourceTree = "<group>"; };
-		FF0F26F81E241B5500D98C90 /* AVCamPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AVCamPreviewView.m; sourceTree = "<group>"; };
+		FF0F26F71E241B5500D98C90 /* VTCameraPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTCameraPreviewView.h; sourceTree = "<group>"; };
+		FF0F26F81E241B5500D98C90 /* VTCameraPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTCameraPreviewView.m; sourceTree = "<group>"; };
 		FF0F26FA1E24216900D98C90 /* VertigoPrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VertigoPrefixHeader.pch; sourceTree = "<group>"; };
 		FF0F26FB1E2421AF00D98C90 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		FF19EE6E1E8841840001AFC4 /* VTCaptureTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTCaptureTypes.h; sourceTree = "<group>"; };
@@ -160,8 +160,8 @@
 			isa = PBXGroup;
 			children = (
 				FF1E03691E8440DB0015A004 /* CameraControls */,
-				FF0F26F71E241B5500D98C90 /* AVCamPreviewView.h */,
-				FF0F26F81E241B5500D98C90 /* AVCamPreviewView.m */,
+				FF0F26F71E241B5500D98C90 /* VTCameraPreviewView.h */,
+				FF0F26F81E241B5500D98C90 /* VTCameraPreviewView.m */,
 				FF1F2F581E81ACF0009F4510 /* VTRequiresCameraPermissionView.h */,
 				FF1F2F591E81ACF0009F4510 /* VTRequiresCameraPermissionView.m */,
 			);
@@ -297,7 +297,7 @@
 				FFA05F601E89A344009137DA /* VTZoomEffect.m in Sources */,
 				FF74E2621E85951B00C6969F /* VTCameraController.m in Sources */,
 				FF1E036C1E8443110015A004 /* VTToggleButton.m in Sources */,
-				FF0F26F91E241B5500D98C90 /* AVCamPreviewView.m in Sources */,
+				FF0F26F91E241B5500D98C90 /* VTCameraPreviewView.m in Sources */,
 				FF2EE31F1E24ABA1007D5E6C /* VTCaptureModel.m in Sources */,
 				FF4440491E7AEFFA002B6F67 /* VTRootViewController.m in Sources */,
 				FF0B623A1E2057A4003BCDB3 /* VTMainViewController.m in Sources */,

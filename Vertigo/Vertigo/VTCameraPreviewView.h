@@ -6,9 +6,11 @@
 	Application preview view.
 */
 
+#import <AVFoundation/AVFoundation.h>
+
 @class AVCaptureSession;
 
-@interface AVCamPreviewView : UIView
+@interface VTCameraPreviewView : UIView
 
 @property (nonatomic, readonly) AVCaptureVideoPreviewLayer *videoPreviewLayer;
 
