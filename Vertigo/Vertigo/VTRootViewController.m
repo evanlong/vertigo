@@ -105,14 +105,14 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 
 - (void)didPressRecordButton:(VTCameraControlView *)cameraControlView
 {
-    VTLogObject(@(self.cameraControlView.direction));
-    VTLogObject(@(self.cameraControlView.duration));
+//    VTLogObject(@(self.cameraControlView.direction));
+//    VTLogObject(@(self.cameraControlView.duration));
     
     VTRecordingState recordingState = self.recordingState;
     if (recordingState == VTRecordingStateWaiting)
     {
         AVCaptureVideoOrientation orientation = self.previewView.videoPreviewLayer.connection.videoOrientation;
-        [self.cameraController startRecordingWithOrientation:orientation];
+        [self.cameraController startRecordingWithOrientation:orientation duration:self.cameraControlView.duration];
         self.recordingState = VTRecordingStateTransitionToRecording;
     }
     else if (recordingState == VTRecordingStateRecording)

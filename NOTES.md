@@ -13,13 +13,13 @@ inputs and outputs
 
 # Error Handling
 
-- consider application backgrounding to make sure things get written to the file system OK...
+- Consider application backgrounding to make sure things get written to the file system OK...
     + accepting a phone call?
 - Need to look at error handling NSHipster and AV sample code have plenty of both:
     - facetime using camera, permission issues, etc
     - Look in sample and nshipster for the common issues and try and prevent them, provide some reasonable feedback
 
-# Things to investigate
+# Things to Investigate
 
 - How do we differentiate between the two camera on the 7plus in the capture devices? 3 including front camera...
 
@@ -90,4 +90,7 @@ startRecordingWithSettings...
     - orientation
     - duration
     - push/pull etc...
+
+- experiment with the ramping zoom effect on capture session (might *just* work as I need it too)
+
 

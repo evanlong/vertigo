@@ -16,3 +16,21 @@ CGPoint VTRectMidPoint(CGRect rect)
     return p;
 }
 
+CGFloat VTClamp(CGFloat value, CGFloat min, CGFloat max)
+{
+    return MAX(min, MIN(max, value));
+}
+
+BOOL VTFloatIsZero(CGFloat a)
+{
+    return VTFloatIsEqual(a, 0.0);
+}
+
+BOOL VTFloatIsEqual(CGFloat a, CGFloat b)
+{
+#if CGFLOAT_IS_DOUBLE
+    return fabs(a - b) < DBL_EPSILON;
+#else
+    return fabsf(a - b) < FLT_EPSILON;
+#endif
+}

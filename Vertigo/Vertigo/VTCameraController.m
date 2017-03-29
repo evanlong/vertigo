@@ -8,7 +8,13 @@
 
 #import "VTCameraController.h"
 
-@interface VTCameraController () <AVCaptureFileOutputRecordingDelegate>
+#import "HFKVOBlocks.h"
+
+#import "VTZoomEffect.h"
+
+#define USE_VT_ZOOM_EFFECT 0
+
+@interface VTCameraController () <AVCaptureFileOutputRecordingDelegate, VTZoomEffectDelegate>
 
 @property (nonatomic, assign, getter=isConfigured) BOOL configured;
 
@@ -16,6 +22,10 @@
 @property (nonatomic, readwrite, strong) AVCaptureSession *captureSession;
 @property (nonatomic, strong) AVCaptureDevice *videoCaptureDevice;
 @property (nonatomic, strong) AVCaptureMovieFileOutput *movieFileOutput;
+
+#if USE_VT_ZOOM_EFFECT
+@property (nonatomic, strong) VTZoomEffect *zoomEffect;
+#endif
 
 @end
 
@@ -28,11 +38,11 @@
     {
         _sessionQueue = dispatch_queue_create("vertigo.sessionQueue", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
         _captureSession = [[AVCaptureSession alloc] init];
-        
-        // How much of initial AVCaptureSession can be done here...
-        // If some of the camera config (devices, capture output) fails, then what?
-        
-        // Simply signal a "ready" state once configuration is complete? Lazily setup when startRunning called?
+#if USE_VT_ZOOM_EFFECT
+        self.zoomEffect = [[VTZoomEffect alloc] init];
+        self.zoomEffect.queue = self.sessionQueue;
+        self.zoomEffect.delegate = self;
+#endif
     }
     return self;
 }
@@ -53,10 +63,10 @@
     });
 }
 
-- (void)startRecordingWithOrientation:(AVCaptureVideoOrientation)orientation
+- (void)startRecordingWithOrientation:(AVCaptureVideoOrientation)orientation duration:(NSTimeInterval)duration
 {
     dispatch_async(self.sessionQueue, ^{
-        [self _queue_startRecordingWithOrientation:orientation];
+        [self _queue_startRecordingWithOrientation:orientation duration:duration];
     });
 }
 
@@ -175,6 +185,17 @@
     if (successfullyConfigured)
     {
         self.videoCaptureDevice = videoCaptureDevice;
+#if !USE_VT_ZOOM_EFFECT
+        __weak typeof(self) weakSelf = self;
+        [self.videoCaptureDevice hf_addBlockObserver:^(AVCaptureDevice *_Nonnull object, NSDictionary *_Nonnull change) {
+            // EL TODO: This logic will need to change when we do previewing or looping and no simply call stopRecording
+            typeof(self) strongSelf = weakSelf;
+            if (strongSelf && !object.isRampingVideoZoom)
+            {
+                [strongSelf stopRecording];
+            }
+        } forKeyPath:VTKeyPath(self.videoCaptureDevice, rampingVideoZoom)];
+#endif
         self.movieFileOutput = movieFileOutput;
     }
     else
@@ -194,7 +215,7 @@
     [self.captureSession commitConfiguration];
 }
 
-- (void)_queue_startRecordingWithOrientation:(AVCaptureVideoOrientation)orientation
+- (void)_queue_startRecordingWithOrientation:(AVCaptureVideoOrientation)orientation duration:(NSTimeInterval)duration
 {
     if (!self.captureSession.isRunning)
     {
@@ -212,6 +233,19 @@
         NSString *outputFileName = [NSUUID UUID].UUIDString;
         NSString *outputFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[outputFileName stringByAppendingPathExtension:@"mov"]];
         [self.movieFileOutput startRecordingToOutputFileURL:[NSURL fileURLWithPath:outputFilePath] recordingDelegate:self];
+        
+#if USE_VT_ZOOM_EFFECT
+        self.zoomEffect.duration = duration;
+        [self.zoomEffect start];
+#else
+        const CGFloat zoomFactor = 2.0;
+        float rate = log2(zoomFactor) / duration;
+        if ([self.videoCaptureDevice lockForConfiguration:nil])
+        {
+            [self.videoCaptureDevice rampToVideoZoomFactor:zoomFactor withRate:rate];
+            [self.videoCaptureDevice unlockForConfiguration];
+        }
+#endif
     }
 }
 
@@ -225,6 +259,9 @@
     if (self.movieFileOutput.isRecording)
     {
         [self.movieFileOutput stopRecording];
+#if USE_VT_ZOOM_EFFECT
+        [self.zoomEffect stop];
+#endif
     }
 }
 
@@ -241,6 +278,12 @@
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)error
 {
+    if ([self.videoCaptureDevice lockForConfiguration:nil])
+    {
+        self.videoCaptureDevice.videoZoomFactor = 1.0;
+        [self.videoCaptureDevice unlockForConfiguration];
+    }
+
     id<VTCameraControllerDelegate> delegate = self.delegate;
     if ([delegate respondsToSelector:@selector(cameraController:didFinishRecordingToOutputFileAtURL:)])
     {
@@ -248,58 +291,26 @@
     }
 }
 
+#pragma mark - VTZoomEffectDelegate
+
+#if USE_VT_ZOOM_EFFECT
+- (void)zoomEffectDidStart:(VTZoomEffect *)zoomEffect
+{
+}
+
+- (void)zoomEffectDidComplete:(VTZoomEffect *)zoomEffect
+{
+    [self _queue_stopRecording];
+}
+
+- (void)zoomEffectZoomLevelDidChange:(VTZoomEffect *)zoomEffect
+{
+    if ([self.videoCaptureDevice lockForConfiguration:nil])
+    {
+        self.videoCaptureDevice.videoZoomFactor = zoomEffect.zoomLevel;
+        [self.videoCaptureDevice unlockForConfiguration];
+    }
+}
+#endif
+
 @end
-
-
-//- (void)_session_queue_toggleRecording
-//{
-//    if (self.movieFileOutput.isRecording)
-//    {
-//        [self.movieFileOutput stopRecording];
-//    }
-//    else
-//    {
-//        [self _session_queue_startRecording];
-//    }
-//}
-
-//- (void)_session_queue_startRecording
-//{
-//    /*
-//     1. Prepare camera for initial state
-//     2. Start recording and the camera effect
-//     3. Trigger end when camera effect is done
-//     */
-//
-//    CGFloat initialZoomLevel;
-//    CGFloat finalZoomLevel;
-//    if (self.mainControlHostView.direction == VTRecordDirectionPush)
-//    {
-//        initialZoomLevel = self.mainControlHostView.pulledZoomLevel;
-//        finalZoomLevel = self.mainControlHostView.pushedZoomLevel;
-//    }
-//    else
-//    {
-//        initialZoomLevel = self.mainControlHostView.pushedZoomLevel;
-//        finalZoomLevel = self.mainControlHostView.pulledZoomLevel;
-//    }
-//
-//    CGFloat duration = (CGFloat)self.mainControlHostView.duration;
-//
-//    dispatch_async(self.sessionQueue, ^{
-//        AVCaptureConnection *movieFileOutputConnection = [self.movieFileOutput connectionWithMediaType:AVMediaTypeVideo];
-//        movieFileOutputConnection.videoOrientation = videoPreviewLayerVideoOrientation;
-//
-//        if ([self.videoCaptureDevice lockForConfiguration:nil])
-//        {
-//            self.videoCaptureDevice.videoZoomFactor = initialZoomLevel;
-//            [self.videoCaptureDevice unlockForConfiguration];
-//        }
-//
-//        // Start recording to a temporary file.
-//        NSString *outputFileName = [NSUUID UUID].UUIDString;
-//        NSString *outputFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[outputFileName stringByAppendingPathExtension:@"mov"]];
-//        [self.movieFileOutput startRecordingToOutputFileURL:[NSURL fileURLWithPath:outputFilePath] recordingDelegate:self];
-//    });
-//}
-

@@ -17,6 +17,10 @@
     #define ISA(object, __class__) [object isKindOfClass:[__class__ class]]
 #endif
 
+#ifndef VTKeyPath
+    #define VTKeyPath(object, keyPath) (YES ? @#keyPath : ((void)object.keyPath, @""))
+#endif
+
 #ifndef VTAllowAutolayoutForView
     #define VTAllowAutolayoutForView(view) view.translatesAutoresizingMaskIntoConstraints = NO
 #endif
@@ -43,11 +47,19 @@
 
 // Logging
 #ifndef VTLog
-    #define VTLog NSLog
-    #define VTLogObject(object) NSLog(@"%s = %@", #object, object)
-    #define VTLogFunction NSLog(@"%s", __PRETTY_FUNCTION__)
-    #define VTLogFunctionMsg(msg) NSLog(@"%s - %@", __PRETTY_FUNCTION__, msg)
-    #define VTLogFunctionWithObject(object) NSLog(@"%s - %s = %@", __PRETTY_FUNCTION__, #object, object)
+    #if DEBUG
+        #define VTLog NSLog
+        #define VTLogObject(object) NSLog(@"%s = %@", #object, object)
+        #define VTLogFunction NSLog(@"%s", __PRETTY_FUNCTION__)
+        #define VTLogFunctionMsg(msg) NSLog(@"%s - %@", __PRETTY_FUNCTION__, msg)
+        #define VTLogFunctionWithObject(object) NSLog(@"%s - %s = %@", __PRETTY_FUNCTION__, #object, object)
+    #else
+        #define VTLog
+        #define VTLogObject(object)
+        #define VTLogFunction
+        #define VTLogFunctionMsg(msg)
+        #define VTLogFunctionWithObject(object)
+    #endif
 #endif
 
 // Visual Debugging

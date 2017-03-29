@@ -26,17 +26,6 @@ NS_ASSUME_NONNULL_BEGIN
 //! captureSession of the VTCameraController can be used to configure a AVCaptureVideoPreviewLayer
 @property (nonatomic, readonly, strong) AVCaptureSession *captureSession;
 
-/* Things like "zoom" over a period of time could be a seperate object that given:
- 
- VTEffectZoomerObject:
-    Input: Initial and Final zoom levels, duration, optional samples per second, optionally a "curve"
-    Ouput: Emits values [initial, final] over that duration at each interval
- 
-    - VTCameraController can apply those values to the zoom of camera
-    - VTEffectZoomerObject contains knowledge of the start/end of the effect and VTCameraController can use that
-      to accomplish messaging the start and end
- */
-
 // EL NOTE: Note start/stop running called by things like viewDid(Dis)Appear
 /*!
  The startRunning, stopRunning, startRecordingWithOrientation, stopRecording are all asynchronous in nature. Delegate callbacks will
@@ -47,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 //@property (nonatomic, readonly, assign, getter=isRunning) BOOL running;
 
 // Recording related calls are a nop if VTCameraController is not running
-- (void)startRecordingWithOrientation:(AVCaptureVideoOrientation)orientation;
+- (void)startRecordingWithOrientation:(AVCaptureVideoOrientation)orientation duration:(NSTimeInterval)duration;
 - (void)stopRecording;
 //@property (nonatomic, readonly, assign, getter=isRecording) BOOL recording;
 
