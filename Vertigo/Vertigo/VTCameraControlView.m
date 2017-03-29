@@ -26,7 +26,7 @@
 @property (nonatomic, strong) VTToggleButton *durationToggleButton;
 @property (nonatomic, strong) UIView *loopToggleView;
 
-@property (nonatomic, strong) NSMutableDictionary<VTToggleButtonItem *, NSNumber *> *durationToggleItemToValue;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, NSNumber *> *durationToggleItemToValue;
 
 @end
 
@@ -52,84 +52,83 @@
             
             NSArray *pushPullItems = @[NSLocalizedString(@"SegmentPush", nil), NSLocalizedString(@"SegmentPull", nil)];
             _pushPullControl = [[UISegmentedControl alloc] initWithItems:pushPullItems];
-            self.pushPullControl.selectedSegmentIndex = 0;
-            VTAllowAutolayoutForView(self.pushPullControl);
-            [self.pushPullControlBackdrop addSubview:self.pushPullControl];
+            _pushPullControl.selectedSegmentIndex = 0;
+            VTAllowAutolayoutForView(_pushPullControl);
+            [_pushPullControlBackdrop addSubview:_pushPullControl];
             
-            [self.pushPullControl.centerXAnchor constraintEqualToAnchor:self.pushPullControlBackdrop.centerXAnchor].active = YES;
-            [self.pushPullControl.centerYAnchor constraintEqualToAnchor:self.pushPullControlBackdrop.centerYAnchor].active = YES;
-            [self.pushPullControlBackdrop.heightAnchor constraintEqualToAnchor:self.pushPullControl.heightAnchor constant:16.0].active = YES;
-            [self.pushPullControlBackdrop.widthAnchor constraintEqualToAnchor:self.widthAnchor].active = YES;
+            [_pushPullControl.centerXAnchor constraintEqualToAnchor:_pushPullControlBackdrop.centerXAnchor].active = YES;
+            [_pushPullControl.centerYAnchor constraintEqualToAnchor:_pushPullControlBackdrop.centerYAnchor].active = YES;
+            [_pushPullControlBackdrop.heightAnchor constraintEqualToAnchor:_pushPullControl.heightAnchor constant:16.0].active = YES;
+            [_pushPullControlBackdrop.widthAnchor constraintEqualToAnchor:self.widthAnchor].active = YES;
             
-            [self.pushPullControlBackdrop.centerXAnchor constraintEqualToAnchor:self.centerXAnchor].active = YES;
-            [self.pushPullControlBackdrop.topAnchor constraintEqualToAnchor:self.topAnchor].active = YES;
+            [_pushPullControlBackdrop.centerXAnchor constraintEqualToAnchor:self.centerXAnchor].active = YES;
+            [_pushPullControlBackdrop.topAnchor constraintEqualToAnchor:self.topAnchor].active = YES;
         }
     
         { // Bottom Controls
             _bottomViewHost = [[UIView alloc] init];
-            VTAllowAutolayoutForView(self.bottomViewHost);
-            self.bottomViewHost.backgroundColor = CONTROL_BACKDROP_COLOR;
-            [self addSubview:self.bottomViewHost];
+            VTAllowAutolayoutForView(_bottomViewHost);
+            _bottomViewHost.backgroundColor = CONTROL_BACKDROP_COLOR;
+            [self addSubview:_bottomViewHost];
             
-            [self.bottomViewHost.heightAnchor constraintEqualToConstant:70.0].active = YES;
-            [self.bottomViewHost.widthAnchor constraintEqualToAnchor:self.pushPullControlBackdrop.widthAnchor].active = YES;
-            [self.bottomViewHost.bottomAnchor constraintEqualToAnchor:self.bottomAnchor].active = YES;
-            [self.bottomViewHost.centerXAnchor constraintEqualToAnchor:self.centerXAnchor].active = YES;
+            [_bottomViewHost.heightAnchor constraintEqualToConstant:70.0].active = YES;
+            [_bottomViewHost.widthAnchor constraintEqualToAnchor:_pushPullControlBackdrop.widthAnchor].active = YES;
+            [_bottomViewHost.bottomAnchor constraintEqualToAnchor:self.bottomAnchor].active = YES;
+            [_bottomViewHost.centerXAnchor constraintEqualToAnchor:self.centerXAnchor].active = YES;
             
             // Record
             _recordButton = [[UIButton alloc] init];
-            VTAllowAutolayoutForView(self.recordButton);
-            self.recordButton.backgroundColor = [UIColor redColor];
-            [self.bottomViewHost addSubview:self.recordButton];
+            VTAllowAutolayoutForView(_recordButton);
+            _recordButton.backgroundColor = [UIColor redColor];
+            [_bottomViewHost addSubview:_recordButton];
             
-            [self.recordButton addTarget:self action:@selector(_handleRecordButtonPress) forControlEvents:UIControlEventTouchUpInside];
+            [_recordButton addTarget:self action:@selector(_handleRecordButtonPress) forControlEvents:UIControlEventTouchUpInside];
             
-            [self.recordButton.centerXAnchor constraintEqualToAnchor:self.bottomViewHost.centerXAnchor].active = YES;
-            [self.recordButton.centerYAnchor constraintEqualToAnchor:self.bottomViewHost.centerYAnchor].active = YES;
-            [self.recordButton.widthAnchor constraintEqualToConstant:50.0].active = YES;
-            [self.recordButton.heightAnchor constraintEqualToConstant:50.0].active = YES;
+            [_recordButton.centerXAnchor constraintEqualToAnchor:_bottomViewHost.centerXAnchor].active = YES;
+            [_recordButton.centerYAnchor constraintEqualToAnchor:_bottomViewHost.centerYAnchor].active = YES;
+            [_recordButton.widthAnchor constraintEqualToConstant:50.0].active = YES;
+            [_recordButton.heightAnchor constraintEqualToConstant:50.0].active = YES;
             
             // Duration Toggle
             _durationToggleButton = [[VTToggleButton alloc] init];
-            VTAllowAutolayoutForView(self.durationToggleButton);
-            [self.bottomViewHost addSubview:self.durationToggleButton];
+            VTAllowAutolayoutForView(_durationToggleButton);
+            [_bottomViewHost addSubview:_durationToggleButton];
             
-            [self.durationToggleButton.rightAnchor constraintEqualToAnchor:self.recordButton.leftAnchor constant:-40.0].active = YES;
-            [self.durationToggleButton.centerYAnchor constraintEqualToAnchor:self.bottomViewHost.centerYAnchor].active = YES;
-            [self.durationToggleButton.widthAnchor constraintEqualToConstant:30.0].active = YES;
-            [self.durationToggleButton.heightAnchor constraintEqualToConstant:30.0].active = YES;
+            [_durationToggleButton.rightAnchor constraintEqualToAnchor:_recordButton.leftAnchor constant:-40.0].active = YES;
+            [_durationToggleButton.centerYAnchor constraintEqualToAnchor:_bottomViewHost.centerYAnchor].active = YES;
+            [_durationToggleButton.widthAnchor constraintEqualToConstant:30.0].active = YES;
+            [_durationToggleButton.heightAnchor constraintEqualToConstant:30.0].active = YES;
             
             // Loop Toggle
             _loopToggleView = [[UIView alloc] init];
-            self.loopToggleView.hidden = YES; // EL TODO: add back when needed
-            VTAllowAutolayoutForView(self.loopToggleView);
-            self.loopToggleView.backgroundColor = [UIColor blueColor];
-            [self.bottomViewHost addSubview:self.loopToggleView];
+            _loopToggleView.hidden = YES; // EL TODO: add back when needed
+            VTAllowAutolayoutForView(_loopToggleView);
+            _loopToggleView.backgroundColor = [UIColor blueColor];
+            [_bottomViewHost addSubview:_loopToggleView];
             
-            [self.loopToggleView.leftAnchor constraintEqualToAnchor:self.recordButton.rightAnchor constant:40.0].active = YES;
-            [self.loopToggleView.centerYAnchor constraintEqualToAnchor:self.bottomViewHost.centerYAnchor].active = YES;
-            [self.loopToggleView.widthAnchor constraintEqualToConstant:30.0].active = YES;
-            [self.loopToggleView.heightAnchor constraintEqualToConstant:30.0].active = YES;
+            [_loopToggleView.leftAnchor constraintEqualToAnchor:_recordButton.rightAnchor constant:40.0].active = YES;
+            [_loopToggleView.centerYAnchor constraintEqualToAnchor:_bottomViewHost.centerYAnchor].active = YES;
+            [_loopToggleView.widthAnchor constraintEqualToConstant:30.0].active = YES;
+            [_loopToggleView.heightAnchor constraintEqualToConstant:30.0].active = YES;
         }
         
         { // Configure Default Property and View State
             _recording = NO;
             
             _durationToggleItemToValue = [[NSMutableDictionary alloc] init];
-            NSMutableArray<VTToggleButtonItem *> *items = [NSMutableArray array];
+            NSMutableArray<NSString *> *items = [NSMutableArray array];
             for (VTRecordDuration duration = VTRecordDuration1Second; duration < VTRecordDurationLast; duration++)
             {
                 NSString *title = [NSString stringWithFormat:NSLocalizedString(@"DurationToggleSeconds", nil), duration];
-                VTToggleButtonItem *toggleItem = [VTToggleButtonItem toggleButtonItemWithTitle:title];
-                [items addObject:toggleItem];
-                [self.durationToggleItemToValue setObject:@(duration) forKey:toggleItem];
+                [items addObject:title];
+                [_durationToggleItemToValue setObject:@(duration) forKey:title];
             }
-            self.durationToggleButton.items = items;
-            
+            _durationToggleButton.items = items;
+
             _shouldLoop = NO;
             _pushedZoomLevel = 1.0;
             _pulledZoomLevel = 2.0;
-            
+
             // EL TODO: A better pattern is to "update" our controls for our property values. That way it's the same code when
             // or if the properties become readwrite. And various properties will influence various controls
         }
@@ -163,7 +162,7 @@
 - (VTRecordDuration)duration
 {
     VTRecordDuration duration = VTRecordDuration1Second;
-    VTToggleButtonItem *currentItem = self.durationToggleButton.currentItem;
+    NSString *currentItem = self.durationToggleButton.currentItem;
     if (currentItem)
     {
         duration = (VTRecordDuration)[[self.durationToggleItemToValue objectForKey:currentItem] integerValue];
