@@ -46,6 +46,7 @@
 
         { // Top Controls
             _pushPullControlBackdrop = [[UIView alloc] init];
+            _pushPullControlBackdrop.hidden = YES;
             VTAllowAutolayoutForView(self.pushPullControlBackdrop);
             self.pushPullControlBackdrop.backgroundColor = CONTROL_BACKDROP_COLOR;
             [self addSubview:self.pushPullControlBackdrop];

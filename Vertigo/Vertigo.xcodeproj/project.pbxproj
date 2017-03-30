@@ -21,7 +21,6 @@
 		FF1F2F5E1E81B67A009F4510 /* VTMath.m in Sources */ = {isa = PBXBuildFile; fileRef = FF1F2F5D1E81B67A009F4510 /* VTMath.m */; };
 		FF1F2F671E81BEE7009F4510 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FF1F2F691E81BEE7009F4510 /* Localizable.strings */; };
 		FF1F2F8F1E82F86C009F4510 /* VTCameraControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = FF1F2F8E1E82F86C009F4510 /* VTCameraControlView.m */; };
-		FF2EE31F1E24ABA1007D5E6C /* VTCaptureModel.m in Sources */ = {isa = PBXBuildFile; fileRef = FF2EE31E1E24ABA1007D5E6C /* VTCaptureModel.m */; };
 		FF2EE3211E24B0EC007D5E6C /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF2EE3201E24B0EC007D5E6C /* Photos.framework */; };
 		FF4440491E7AEFFA002B6F67 /* VTRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF4440481E7AEFFA002B6F67 /* VTRootViewController.m */; };
 		FF74E2621E85951B00C6969F /* VTCameraController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF74E2611E85951B00C6969F /* VTCameraController.m */; };
@@ -55,8 +54,6 @@
 		FF1F2F681E81BEE7009F4510 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		FF1F2F8D1E82F86C009F4510 /* VTCameraControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTCameraControlView.h; sourceTree = "<group>"; };
 		FF1F2F8E1E82F86C009F4510 /* VTCameraControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTCameraControlView.m; sourceTree = "<group>"; };
-		FF2EE31D1E24ABA1007D5E6C /* VTCaptureModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTCaptureModel.h; sourceTree = "<group>"; };
-		FF2EE31E1E24ABA1007D5E6C /* VTCaptureModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTCaptureModel.m; sourceTree = "<group>"; };
 		FF2EE3201E24B0EC007D5E6C /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 		FF4440471E7AEFFA002B6F67 /* VTRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTRootViewController.h; sourceTree = "<group>"; };
 		FF4440481E7AEFFA002B6F67 /* VTRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTRootViewController.m; sourceTree = "<group>"; };
@@ -192,8 +189,6 @@
 		FF2EE31C1E24AB7D007D5E6C /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				FF2EE31D1E24ABA1007D5E6C /* VTCaptureModel.h */,
-				FF2EE31E1E24ABA1007D5E6C /* VTCaptureModel.m */,
 				FF19EE6E1E8841840001AFC4 /* VTCaptureTypes.h */,
 				FF19EE6F1E8841840001AFC4 /* VTCaptureTypes.m */,
 			);
@@ -298,7 +293,6 @@
 				FF74E2621E85951B00C6969F /* VTCameraController.m in Sources */,
 				FF1E036C1E8443110015A004 /* VTToggleButton.m in Sources */,
 				FF0F26F91E241B5500D98C90 /* VTCameraPreviewView.m in Sources */,
-				FF2EE31F1E24ABA1007D5E6C /* VTCaptureModel.m in Sources */,
 				FF4440491E7AEFFA002B6F67 /* VTRootViewController.m in Sources */,
 				FF0B623A1E2057A4003BCDB3 /* VTMainViewController.m in Sources */,
 				FF8111AD1E8B2781004E87B4 /* HFKVOBlocks.m in Sources */,

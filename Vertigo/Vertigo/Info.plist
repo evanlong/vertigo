@@ -38,5 +38,7 @@
 	<string>Capture video to achieve the vertigo effect</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Ability to save captured video to the photo library</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>

@@ -21,6 +21,9 @@
 @property (nonatomic, strong) dispatch_queue_t sessionQueue;
 @property (nonatomic, readwrite, strong) AVCaptureSession *captureSession;
 @property (nonatomic, strong) AVCaptureDevice *videoCaptureDevice;
+@property (nonatomic, strong) id rampingVideoZoomToken;
+@property (nonatomic, assign, getter=isDeviceRampingVideoZoom) BOOL deviceRampingVideoZoom;
+@property (nonatomic, assign) NSTimeInterval zoomDuration;
 @property (nonatomic, strong) AVCaptureMovieFileOutput *movieFileOutput;
 
 #if USE_VT_ZOOM_EFFECT
@@ -45,6 +48,14 @@
 #endif
     }
     return self;
+}
+
+- (void)dealloc
+{
+    if (_rampingVideoZoomToken)
+    {
+        [_videoCaptureDevice hf_removeBlockObserverWithToken:_rampingVideoZoomToken];
+    }
 }
 
 #pragma mark - VTCameraController Public
@@ -77,7 +88,70 @@
     });
 }
 
-#pragma mark - Session Queue
+#pragma mark - Private (Unknown Queue)
+
+- (void)_rampingVideoZoomDidChange
+{
+    dispatch_async(self.sessionQueue, ^{
+        self.deviceRampingVideoZoom = self.videoCaptureDevice.isRampingVideoZoom;
+    });
+}
+
+- (void)_resetVideoZoomFactor
+{
+    dispatch_async(self.sessionQueue, ^{
+        [self _queue_resetVideoZoomFactor];
+    });
+}
+
+#pragma mark - Private (Session Queue)
+
+- (void)setVideoCaptureDevice:(AVCaptureDevice *)videoCaptureDevice
+{
+    if (_videoCaptureDevice != videoCaptureDevice)
+    {
+#if !USE_VT_ZOOM_EFFECT
+        // Remove observer from the previous videoCaptureDevice
+        [_videoCaptureDevice hf_removeBlockObserverWithToken:self.rampingVideoZoomToken];
+#endif
+        
+        _videoCaptureDevice = videoCaptureDevice;
+        
+#if !USE_VT_ZOOM_EFFECT
+        __weak typeof(self) weakSelf = self;
+        self.rampingVideoZoomToken = [videoCaptureDevice hf_addBlockObserver:^(AVCaptureDevice *_Nonnull object, NSDictionary *_Nonnull change) {
+            [weakSelf _rampingVideoZoomDidChange];
+        } forKeyPath:VTKeyPath(self.videoCaptureDevice, rampingVideoZoom)];
+#endif
+        self.deviceRampingVideoZoom = self.videoCaptureDevice.isRampingVideoZoom;
+    }
+}
+
+- (void)setDeviceRampingVideoZoom:(BOOL)deviceRampingVideoZoom
+{
+    if (_deviceRampingVideoZoom != deviceRampingVideoZoom)
+    {
+        _deviceRampingVideoZoom = deviceRampingVideoZoom;
+        
+        if (!deviceRampingVideoZoom)
+        {
+            // EL TODO: This will be more complex in the future (eg: are we previewing or recording)
+            // For now, we assume if the zoom stopped, we want to stop recording
+            
+            // A call to _queue_stopRecording might result in zoom factor stopping by virtue of resetting zoom factor
+            [self _queue_stopRecording];
+        }
+    }
+}
+
+- (void)_queue_resetVideoZoomFactor
+{
+    if ([self.videoCaptureDevice lockForConfiguration:nil])
+    {
+        self.videoCaptureDevice.videoZoomFactor = 1.0;
+        [self.videoCaptureDevice unlockForConfiguration];
+    }
+}
 
 - (void)_queue_startRunning
 {
@@ -185,17 +259,6 @@
     if (successfullyConfigured)
     {
         self.videoCaptureDevice = videoCaptureDevice;
-#if !USE_VT_ZOOM_EFFECT
-        __weak typeof(self) weakSelf = self;
-        [self.videoCaptureDevice hf_addBlockObserver:^(AVCaptureDevice *_Nonnull object, NSDictionary *_Nonnull change) {
-            // EL TODO: This logic will need to change when we do previewing or looping and no simply call stopRecording
-            typeof(self) strongSelf = weakSelf;
-            if (strongSelf && !object.isRampingVideoZoom)
-            {
-                [strongSelf stopRecording];
-            }
-        } forKeyPath:VTKeyPath(self.videoCaptureDevice, rampingVideoZoom)];
-#endif
         self.movieFileOutput = movieFileOutput;
     }
     else
@@ -234,17 +297,12 @@
         NSString *outputFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[outputFileName stringByAppendingPathExtension:@"mov"]];
         [self.movieFileOutput startRecordingToOutputFileURL:[NSURL fileURLWithPath:outputFilePath] recordingDelegate:self];
         
+        // Capture Recording Preferences for this Recording Session
+        self.zoomDuration = duration;
+        
 #if USE_VT_ZOOM_EFFECT
         self.zoomEffect.duration = duration;
         [self.zoomEffect start];
-#else
-        const CGFloat zoomFactor = 2.0;
-        float rate = log2(zoomFactor) / duration;
-        if ([self.videoCaptureDevice lockForConfiguration:nil])
-        {
-            [self.videoCaptureDevice rampToVideoZoomFactor:zoomFactor withRate:rate];
-            [self.videoCaptureDevice unlockForConfiguration];
-        }
 #endif
     }
 }
@@ -265,10 +323,29 @@
     }
 }
 
+- (void)_queue_startZoom
+{
+    const CGFloat zoomFactor = 2.0;
+    float rate = log2(zoomFactor) / self.zoomDuration;
+    if ([self.videoCaptureDevice lockForConfiguration:nil])
+    {
+        [self.videoCaptureDevice rampToVideoZoomFactor:zoomFactor withRate:rate];
+        [self.videoCaptureDevice unlockForConfiguration];
+    }
+}
+
 #pragma mark - AVCaptureFileOutputRecordingDelegate
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didStartRecordingToOutputFileAtURL:(NSURL *)fileURL fromConnections:(NSArray *)connections
 {
+    dispatch_async(self.sessionQueue, ^{
+        // EL NOTE: It looks like the zoom starts pretty quickly with respect didStartRecording. If we inline the calls to
+        // [self.movieFileOutput startRecordingToOutputFileURL...] and [self.videoCaptureDevice rampToVideoZoomFactor...],
+        // I noticed the zoom would sometimes start much sonoer than the actual recording. I don't know of a better way to
+        // synchronize the "record" and "zoom" other than simply starting the zoom once the didStartRecording call occurs
+        [self _queue_startZoom];
+    });
+
     id<VTCameraControllerDelegate> delegate = self.delegate;
     if ([delegate respondsToSelector:@selector(cameraController:didStartRecordingToOutputFileAtURL:)])
     {
@@ -278,11 +355,7 @@
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)error
 {
-    if ([self.videoCaptureDevice lockForConfiguration:nil])
-    {
-        self.videoCaptureDevice.videoZoomFactor = 1.0;
-        [self.videoCaptureDevice unlockForConfiguration];
-    }
+    [self _resetVideoZoomFactor];
 
     id<VTCameraControllerDelegate> delegate = self.delegate;
     if ([delegate respondsToSelector:@selector(cameraController:didFinishRecordingToOutputFileAtURL:)])
