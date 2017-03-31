@@ -2,6 +2,7 @@
 
 - Support for Push and Pull
     + Create object/model for storing state of the settings (push/pull, duration, zoom levels)
+- Countdown to recording
 - Zoom level adjustment in UI
 - Better duration adjustment
     + No more toggle
@@ -12,7 +13,11 @@
 - Tap to automatic focus and/or lighting adjustment
 - Save app state/settings between launches
 - Looping / Preview Mode
+- Play a start/end recording sound
+    + respect the muted setting
 - Accessibility
+- Social
+    + Post straight to Instagram (Ask Tim)
 
 # Bugs
 
@@ -22,6 +27,6 @@
 # Future Goals / Ideas
 
 - post processing video for effect
-- Automatic zoom adjustment based object tracking
+- Automatic zoom adjustment based object tracking / phone movement
 
 
