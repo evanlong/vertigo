@@ -325,7 +325,7 @@
 
 - (void)_queue_startZoom
 {
-    const CGFloat zoomFactor = 2.0;
+    CGFloat zoomFactor = MIN(2.0, self.videoCaptureDevice.activeFormat.videoMaxZoomFactor);
     float rate = log2(zoomFactor) / self.zoomDuration;
     if ([self.videoCaptureDevice lockForConfiguration:nil])
     {

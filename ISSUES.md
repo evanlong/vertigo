@@ -3,6 +3,7 @@
 - Support for Push and Pull
     + Create object/model for storing state of the settings (push/pull, duration, zoom levels)
 - Countdown to recording
+    + Include some text, or animation indicating the direction of movement of the phone
 - Zoom level adjustment in UI
 - Better duration adjustment
     + No more toggle
@@ -18,11 +19,13 @@
 - Accessibility
 - Social
     + Post straight to Instagram (Ask Tim)
+- Front Facing Camera?
 
 # Bugs
 
 - address TODO in code
     + Error handling
+- Crash on Mom's iPad NSRangeException likely because we went beyond videoMaxZoomFactor
 
 # Future Goals / Ideas
 
