@@ -9,6 +9,7 @@
 - UI handles rotation based on device orientation
     + Allow some UI elements to rotate in place
 - Present most recently recorded video for the user, let them decide what to do with that media (save vs share)
+- Tap to automatic focus and/or lighting adjustment
 - Save app state/settings between launches
 - Looping / Preview Mode
 - Accessibility
