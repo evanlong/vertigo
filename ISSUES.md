@@ -21,6 +21,7 @@
 - Social
     + Post straight to Instagram (Ask Tim)
 - Front Facing Camera?
+- iOS 9.3.5
 
 # Bugs
 

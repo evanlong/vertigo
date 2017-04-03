@@ -72,7 +72,10 @@ static void *HFObserverContext = &HFObserverContext;
 
 - (void)hf_removeBlockObserverWithToken:(id)token
 {
-    objc_setAssociatedObject(self, (__bridge void*)token, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if (token)
+    {
+        objc_setAssociatedObject(self, (__bridge void*)token, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
 }
 
 @end

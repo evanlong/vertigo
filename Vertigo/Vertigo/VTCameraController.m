@@ -39,7 +39,8 @@
     self = [super init];
     if (self)
     {
-        _sessionQueue = dispatch_queue_create("vertigo.sessionQueue", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        dispatch_queue_attr_t sessionQueueAttr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL, QOS_CLASS_USER_INITIATED, 0);
+        _sessionQueue = dispatch_queue_create("vertigo.sessionQueue", sessionQueueAttr);
         _captureSession = [[AVCaptureSession alloc] init];
 #if USE_VT_ZOOM_EFFECT
         _zoomEffect = [[VTZoomEffect alloc] init];
@@ -52,10 +53,7 @@
 
 - (void)dealloc
 {
-    if (_rampingVideoZoomToken)
-    {
-        [_videoCaptureDevice hf_removeBlockObserverWithToken:_rampingVideoZoomToken];
-    }
+    [_videoCaptureDevice hf_removeBlockObserverWithToken:_rampingVideoZoomToken];
 }
 
 #pragma mark - VTCameraController Public
