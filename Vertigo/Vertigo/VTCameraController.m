@@ -343,11 +343,10 @@
 - (void)_queue_startZoom
 {
     CGFloat safeFinalZoomLevel = VTClamp(self.zoomEffectSettings.finalZoomLevel, 1.0, self.maximumZoomLevel);
-    CGFloat zoomFactorDelta = ABS(safeFinalZoomLevel - self.zoomEffectSettings.initalZoomLevel) + 1;
-    
-    // EL TODO: double check my path since, this works when 1x is an initial / final level.
-    // What happens if it's 2-4 (do we need to take the delta and +1)?
-    float rate = log2(zoomFactorDelta) / self.zoomEffectSettings.duration;
+    CGFloat min = MIN(self.zoomEffectSettings.initalZoomLevel, safeFinalZoomLevel);
+    CGFloat max = MAX(self.zoomEffectSettings.initalZoomLevel, safeFinalZoomLevel);
+    float rate = log2(max/min) / self.zoomEffectSettings.duration;
+
     if ([self.videoCaptureDevice lockForConfiguration:nil])
     {
         [self.videoCaptureDevice rampToVideoZoomFactor:safeFinalZoomLevel withRate:rate];
