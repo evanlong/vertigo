@@ -11,3 +11,4 @@
 "SegmentPush" = "Push";
 "SegmentPull" = "Pull";
 "DurationToggleSeconds" = "%ds";
+"Stop" = "Stop";

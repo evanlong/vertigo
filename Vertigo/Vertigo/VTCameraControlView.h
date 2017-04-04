@@ -45,7 +45,8 @@ typedef NS_ENUM(NSInteger, VTRecordDuration) {
 @protocol VTCameraControlViewDelegate <NSObject>
 
 @optional
-- (void)didPressRecordButton:(VTCameraControlView *)cameraControlView;
+- (void)cameraControlViewDidPressRecordButton:(VTCameraControlView *)cameraControlView;
+- (void)cameraControlViewDidChangeDirection:(VTCameraControlView *)cameraControlView;
 
 @end
 

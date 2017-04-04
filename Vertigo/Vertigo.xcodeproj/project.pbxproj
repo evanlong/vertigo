@@ -25,6 +25,7 @@
 		FF4440491E7AEFFA002B6F67 /* VTRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF4440481E7AEFFA002B6F67 /* VTRootViewController.m */; };
 		FF74E2621E85951B00C6969F /* VTCameraController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF74E2611E85951B00C6969F /* VTCameraController.m */; };
 		FF8111AD1E8B2781004E87B4 /* HFKVOBlocks.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8111AC1E8B2781004E87B4 /* HFKVOBlocks.m */; };
+		FF84B7171E92FB7400F79413 /* VTZoomEffectSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = FF84B7161E92FB7400F79413 /* VTZoomEffectSettings.m */; };
 		FFA05F601E89A344009137DA /* VTZoomEffect.m in Sources */ = {isa = PBXBuildFile; fileRef = FFA05F5F1E89A344009137DA /* VTZoomEffect.m */; };
 /* End PBXBuildFile section */
 
@@ -61,6 +62,8 @@
 		FF74E2611E85951B00C6969F /* VTCameraController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTCameraController.m; sourceTree = "<group>"; };
 		FF8111AB1E8B2781004E87B4 /* HFKVOBlocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HFKVOBlocks.h; sourceTree = "<group>"; };
 		FF8111AC1E8B2781004E87B4 /* HFKVOBlocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HFKVOBlocks.m; sourceTree = "<group>"; };
+		FF84B7151E92FB7400F79413 /* VTZoomEffectSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTZoomEffectSettings.h; sourceTree = "<group>"; };
+		FF84B7161E92FB7400F79413 /* VTZoomEffectSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTZoomEffectSettings.m; sourceTree = "<group>"; };
 		FFA05F5E1E89A344009137DA /* VTZoomEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTZoomEffect.h; sourceTree = "<group>"; };
 		FFA05F5F1E89A344009137DA /* VTZoomEffect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTZoomEffect.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -191,6 +194,8 @@
 			children = (
 				FF19EE6E1E8841840001AFC4 /* VTCaptureTypes.h */,
 				FF19EE6F1E8841840001AFC4 /* VTCaptureTypes.m */,
+				FF84B7151E92FB7400F79413 /* VTZoomEffectSettings.h */,
+				FF84B7161E92FB7400F79413 /* VTZoomEffectSettings.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -286,6 +291,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF84B7171E92FB7400F79413 /* VTZoomEffectSettings.m in Sources */,
 				FF0B62261E20567B003BCDB3 /* VTAppDelegate.m in Sources */,
 				FF1F2F8F1E82F86C009F4510 /* VTCameraControlView.m in Sources */,
 				FF0B62231E20567B003BCDB3 /* main.m in Sources */,
@@ -341,6 +347,9 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_EXPLICIT_OWNERSHIP_TYPE = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_REPEATED_USE_OF_WEAK = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
@@ -358,13 +367,14 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -388,6 +398,9 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_EXPLICIT_OWNERSHIP_TYPE = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_REPEATED_USE_OF_WEAK = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
@@ -399,13 +412,14 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -419,7 +433,6 @@
 				DEVELOPMENT_TEAM = 8J2J47QA72;
 				GCC_PREFIX_HEADER = Vertigo/VertigoPrefixHeader.pch;
 				INFOPLIST_FILE = Vertigo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.evanlong.Vertigo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -433,7 +446,6 @@
 				DEVELOPMENT_TEAM = 8J2J47QA72;
 				GCC_PREFIX_HEADER = Vertigo/VertigoPrefixHeader.pch;
 				INFOPLIST_FILE = Vertigo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.evanlong.Vertigo;
 				PRODUCT_NAME = "$(TARGET_NAME)";

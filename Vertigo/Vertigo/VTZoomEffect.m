@@ -83,9 +83,10 @@ static const NSInteger FRAMES_PER_SECOND = 120;
         dispatch_resume(timer);
         self.timer = timer;
 
-        if ([self.delegate respondsToSelector:@selector(zoomEffectDidStart:)])
+        id<VTZoomEffectDelegate> delegate = self.delegate;
+        if ([delegate respondsToSelector:@selector(zoomEffectDidStart:)])
         {
-            [self.delegate zoomEffectDidStart:self];
+            [delegate zoomEffectDidStart:self];
         }
     }
 }
@@ -96,9 +97,10 @@ static const NSInteger FRAMES_PER_SECOND = 120;
     {
         self.timer = nil;
 
-        if ([self.delegate respondsToSelector:@selector(zoomEffectDidComplete:)])
+        id<VTZoomEffectDelegate> delegate = self.delegate;
+        if ([delegate respondsToSelector:@selector(zoomEffectDidComplete:)])
         {
-            [self.delegate zoomEffectDidComplete:self];
+            [delegate zoomEffectDidComplete:self];
         }
     }
 }
@@ -113,9 +115,10 @@ static const NSInteger FRAMES_PER_SECOND = 120;
     self.zoomLevel = VTClamp(self.zoomLevel + zoomLevelPerTick, self.minZoom, self.maxZoom);
     self.firstTick = NO;
     
-    if ([self.delegate respondsToSelector:@selector(zoomEffectZoomLevelDidChange:)])
+    id<VTZoomEffectDelegate> delegate = self.delegate;
+    if ([delegate respondsToSelector:@selector(zoomEffectZoomLevelDidChange:)])
     {
-        [self.delegate zoomEffectZoomLevelDidChange:self];
+        [delegate zoomEffectZoomLevelDidChange:self];
     }
     
     if (VTFloatIsEqual(self.zoomLevel, self.expectedFinalZoomLevel))

@@ -7,7 +7,7 @@
 //
 
 typedef NS_ENUM(NSInteger, VTRecordDirection) {
-    VTRecordDirectionPush, // Start far and end close to object. Far -> Close
     VTRecordDirectionPull, // Start close and end far from object. Close -> Far
+    VTRecordDirectionPush, // Start far and end close to object. Far -> Close
 };
 

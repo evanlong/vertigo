@@ -10,9 +10,13 @@
 
 #import "HFKVOBlocks.h"
 
+#import "VTMath.h"
 #import "VTZoomEffect.h"
+#import "VTZoomEffectSettings.h"
 
 #define USE_VT_ZOOM_EFFECT 0
+
+#define MINIMUM_ZOOM_LEVEL 1.0
 
 @interface VTCameraController () <AVCaptureFileOutputRecordingDelegate, VTZoomEffectDelegate>
 
@@ -21,9 +25,16 @@
 @property (nonatomic, strong) dispatch_queue_t sessionQueue;
 @property (nonatomic, readwrite, strong) AVCaptureSession *captureSession;
 @property (nonatomic, strong) AVCaptureDevice *videoCaptureDevice;
+@property (nonatomic, readonly, assign) CGFloat maximumZoomLevel;
+
+// Value captured via public API, so it may be out of change of the current videoCaptureDevice. videoCaptureDevice zoom
+// level updated to range of [1.0, maximumZoomLevel] when this value changes or when the videoCaptureDevice changes
+@property (nonatomic, assign) CGFloat previewZoomLevel;
 @property (nonatomic, strong) id rampingVideoZoomToken;
 @property (nonatomic, assign, getter=isDeviceRampingVideoZoom) BOOL deviceRampingVideoZoom;
 @property (nonatomic, assign) NSTimeInterval zoomDuration;
+@property (nonatomic, copy) VTZoomEffectSettings *zoomEffectSettings;
+
 @property (nonatomic, strong) AVCaptureMovieFileOutput *movieFileOutput;
 
 #if USE_VT_ZOOM_EFFECT
@@ -42,6 +53,8 @@
         dispatch_queue_attr_t sessionQueueAttr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL, QOS_CLASS_USER_INITIATED, 0);
         _sessionQueue = dispatch_queue_create("vertigo.sessionQueue", sessionQueueAttr);
         _captureSession = [[AVCaptureSession alloc] init];
+        _previewZoomLevel = 1.0;
+
 #if USE_VT_ZOOM_EFFECT
         _zoomEffect = [[VTZoomEffect alloc] init];
         _zoomEffect.queue = _sessionQueue;
@@ -58,6 +71,13 @@
 
 #pragma mark - VTCameraController Public
 
+- (void)updatePreviewZoomLevel:(CGFloat)previewZoomLevel
+{
+    dispatch_async(self.sessionQueue, ^{
+        self.previewZoomLevel = previewZoomLevel;
+    });
+}
+
 - (void)startRunning
 {
     dispatch_async(self.sessionQueue, ^{
@@ -72,10 +92,12 @@
     });
 }
 
-- (void)startRecordingWithOrientation:(AVCaptureVideoOrientation)orientation duration:(NSTimeInterval)duration
+- (void)startRecordingWithOrientation:(AVCaptureVideoOrientation)orientation withZoomEffectSettings:(VTZoomEffectSettings *)zoomEffectSettings
 {
+    // If a mutable varient is passed in, the calling thread may change it before sessionQueue gets a chance to use it. Copying now eliminates that problem
+    VTZoomEffectSettings *copiedSettings = [zoomEffectSettings copy];
     dispatch_async(self.sessionQueue, ^{
-        [self _queue_startRecordingWithOrientation:orientation duration:duration];
+        [self _queue_startRecordingWithOrientation:orientation withZoomEffectSettings:copiedSettings];
     });
 }
 
@@ -95,10 +117,10 @@
     });
 }
 
-- (void)_resetVideoZoomFactor
+- (void)_resetWithPreviewVideoZoomLevel
 {
     dispatch_async(self.sessionQueue, ^{
-        [self _queue_resetVideoZoomFactor];
+        [self _queue_resetWithPreviewVideoZoomLevel];
     });
 }
 
@@ -122,6 +144,16 @@
         } forKeyPath:VTKeyPath(self.videoCaptureDevice, rampingVideoZoom)];
 #endif
         self.deviceRampingVideoZoom = self.videoCaptureDevice.isRampingVideoZoom;
+        [self _queue_resetWithPreviewVideoZoomLevel];
+    }
+}
+
+- (void)setPreviewZoomLevel:(CGFloat)previewZoomLevel
+{
+    if (_previewZoomLevel != previewZoomLevel)
+    {
+        _previewZoomLevel = previewZoomLevel;
+        [self _queue_resetWithPreviewVideoZoomLevel];
     }
 }
 
@@ -142,11 +174,17 @@
     }
 }
 
-- (void)_queue_resetVideoZoomFactor
+- (CGFloat)maximumZoomLevel
+{
+    return self.videoCaptureDevice.activeFormat.videoMaxZoomFactor;
+}
+
+- (void)_queue_resetWithPreviewVideoZoomLevel
 {
     if ([self.videoCaptureDevice lockForConfiguration:nil])
     {
-        self.videoCaptureDevice.videoZoomFactor = 1.0;
+        CGFloat previewZoomLevel = VTClamp(self.previewZoomLevel, 1.0, self.maximumZoomLevel);
+        self.videoCaptureDevice.videoZoomFactor = previewZoomLevel;
         [self.videoCaptureDevice unlockForConfiguration];
     }
 }
@@ -276,7 +314,7 @@
     [self.captureSession commitConfiguration];
 }
 
-- (void)_queue_startRecordingWithOrientation:(AVCaptureVideoOrientation)orientation duration:(NSTimeInterval)duration
+- (void)_queue_startRecordingWithOrientation:(AVCaptureVideoOrientation)orientation withZoomEffectSettings:(VTZoomEffectSettings *)zoomEffectSettings
 {
     if (!self.captureSession.isRunning)
     {
@@ -296,7 +334,14 @@
         [self.movieFileOutput startRecordingToOutputFileURL:[NSURL fileURLWithPath:outputFilePath] recordingDelegate:self];
         
         // Capture Recording Preferences for this Recording Session
-        self.zoomDuration = duration;
+        self.zoomEffectSettings = zoomEffectSettings;
+        
+        // Reset to initial zoom position
+        if ([self.videoCaptureDevice lockForConfiguration:nil])
+        {
+            self.videoCaptureDevice.videoZoomFactor = self.zoomEffectSettings.initalZoomLevel;
+            [self.videoCaptureDevice unlockForConfiguration];
+        }
         
 #if USE_VT_ZOOM_EFFECT
         self.zoomEffect.duration = duration;
@@ -323,11 +368,15 @@
 
 - (void)_queue_startZoom
 {
-    CGFloat zoomFactor = MIN(2.0, self.videoCaptureDevice.activeFormat.videoMaxZoomFactor);
-    float rate = log2(zoomFactor) / self.zoomDuration;
+    CGFloat safeFinalZoomLevel = VTClamp(self.zoomEffectSettings.finalZoomLevel, 1.0, self.maximumZoomLevel);
+    CGFloat zoomFactorDelta = ABS(safeFinalZoomLevel - self.zoomEffectSettings.initalZoomLevel) + 1;
+    
+    // EL TODO: double check my path since, this works when 1x is an initial / final level.
+    // What happens if it's 2-4 (do we need to take the delta and +1)?
+    float rate = log2(zoomFactorDelta) / self.zoomEffectSettings.duration;
     if ([self.videoCaptureDevice lockForConfiguration:nil])
     {
-        [self.videoCaptureDevice rampToVideoZoomFactor:zoomFactor withRate:rate];
+        [self.videoCaptureDevice rampToVideoZoomFactor:safeFinalZoomLevel withRate:rate];
         [self.videoCaptureDevice unlockForConfiguration];
     }
 }
@@ -353,7 +402,7 @@
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)error
 {
-    [self _resetVideoZoomFactor];
+    [self _resetWithPreviewVideoZoomLevel];
 
     id<VTCameraControllerDelegate> delegate = self.delegate;
     if ([delegate respondsToSelector:@selector(cameraController:didFinishRecordingToOutputFileAtURL:)])

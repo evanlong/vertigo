@@ -15,6 +15,7 @@
 #import "VTCameraController.h"
 #import "VTCameraControlView.h"
 #import "VTRequiresCameraPermissionView.h"
+#import "VTZoomEffectSettings.h"
 
 typedef NS_ENUM(NSInteger, VTRecordingState) {
     VTRecordingStateWaiting,
@@ -96,13 +97,15 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 
 #pragma mark - VTCameraControlViewDelegate
 
-- (void)didPressRecordButton:(VTCameraControlView *)cameraControlView
+- (void)cameraControlViewDidPressRecordButton:(VTCameraControlView *)cameraControlView
 {
     VTRecordingState recordingState = self.recordingState;
     if (recordingState == VTRecordingStateWaiting)
     {
         AVCaptureVideoOrientation orientation = self.previewView.videoPreviewLayer.connection.videoOrientation;
-        [self.cameraController startRecordingWithOrientation:orientation duration:self.cameraControlView.duration];
+        
+        VTZoomEffectSettings *zoomEffectSettings = [self _settingsForCurrentCameraControlViewState];
+        [self.cameraController startRecordingWithOrientation:orientation withZoomEffectSettings:zoomEffectSettings];
         self.recordingState = VTRecordingStateTransitionToRecording;
     }
     else if (recordingState == VTRecordingStateRecording)
@@ -111,6 +114,11 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
         self.recordingState = VTRecordingStateTransitionToWaiting;
     }
     // else: nop transitioning between recording <-> waiting states
+}
+
+- (void)cameraControlViewDidChangeDirection:(VTCameraControlView *)cameraControlView
+{
+    [self _updatePreviewZoomLevel];
 }
 
 #pragma mark - VTCameraControllerDelegate
@@ -211,6 +219,8 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
     [self.view addSubview:self.cameraControlView];
 
     [self.cameraController startRunning];
+    
+    [self _updatePreviewZoomLevel];
 }
 
 - (void)_setupForPermissionRequired
@@ -223,10 +233,33 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 
 #pragma mark - Private
 
+- (VTZoomEffectSettings *)_settingsForCurrentCameraControlViewState
+{
+    VTMutableZoomEffectSettings *zoomEffectSettings = [[VTMutableZoomEffectSettings alloc] init];
+    zoomEffectSettings.duration = self.cameraControlView.duration;
+    if (self.cameraControlView.direction == VTRecordDirectionPush)
+    {
+        zoomEffectSettings.initalZoomLevel = self.cameraControlView.pulledZoomLevel;
+        zoomEffectSettings.finalZoomLevel = self.cameraControlView.pushedZoomLevel;
+    }
+    else
+    {
+        zoomEffectSettings.initalZoomLevel = self.cameraControlView.pushedZoomLevel;
+        zoomEffectSettings.finalZoomLevel = self.cameraControlView.pulledZoomLevel;
+    }
+    return [zoomEffectSettings copy];
+}
+
 - (void)_updateCameraControlView
 {
     // maybe we put up a spinner if we are transitioning?
     self.cameraControlView.recording = (self.recordingState == VTRecordingStateRecording);
+}
+
+- (void)_updatePreviewZoomLevel
+{
+    VTZoomEffectSettings *zoomEffectSettings = [self _settingsForCurrentCameraControlViewState];
+    [self.cameraController updatePreviewZoomLevel:zoomEffectSettings.initalZoomLevel];
 }
 
 @end

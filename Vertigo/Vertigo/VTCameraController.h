@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol VTCameraControllerDelegate;
 
+@class VTZoomEffectSettings;
+
 /**
  VTCameraController supports controlling camera for achieving the Vertigo effect
 
@@ -26,6 +28,9 @@ NS_ASSUME_NONNULL_BEGIN
 //! captureSession of the VTCameraController can be used to configure a AVCaptureVideoPreviewLayer
 @property (nonatomic, readonly, strong) AVCaptureSession *captureSession;
 
+// previewZoomLevel clamp to the range [minimumZoomLevel, maximumZoomLevel]
+- (void)updatePreviewZoomLevel:(CGFloat)previewZoomLevel;
+
 // EL NOTE: Note start/stop running called by things like viewDid(Dis)Appear
 /*!
  The startRunning, stopRunning, startRecordingWithOrientation, stopRecording are all asynchronous in nature. Delegate callbacks will
@@ -36,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 //@property (nonatomic, readonly, assign, getter=isRunning) BOOL running;
 
 // Recording related calls are a nop if VTCameraController is not running
-- (void)startRecordingWithOrientation:(AVCaptureVideoOrientation)orientation duration:(NSTimeInterval)duration;
+- (void)startRecordingWithOrientation:(AVCaptureVideoOrientation)orientation withZoomEffectSettings:(VTZoomEffectSettings *)zoomEffectSettings;
 - (void)stopRecording;
 //@property (nonatomic, readonly, assign, getter=isRecording) BOOL recording;
 

@@ -34,6 +34,7 @@
 {
     struct {
         unsigned int delegateDidPressRecordButton:1;
+        unsigned int delegateDidChangeDirection:1;
     } _flags;
 }
 
@@ -46,16 +47,17 @@
 
         { // Top Controls
             _pushPullControlBackdrop = [[UIView alloc] init];
-            _pushPullControlBackdrop.hidden = YES;
-            VTAllowAutolayoutForView(self.pushPullControlBackdrop);
-            self.pushPullControlBackdrop.backgroundColor = CONTROL_BACKDROP_COLOR;
-            [self addSubview:self.pushPullControlBackdrop];
+            VTAllowAutolayoutForView(_pushPullControlBackdrop);
+            _pushPullControlBackdrop.backgroundColor = CONTROL_BACKDROP_COLOR;
+            [self addSubview:_pushPullControlBackdrop];
             
-            NSArray *pushPullItems = @[NSLocalizedString(@"SegmentPush", nil), NSLocalizedString(@"SegmentPull", nil)];
+            NSArray *pushPullItems = @[NSLocalizedString(@"SegmentPull", nil), NSLocalizedString(@"SegmentPush", nil)];
             _pushPullControl = [[UISegmentedControl alloc] initWithItems:pushPullItems];
             _pushPullControl.selectedSegmentIndex = 0;
             VTAllowAutolayoutForView(_pushPullControl);
             [_pushPullControlBackdrop addSubview:_pushPullControl];
+            
+            [_pushPullControl addTarget:self action:@selector(_handleDirectionChange) forControlEvents:UIControlEventValueChanged];
             
             [_pushPullControl.centerXAnchor constraintEqualToAnchor:_pushPullControlBackdrop.centerXAnchor].active = YES;
             [_pushPullControl.centerYAnchor constraintEqualToAnchor:_pushPullControlBackdrop.centerYAnchor].active = YES;
@@ -142,7 +144,8 @@
     if (_delegate != delegate)
     {
         _delegate = delegate;
-        _flags.delegateDidPressRecordButton = [delegate respondsToSelector:@selector(didPressRecordButton:)];
+        _flags.delegateDidPressRecordButton = [delegate respondsToSelector:@selector(cameraControlViewDidPressRecordButton:)];
+        _flags.delegateDidChangeDirection = [delegate respondsToSelector:@selector(cameraControlViewDidChangeDirection:)];
     }
 }
 
@@ -151,7 +154,7 @@
     if (_recording != recording)
     {
         _recording = recording;
-        [self _updateRecordButton];
+        [self _updateViewRecordingState];
     }
 }
 
@@ -177,21 +180,33 @@
 {
     if (_flags.delegateDidPressRecordButton)
     {
-        [self.delegate didPressRecordButton:self];
+        [self.delegate cameraControlViewDidPressRecordButton:self];
+    }
+}
+
+- (void)_handleDirectionChange
+{
+    if (_flags.delegateDidChangeDirection)
+    {
+        [self.delegate cameraControlViewDidChangeDirection:self];
     }
 }
 
 #pragma mark - Private
 
-- (void)_updateRecordButton
+- (void)_updateViewRecordingState
 {
     if (self.isRecording)
     {
-        [self.recordButton setTitle:@"Stop" forState:UIControlStateNormal];
+        [self.recordButton setTitle:NSLocalizedString(@"Stop", nil) forState:UIControlStateNormal];
+        self.pushPullControl.userInteractionEnabled = NO;
+        self.durationToggleButton.userInteractionEnabled = NO;
     }
     else
     {
         [self.recordButton setTitle:@"" forState:UIControlStateNormal];
+        self.pushPullControl.userInteractionEnabled = YES;
+        self.durationToggleButton.userInteractionEnabled = YES;
     }
 }
 
