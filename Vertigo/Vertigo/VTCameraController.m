@@ -11,14 +11,9 @@
 #import "HFKVOBlocks.h"
 
 #import "VTMath.h"
-#import "VTZoomEffect.h"
 #import "VTZoomEffectSettings.h"
 
-#define USE_VT_ZOOM_EFFECT 0
-
-#define MINIMUM_ZOOM_LEVEL 1.0
-
-@interface VTCameraController () <AVCaptureFileOutputRecordingDelegate, VTZoomEffectDelegate>
+@interface VTCameraController () <AVCaptureFileOutputRecordingDelegate>
 
 @property (nonatomic, assign, getter=isConfigured) BOOL configured;
 
@@ -37,10 +32,6 @@
 
 @property (nonatomic, strong) AVCaptureMovieFileOutput *movieFileOutput;
 
-#if USE_VT_ZOOM_EFFECT
-@property (nonatomic, strong) VTZoomEffect *zoomEffect;
-#endif
-
 @end
 
 @implementation VTCameraController
@@ -54,12 +45,6 @@
         _sessionQueue = dispatch_queue_create("vertigo.sessionQueue", sessionQueueAttr);
         _captureSession = [[AVCaptureSession alloc] init];
         _previewZoomLevel = 1.0;
-
-#if USE_VT_ZOOM_EFFECT
-        _zoomEffect = [[VTZoomEffect alloc] init];
-        _zoomEffect.queue = _sessionQueue;
-        _zoomEffect.delegate = self;
-#endif
     }
     return self;
 }
@@ -130,19 +115,16 @@
 {
     if (_videoCaptureDevice != videoCaptureDevice)
     {
-#if !USE_VT_ZOOM_EFFECT
         // Remove observer from the previous videoCaptureDevice
         [_videoCaptureDevice hf_removeBlockObserverWithToken:self.rampingVideoZoomToken];
-#endif
-        
+
         _videoCaptureDevice = videoCaptureDevice;
         
-#if !USE_VT_ZOOM_EFFECT
         __weak typeof(self) weakSelf = self;
         self.rampingVideoZoomToken = [videoCaptureDevice hf_addBlockObserver:^(AVCaptureDevice *_Nonnull object, NSDictionary *_Nonnull change) {
             [weakSelf _rampingVideoZoomDidChange];
         } forKeyPath:VTKeyPath(self.videoCaptureDevice, rampingVideoZoom)];
-#endif
+
         self.deviceRampingVideoZoom = self.videoCaptureDevice.isRampingVideoZoom;
         [self _queue_resetWithPreviewVideoZoomLevel];
     }
@@ -342,11 +324,6 @@
             self.videoCaptureDevice.videoZoomFactor = self.zoomEffectSettings.initalZoomLevel;
             [self.videoCaptureDevice unlockForConfiguration];
         }
-        
-#if USE_VT_ZOOM_EFFECT
-        self.zoomEffect.duration = duration;
-        [self.zoomEffect start];
-#endif
     }
 }
 
@@ -360,9 +337,6 @@
     if (self.movieFileOutput.isRecording)
     {
         [self.movieFileOutput stopRecording];
-#if USE_VT_ZOOM_EFFECT
-        [self.zoomEffect stop];
-#endif
     }
 }
 
@@ -410,27 +384,5 @@
         [delegate cameraController:self didFinishRecordingToOutputFileAtURL:outputFileURL];
     }
 }
-
-#pragma mark - VTZoomEffectDelegate
-
-#if USE_VT_ZOOM_EFFECT
-- (void)zoomEffectDidStart:(VTZoomEffect *)zoomEffect
-{
-}
-
-- (void)zoomEffectDidComplete:(VTZoomEffect *)zoomEffect
-{
-    [self _queue_stopRecording];
-}
-
-- (void)zoomEffectZoomLevelDidChange:(VTZoomEffect *)zoomEffect
-{
-    if ([self.videoCaptureDevice lockForConfiguration:nil])
-    {
-        self.videoCaptureDevice.videoZoomFactor = zoomEffect.zoomLevel;
-        [self.videoCaptureDevice unlockForConfiguration];
-    }
-}
-#endif
 
 @end
