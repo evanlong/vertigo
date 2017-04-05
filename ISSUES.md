@@ -19,7 +19,6 @@
 - Social
     + Post straight to Instagram (Ask Tim)
 - Front Facing Camera?
-- iOS 9.3.5
 - Allow for "reversing" the video to get the opposite of the push/pull effect
 
 # Bugs

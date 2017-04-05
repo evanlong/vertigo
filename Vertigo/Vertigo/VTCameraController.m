@@ -41,7 +41,9 @@
     self = [super init];
     if (self)
     {
-        dispatch_queue_attr_t sessionQueueAttr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL, QOS_CLASS_USER_INITIATED, 0);
+        // Prior to iOS 10.0 the app will be at the wim of when iOS wants to drain autorelease from libdispatch queues, instead of the more agressive behavior in iOS 10
+        dispatch_queue_attr_t sessionQueueAttr = VTOSAtLeast(10,0,0) ? DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL : DISPATCH_QUEUE_SERIAL;
+        sessionQueueAttr = dispatch_queue_attr_make_with_qos_class(sessionQueueAttr, QOS_CLASS_USER_INITIATED, 0);
         _sessionQueue = dispatch_queue_create("vertigo.sessionQueue", sessionQueueAttr);
         _captureSession = [[AVCaptureSession alloc] init];
         _previewZoomLevel = 1.0;
@@ -215,18 +217,26 @@
     BOOL successfullyConfigured = YES;
 
     [self.captureSession beginConfiguration];
-    
+
     // Logic from AVCam sample for picking the device
-    AVCaptureDevice *videoCaptureDevice = [AVCaptureDevice defaultDeviceWithDeviceType:AVCaptureDeviceTypeBuiltInDuoCamera mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionBack];
-    if (!videoCaptureDevice)
+    AVCaptureDevice *videoCaptureDevice = nil;
+    if (VTOSAtLeast(10,0,0))
     {
-        videoCaptureDevice = [AVCaptureDevice defaultDeviceWithDeviceType:AVCaptureDeviceTypeBuiltInWideAngleCamera mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionBack];
-        
-        // Fallback to front facing camera if back is not available for some reason. AVCam notes this is in cases where users drop the phone
+        videoCaptureDevice = [AVCaptureDevice defaultDeviceWithDeviceType:AVCaptureDeviceTypeBuiltInDuoCamera mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionBack];
         if (!videoCaptureDevice)
         {
-            videoCaptureDevice = [AVCaptureDevice defaultDeviceWithDeviceType:AVCaptureDeviceTypeBuiltInWideAngleCamera mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionFront];
+            videoCaptureDevice = [AVCaptureDevice defaultDeviceWithDeviceType:AVCaptureDeviceTypeBuiltInWideAngleCamera mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionBack];
+            
+            // Fallback to front facing camera if back is not available for some reason. AVCam notes this is in cases where users drop the phone
+            if (!videoCaptureDevice)
+            {
+                videoCaptureDevice = [AVCaptureDevice defaultDeviceWithDeviceType:AVCaptureDeviceTypeBuiltInWideAngleCamera mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionFront];
+            }
         }
+    }
+    else
+    {
+        videoCaptureDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     }
     
     // Configure Capture Input

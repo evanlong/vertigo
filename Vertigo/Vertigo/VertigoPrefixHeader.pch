@@ -29,6 +29,11 @@
     #define VTUnavailableInitializer [NSException raise:NSInternalInconsistencyException format:@"%s is not a valid initializer", __PRETTY_FUNCTION__]; return nil
 #endif
 
+// OS Compatibility
+#ifndef VTOSAtLeast
+    #define VTOSAtLeast(major,minor,patch) [[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){major,minor,patch}]
+#endif
+
 // isEqual helpers
 #ifndef VTEqualityPossibleCheck
     // Returns YES or NO if equality is certain or not possible. Allows execution to continue if equality is unknown but possible
