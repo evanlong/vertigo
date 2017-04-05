@@ -34,3 +34,42 @@ BOOL VTFloatIsEqual(CGFloat a, CGFloat b)
     return fabsf(a - b) < FLT_EPSILON;
 #endif
 }
+
+CGFloat VTFloatFloor(CGFloat value)
+{
+#if CGFLOAT_IS_DOUBLE
+    return floor(value);
+#else
+    return floorf(value);
+#endif
+}
+
+CGFloat VTFloatCeil(CGFloat value)
+{
+#if CGFLOAT_IS_DOUBLE
+    return ceil(value);
+#else
+    return ceilf(value);
+#endif
+}
+
+CGFloat VTFloatRound(CGFloat value)
+{
+#if CGFLOAT_IS_DOUBLE
+    return round(value);
+#else
+    return roundf(value);
+#endif
+}
+
+CGFloat VTRoundToNearestFactor(CGFloat value, CGFloat factor)
+{
+#if 0
+    // Alternate way to do the same thing. This snippet is nicer for a function that is a SnapToDeviceScale where the function
+    // hardcodes the device's scale such as 2 or 3 instead of of providing a factor (1 / deviceScale) as value to factor.
+    CGFloat scale = 1.0 / factor;
+    return VTFloatRound(value * scale) / scale;
+#else
+    return VTFloatRound(value / factor) * factor;
+#endif
+}

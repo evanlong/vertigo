@@ -8,12 +8,17 @@
 
 #import "VTCameraControlView.h"
 
+#import "VTMath.h"
 #import "VTToggleButton.h"
 
 #define CONTROL_BACKDROP_COLOR          [UIColor colorWithWhite:0.1 alpha:0.70]
 
 @interface VTCameraControlView ()
 
+// Data
+@property (nonatomic, readwrite, assign) NSTimeInterval duration;
+
+// Controls
 @property (nonatomic, strong) UIView *pushPullControlBackdrop;
 @property (nonatomic, strong) UISegmentedControl *pushPullControl;
 
@@ -21,12 +26,12 @@
 @property (nonatomic, strong) UIView *pushPullIndicatorArrow;
 @property (nonatomic, strong) UIView *pulledZoomLevelView;
 
+@property (nonatomic, strong) UISlider *durationSlider;
+
 @property (nonatomic, strong) UIView *bottomViewHost;
 @property (nonatomic, strong) UIButton *recordButton;
-@property (nonatomic, strong) VTToggleButton *durationToggleButton;
+@property (nonatomic, strong) UILabel *durationLabel;
 @property (nonatomic, strong) UIView *loopToggleView;
-
-@property (nonatomic, strong) NSMutableDictionary<NSString *, NSNumber *> *durationToggleItemToValue;
 
 @end
 
@@ -67,7 +72,7 @@
             [_pushPullControlBackdrop.centerXAnchor constraintEqualToAnchor:self.centerXAnchor].active = YES;
             [_pushPullControlBackdrop.topAnchor constraintEqualToAnchor:self.topAnchor].active = YES;
         }
-    
+        
         { // Bottom Controls
             _bottomViewHost = [[UIView alloc] init];
             VTAllowAutolayoutForView(_bottomViewHost);
@@ -93,14 +98,17 @@
             [_recordButton.heightAnchor constraintEqualToConstant:50.0].active = YES;
             
             // Duration Toggle
-            _durationToggleButton = [[VTToggleButton alloc] init];
-            VTAllowAutolayoutForView(_durationToggleButton);
-            [_bottomViewHost addSubview:_durationToggleButton];
+            _durationLabel = [[UILabel alloc] init];
+            _durationLabel.font = [UIFont monospacedDigitSystemFontOfSize:16.0 weight:UIFontWeightRegular];
+            VTAllowAutolayoutForView(_durationLabel);
+            _durationLabel.textColor = self.tintColor;
+            _durationLabel.textAlignment = NSTextAlignmentCenter;
+            [_bottomViewHost addSubview:_durationLabel];
             
-            [_durationToggleButton.rightAnchor constraintEqualToAnchor:_recordButton.leftAnchor constant:-40.0].active = YES;
-            [_durationToggleButton.centerYAnchor constraintEqualToAnchor:_bottomViewHost.centerYAnchor].active = YES;
-            [_durationToggleButton.widthAnchor constraintEqualToConstant:30.0].active = YES;
-            [_durationToggleButton.heightAnchor constraintEqualToConstant:30.0].active = YES;
+            [_durationLabel.rightAnchor constraintEqualToAnchor:_recordButton.leftAnchor].active = YES;
+            [_durationLabel.leftAnchor constraintEqualToAnchor:_bottomViewHost.leftAnchor].active = YES;
+            [_durationLabel.centerYAnchor constraintEqualToAnchor:_recordButton.centerYAnchor].active = YES;
+            [_durationLabel.heightAnchor constraintEqualToConstant:30.0].active = YES;
             
             // Loop Toggle
             _loopToggleView = [[UIView alloc] init];
@@ -115,25 +123,32 @@
             [_loopToggleView.heightAnchor constraintEqualToConstant:30.0].active = YES;
         }
         
+        { // Slider Adjustment Controls
+            _durationSlider = [[UISlider alloc] init];
+            _durationSlider.minimumValue = 1.0;
+            _durationSlider.maximumValue = 8.0;
+            VTAllowAutolayoutForView(_durationSlider);
+            [self addSubview:_durationSlider];
+            
+            [_durationSlider addTarget:self action:@selector(_handleDurationSliderChange) forControlEvents:UIControlEventValueChanged];
+            
+            [_durationSlider.centerXAnchor constraintEqualToAnchor:self.centerXAnchor].active = YES;
+            [_durationSlider.widthAnchor constraintEqualToAnchor:self.widthAnchor constant:-20.0].active = YES;
+            [_durationSlider.bottomAnchor constraintEqualToAnchor:_bottomViewHost.topAnchor constant:-10.0].active = YES;
+        }
+        
         { // Configure Default Property and View State
             _recording = NO;
-            
-            _durationToggleItemToValue = [[NSMutableDictionary alloc] init];
-            NSMutableArray<NSString *> *items = [NSMutableArray array];
-            for (VTRecordDuration duration = VTRecordDuration1Second; duration < VTRecordDurationLast; duration++)
-            {
-                NSString *title = [NSString stringWithFormat:NSLocalizedString(@"DurationToggleSeconds", nil), duration];
-                [items addObject:title];
-                [_durationToggleItemToValue setObject:@(duration) forKey:title];
-            }
-            _durationToggleButton.items = items;
-
             _shouldLoop = NO;
+            _duration = 2.0;
             _pushedZoomLevel = 1.0;
             _pulledZoomLevel = 2.0;
 
             // EL TODO: A better pattern is to "update" our controls for our property values. That way it's the same code when
             // or if the properties become readwrite. And various properties will influence various controls
+            
+            [self _updateDurationSlider];
+            [self _updateDurationLabelText];
         }
     }
     return self;
@@ -163,15 +178,17 @@
     return (VTRecordDirection)self.pushPullControl.selectedSegmentIndex;
 }
 
-- (VTRecordDuration)duration
+- (void)setDuration:(NSTimeInterval)duration
 {
-    VTRecordDuration duration = VTRecordDuration1Second;
-    NSString *currentItem = self.durationToggleButton.currentItem;
-    if (currentItem)
+    // Converting int the setter intead of getter to help reduce number of _update* calls that are made
+    duration = VTRoundToNearestFactor(duration, 0.25);
+
+    if (_duration != duration)
     {
-        duration = (VTRecordDuration)[[self.durationToggleItemToValue objectForKey:currentItem] integerValue];
+        _duration = duration;
+        [self _updateDurationSlider];
+        [self _updateDurationLabelText];
     }
-    return duration;
 }
 
 #pragma mark - Events
@@ -192,6 +209,16 @@
     }
 }
 
+- (void)_handleDurationSliderChange
+{
+    CGFloat sliderValue = self.durationSlider.value;
+    self.duration = sliderValue;
+    
+    // Keep slider at its continuous value, instead of value rounded to some factor within the duration property
+    // This prevents chunky visual effect as user moves the slider around
+    self.durationSlider.value = sliderValue;
+}
+
 #pragma mark - Private
 
 - (void)_updateViewRecordingState
@@ -200,14 +227,22 @@
     {
         [self.recordButton setTitle:NSLocalizedString(@"Stop", nil) forState:UIControlStateNormal];
         self.pushPullControl.userInteractionEnabled = NO;
-        self.durationToggleButton.userInteractionEnabled = NO;
     }
     else
     {
         [self.recordButton setTitle:@"" forState:UIControlStateNormal];
         self.pushPullControl.userInteractionEnabled = YES;
-        self.durationToggleButton.userInteractionEnabled = YES;
     }
+}
+
+- (void)_updateDurationSlider
+{
+    self.durationSlider.value = self.duration;
+}
+
+- (void)_updateDurationLabelText
+{
+    self.durationLabel.text = [NSString stringWithFormat:NSLocalizedString(@"DurationToggleSeconds", nil), self.duration];
 }
 
 @end

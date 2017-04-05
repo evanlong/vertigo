@@ -10,5 +10,5 @@
 "RequiresCameraPermissionTapHere" = "Tap here to enable camera permissions in Settings";
 "SegmentPush" = "Push";
 "SegmentPull" = "Pull";
-"DurationToggleSeconds" = "%ds";
+"DurationToggleSeconds" = "%.2fs";
 "Stop" = "Stop";

@@ -11,6 +11,8 @@
 #import <AVFoundation/AVFoundation.h>
 #import <Photos/Photos.h>
 
+#import "HFKVOBlocks.h"
+
 #import "VTCameraPreviewView.h"
 #import "VTCameraController.h"
 #import "VTCameraControlView.h"
@@ -220,7 +222,7 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 
     [self.cameraController startRunning];
     
-    [self _updatePreviewZoomLevel];
+    [self _updatePreviewZoomLevel];    
 }
 
 - (void)_setupForPermissionRequired

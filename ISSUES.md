@@ -1,9 +1,6 @@
 # Features
 
 - Zoom level adjustment in UI
-- Better duration adjustment
-    + No more toggle
-    + Finer grained duration (0.2 or 0.25 seconds)
 - UI handles rotation based on device orientation
     + Allow some UI elements to rotate in place
 - Countdown to recording
