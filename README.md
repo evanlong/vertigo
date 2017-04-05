@@ -17,3 +17,14 @@ The recorded video will be saved to your camera roll.
 Known Issues:
 - If Photo Library Permission is denied the recorded video will be discarded
 
+### Beta-4
+
+Support for iOS 9.3 and above
+
+App can now perform "push" effect in addition to the "pull" effect. For the "pull" effect, start close to the object, start recording, and slowly move further away. For the "push" effect, start further away from the object, start recording, and slowly move closer to the object.
+
+The recorded video will be saved to your camera roll.
+
+Known Issues:
+- If Photo Library Permission is denied the recorded video will be discarded
+
