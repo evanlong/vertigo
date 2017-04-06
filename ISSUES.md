@@ -1,11 +1,15 @@
 # Features
 
-- Zoom level adjustment in UI
-- UI handles rotation based on device orientation
-    + Allow some UI elements to rotate in place
+- Move duration slider to left side of screen
+    + move duration label inline with the slider
+    + magnify text as it slides
 - Countdown to recording
     + Include some text, or animation indicating the direction of movement of the phone
 - Present most recently recorded video for the user, let them decide what to do with that media (save vs share)
+
+- Zoom level adjustment in UI
+- UI handles rotation based on device orientation
+    + Allow some UI elements to rotate in place
 - Looping / Preview Mode
     + This might go hand-in-hand with the sharing aspect. That is does the user want to "keep" or "retake" the photo. Once taken, immediately go to "replay" the clip
 - Tap to automatic focus and/or lighting adjustment

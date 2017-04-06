@@ -12,11 +12,14 @@
 #import "VTToggleButton.h"
 
 #define CONTROL_BACKDROP_COLOR          [UIColor colorWithWhite:0.1 alpha:0.70]
+#define DURATION_MIN                    1.0
+#define DURATION_MAX                    8.0
 
 @interface VTCameraControlView ()
 
 // Data
 @property (nonatomic, readwrite, assign) NSTimeInterval duration;
+@property (nonatomic, readonly, assign) NSTimeInterval rawDuration;
 
 // Controls
 @property (nonatomic, strong) UIView *pushPullControlBackdrop;
@@ -42,6 +45,8 @@
         unsigned int delegateDidChangeDirection:1;
     } _flags;
 }
+
+@synthesize duration = _duration;
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -125,8 +130,8 @@
         
         { // Slider Adjustment Controls
             _durationSlider = [[UISlider alloc] init];
-            _durationSlider.minimumValue = 1.0;
-            _durationSlider.maximumValue = 8.0;
+            _durationSlider.minimumValue = DURATION_MIN;
+            _durationSlider.maximumValue = DURATION_MAX;
             VTAllowAutolayoutForView(_durationSlider);
             [self addSubview:_durationSlider];
             
@@ -140,15 +145,12 @@
         { // Configure Default Property and View State
             _recording = NO;
             _shouldLoop = NO;
-            _duration = 2.0;
             _pushedZoomLevel = 1.0;
             _pulledZoomLevel = 2.0;
 
             // EL TODO: A better pattern is to "update" our controls for our property values. That way it's the same code when
             // or if the properties become readwrite. And various properties will influence various controls
-            
-            [self _updateDurationSlider];
-            [self _updateDurationLabelText];
+            self.duration = 2.0;
         }
     }
     return self;
@@ -180,15 +182,27 @@
 
 - (void)setDuration:(NSTimeInterval)duration
 {
-    // Converting int the setter intead of getter to help reduce number of _update* calls that are made
-    duration = VTRoundToNearestFactor(duration, 0.25);
+    // EL NOTE: To reduce number of _update* calls we could round in this setter intead of getter. Doing so would require
+    // resetting the slider's value back to its original value after it updates this property. As a result the rawDuration
+    // property would no longer have any meaning
 
+    duration = VTClamp(duration, DURATION_MIN, DURATION_MAX);
     if (_duration != duration)
     {
         _duration = duration;
         [self _updateDurationSlider];
         [self _updateDurationLabelText];
     }
+}
+
+- (NSTimeInterval)duration
+{
+    return VTRoundToNearestFactor(_duration, 0.25);
+}
+
+- (NSTimeInterval)rawDuration
+{
+    return _duration;
 }
 
 #pragma mark - Events
@@ -211,12 +225,7 @@
 
 - (void)_handleDurationSliderChange
 {
-    CGFloat sliderValue = self.durationSlider.value;
-    self.duration = sliderValue;
-    
-    // Keep slider at its continuous value, instead of value rounded to some factor within the duration property
-    // This prevents chunky visual effect as user moves the slider around
-    self.durationSlider.value = sliderValue;
+    self.duration = self.durationSlider.value;
 }
 
 #pragma mark - Private
@@ -227,17 +236,19 @@
     {
         [self.recordButton setTitle:NSLocalizedString(@"Stop", nil) forState:UIControlStateNormal];
         self.pushPullControl.userInteractionEnabled = NO;
+        self.durationSlider.userInteractionEnabled = NO;
     }
     else
     {
         [self.recordButton setTitle:@"" forState:UIControlStateNormal];
         self.pushPullControl.userInteractionEnabled = YES;
+        self.durationSlider.userInteractionEnabled = YES;
     }
 }
 
 - (void)_updateDurationSlider
 {
-    self.durationSlider.value = self.duration;
+    self.durationSlider.value = self.rawDuration;
 }
 
 - (void)_updateDurationLabelText
