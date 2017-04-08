@@ -26,6 +26,7 @@
 // level updated to range of [1.0, maximumZoomLevel] when this value changes or when the videoCaptureDevice changes
 @property (nonatomic, assign) CGFloat previewZoomLevel;
 @property (nonatomic, strong) id rampingVideoZoomToken;
+@property (nonatomic, strong) id videoZoomFactorToken;
 @property (nonatomic, assign, getter=isDeviceRampingVideoZoom) BOOL deviceRampingVideoZoom;
 @property (nonatomic, assign) NSTimeInterval zoomDuration;
 @property (nonatomic, copy) VTZoomEffectSettings *zoomEffectSettings;
@@ -54,6 +55,7 @@
 - (void)dealloc
 {
     [_videoCaptureDevice hf_removeBlockObserverWithToken:_rampingVideoZoomToken];
+    [_videoCaptureDevice hf_removeBlockObserverWithToken:_videoZoomFactorToken];
 }
 
 #pragma mark - VTCameraController Public
@@ -104,6 +106,13 @@
     });
 }
 
+- (void)_videoZoomFactorDidChange
+{
+    dispatch_async(self.sessionQueue, ^{
+        // VTLogObject(@(self.videoCaptureDevice.videoZoomFactor));
+    });
+}
+
 - (void)_resetWithPreviewVideoZoomLevel
 {
     dispatch_async(self.sessionQueue, ^{
@@ -119,6 +128,7 @@
     {
         // Remove observer from the previous videoCaptureDevice
         [_videoCaptureDevice hf_removeBlockObserverWithToken:self.rampingVideoZoomToken];
+        [_videoCaptureDevice hf_removeBlockObserverWithToken:self.videoZoomFactorToken];
 
         _videoCaptureDevice = videoCaptureDevice;
         
@@ -126,6 +136,10 @@
         self.rampingVideoZoomToken = [videoCaptureDevice hf_addBlockObserver:^(AVCaptureDevice *_Nonnull object, NSDictionary *_Nonnull change) {
             [weakSelf _rampingVideoZoomDidChange];
         } forKeyPath:VTKeyPath(self.videoCaptureDevice, rampingVideoZoom)];
+        
+        self.videoZoomFactorToken = [videoCaptureDevice hf_addBlockObserver:^(AVCaptureDevice *_Nonnull object, NSDictionary *_Nonnull change) {
+            [weakSelf _videoZoomFactorDidChange];
+        } forKeyPath:VTKeyPath(self.videoCaptureDevice, videoZoomFactor)];
 
         self.deviceRampingVideoZoom = self.videoCaptureDevice.isRampingVideoZoom;
         [self _queue_resetWithPreviewVideoZoomLevel];

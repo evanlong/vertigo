@@ -36,6 +36,8 @@
 @property (nonatomic, strong) UILabel *durationLabel;
 @property (nonatomic, strong) UIView *loopToggleView;
 
+@property (nonatomic, strong) UILayoutGuide *backdropSpaceGuide;
+
 @end
 
 @implementation VTCameraControlView
@@ -137,9 +139,17 @@
             
             [_durationSlider addTarget:self action:@selector(_handleDurationSliderChange) forControlEvents:UIControlEventValueChanged];
             
-            [_durationSlider.centerXAnchor constraintEqualToAnchor:self.centerXAnchor].active = YES;
-            [_durationSlider.widthAnchor constraintEqualToAnchor:self.widthAnchor constant:-20.0].active = YES;
-            [_durationSlider.bottomAnchor constraintEqualToAnchor:_bottomViewHost.topAnchor constant:-10.0].active = YES;
+            _backdropSpaceGuide = [[UILayoutGuide alloc] init];
+            [self addLayoutGuide:_backdropSpaceGuide];
+
+            // backdropSpaceGuide guide height and centerY represent the area between the backdrop and bottom host views
+            [_backdropSpaceGuide.topAnchor constraintEqualToAnchor:_pushPullControlBackdrop.bottomAnchor].active = YES;
+            [_backdropSpaceGuide.bottomAnchor constraintEqualToAnchor:_bottomViewHost.topAnchor].active = YES;
+
+            [_durationSlider.centerXAnchor constraintEqualToAnchor:self.leftAnchor constant:40.0].active = YES;
+            [_durationSlider.centerYAnchor constraintEqualToAnchor:_backdropSpaceGuide.centerYAnchor].active = YES;
+            [_durationSlider.widthAnchor constraintEqualToAnchor:_backdropSpaceGuide.heightAnchor multiplier:0.8].active = YES;
+            _durationSlider.transform = CGAffineTransformMakeRotation(-M_PI_2);
         }
         
         { // Configure Default Property and View State

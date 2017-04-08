@@ -53,6 +53,8 @@ NS_ASSUME_NONNULL_BEGIN
       more easily, without the need to pass in some seperate state
  
  Currently, pieces of state are passed in (desired preview zoom level), and then entire settings package is passed in when action is started
+ 
+ Also, are there things the camera controller could change, that need to flow back here? "CurrentZoomLevel" is obvious example
  */
 
 @end

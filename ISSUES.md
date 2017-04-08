@@ -5,6 +5,13 @@
     + magnify text as it slides
 - Countdown to recording
     + Include some text, or animation indicating the direction of movement of the phone
+- Progress of the recording 0-100%
+    + Progress bar on the push/pull indicator?
+    + Progress bar some place else?
+    + Countdown timer of duration?
+    + Duration slider converted into progress par?
+    + As it's ramping, does the videoZoomFactor adjust?
+        * Otherwise, running a timer next to the zoom factor would be possible...
 - Present most recently recorded video for the user, let them decide what to do with that media (save vs share)
 
 - Zoom level adjustment in UI
