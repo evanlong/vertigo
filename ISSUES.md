@@ -1,10 +1,6 @@
 # Features
 
-- Move duration slider to left side of screen
-    + move duration label inline with the slider
-    + magnify text as it slides
 - Countdown to recording
-    + Include some text, or animation indicating the direction of movement of the phone
 - Progress of the recording 0-100%
     + Progress bar on the push/pull indicator?
     + Progress bar some place else?
@@ -17,6 +13,7 @@
 - Zoom level adjustment in UI
 - UI handles rotation based on device orientation
     + Allow some UI elements to rotate in place
+- Include some text, or animation indicating the direction of movement of the phone based on push VS pull mode. A lot of times people don't know they need to move the phone while recording
 - Looping / Preview Mode
     + This might go hand-in-hand with the sharing aspect. That is does the user want to "keep" or "retake" the photo. Once taken, immediately go to "replay" the clip
 - Tap to automatic focus and/or lighting adjustment
@@ -28,6 +25,14 @@
     + Post straight to Instagram (Ask Tim)
 - Front Facing Camera?
 - Allow for "reversing" the video to get the opposite of the push/pull effect
+
+# Better UI
+
+- Improve record button
+    + Transition animation between recording / waiting modes
+- Slider UI
+    + Duration and zoom level appear inline with the slider or next to the slider
+    + As value changes a magnified value is presented in the center of the screen
 
 # Bugs
 

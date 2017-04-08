@@ -93,6 +93,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)cameraController:(VTCameraController *)cameraController didStartRecordingToOutputFileAtURL:(NSURL *)fileURL;
 - (void)cameraController:(VTCameraController *)cameraController didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL;
 
+- (void)cameraController:(VTCameraController *)cameraController didUpdateProgress:(CGFloat)progress;
+
 @end
 
 NS_ASSUME_NONNULL_END

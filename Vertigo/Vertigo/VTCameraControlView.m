@@ -31,6 +31,8 @@
 
 @property (nonatomic, strong) UISlider *durationSlider;
 
+@property (nonatomic, strong) UIProgressView *progressView;
+
 @property (nonatomic, strong) UIView *bottomViewHost;
 @property (nonatomic, strong) UIButton *recordButton;
 @property (nonatomic, strong) UILabel *durationLabel;
@@ -104,7 +106,7 @@
             [_recordButton.widthAnchor constraintEqualToConstant:50.0].active = YES;
             [_recordButton.heightAnchor constraintEqualToConstant:50.0].active = YES;
             
-            // Duration Toggle
+            // Duration Label
             _durationLabel = [[UILabel alloc] init];
             _durationLabel.font = [UIFont monospacedDigitSystemFontOfSize:16.0 weight:UIFontWeightRegular];
             VTAllowAutolayoutForView(_durationLabel);
@@ -128,6 +130,18 @@
             [_loopToggleView.centerYAnchor constraintEqualToAnchor:_bottomViewHost.centerYAnchor].active = YES;
             [_loopToggleView.widthAnchor constraintEqualToConstant:30.0].active = YES;
             [_loopToggleView.heightAnchor constraintEqualToConstant:30.0].active = YES;
+        }
+        
+        { // Progress View
+            _progressView = [[UIProgressView alloc] init];
+            _progressView.progressTintColor = [UIColor greenColor];
+            VTAllowAutolayoutForView(_progressView);
+            [self addSubview:_progressView];
+            
+            [_progressView.widthAnchor constraintEqualToAnchor:self.widthAnchor].active = YES;
+            [_progressView.heightAnchor constraintEqualToConstant:4.0].active = YES;
+            [_progressView.topAnchor constraintEqualToAnchor:_pushPullControlBackdrop.bottomAnchor].active = YES;
+            [_progressView.centerXAnchor constraintEqualToAnchor:self.centerXAnchor].active = YES;
         }
         
         { // Slider Adjustment Controls
@@ -161,6 +175,9 @@
             // EL TODO: A better pattern is to "update" our controls for our property values. That way it's the same code when
             // or if the properties become readwrite. And various properties will influence various controls
             self.duration = 2.0;
+            
+            [self _updateViewRecordingState];
+            [self _updateProgress];
         }
     }
     return self;
@@ -182,6 +199,15 @@
     {
         _recording = recording;
         [self _updateViewRecordingState];
+    }
+}
+
+- (void)setPercentComplete:(CGFloat)percentComplete
+{
+    if (_percentComplete != percentComplete)
+    {
+        _percentComplete = percentComplete;
+        [self _updateProgress];
     }
 }
 
@@ -247,13 +273,20 @@
         [self.recordButton setTitle:NSLocalizedString(@"Stop", nil) forState:UIControlStateNormal];
         self.pushPullControl.userInteractionEnabled = NO;
         self.durationSlider.userInteractionEnabled = NO;
+        self.progressView.hidden = NO;
     }
     else
     {
         [self.recordButton setTitle:@"" forState:UIControlStateNormal];
         self.pushPullControl.userInteractionEnabled = YES;
         self.durationSlider.userInteractionEnabled = YES;
+        self.progressView.hidden = YES;
     }
+}
+
+- (void)_updateProgress
+{
+    self.progressView.progress = self.percentComplete;
 }
 
 - (void)_updateDurationSlider

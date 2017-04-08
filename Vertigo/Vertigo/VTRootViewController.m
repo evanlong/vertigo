@@ -184,6 +184,13 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
     // Check for errors as a result of the recording
 }
 
+- (void)cameraController:(VTCameraController *)cameraController didUpdateProgress:(CGFloat)progress
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.cameraControlView.percentComplete = progress;
+    });
+}
+
 #pragma mark - Private (Setup)
 
 - (void)_setupViewsWithVideoPermissionState:(BOOL)granted

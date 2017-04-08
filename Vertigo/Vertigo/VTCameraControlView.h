@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 // VTCameraControlView will disable certain controls while recording
 @property (nonatomic, assign, getter=isRecording) BOOL recording;
+@property (nonatomic, assign) CGFloat percentComplete;
 
 @property (nonatomic, readonly, assign) VTRecordDirection direction;
 @property (nonatomic, readonly, assign) NSTimeInterval duration;
