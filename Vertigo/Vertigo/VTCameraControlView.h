@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, getter=isRecording) BOOL recording;
 @property (nonatomic, assign) CGFloat percentComplete;
 
-@property (nonatomic, readonly, assign) VTRecordDirection direction;
+@property (nonatomic, readonly, assign) VTVertigoDirection direction;
 @property (nonatomic, readonly, assign) NSTimeInterval duration;
 @property (nonatomic, readonly, assign) BOOL shouldLoop;
 

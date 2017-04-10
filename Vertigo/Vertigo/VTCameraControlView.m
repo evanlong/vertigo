@@ -9,7 +9,7 @@
 #import "VTCameraControlView.h"
 
 #import "VTMath.h"
-#import "VTToggleButton.h"
+#import "VTPushPullToggleControl.h"
 
 #define CONTROL_BACKDROP_COLOR          [UIColor colorWithWhite:0.1 alpha:0.70]
 #define DURATION_MIN                    1.0
@@ -22,21 +22,13 @@
 @property (nonatomic, readonly, assign) NSTimeInterval rawDuration;
 
 // Controls
-@property (nonatomic, strong) UIView *pushPullControlBackdrop;
-@property (nonatomic, strong) UISegmentedControl *pushPullControl;
-
-@property (nonatomic, strong) UIView *pushedZoomLevelView;
-@property (nonatomic, strong) UIView *pushPullIndicatorArrow;
-@property (nonatomic, strong) UIView *pulledZoomLevelView;
-
+@property (nonatomic, strong) VTPushPullToggleControl *pushPullToggleControl;
 @property (nonatomic, strong) UISlider *durationSlider;
-
 @property (nonatomic, strong) UIProgressView *progressView;
 
 @property (nonatomic, strong) UIView *bottomViewHost;
 @property (nonatomic, strong) UIButton *recordButton;
 @property (nonatomic, strong) UILabel *durationLabel;
-@property (nonatomic, strong) UIView *loopToggleView;
 
 @property (nonatomic, strong) UILayoutGuide *backdropSpaceGuide;
 
@@ -58,29 +50,6 @@
     if (self)
     {
         self.tintColor = [UIColor whiteColor];
-
-        { // Top Controls
-            _pushPullControlBackdrop = [[UIView alloc] init];
-            VTAllowAutolayoutForView(_pushPullControlBackdrop);
-            _pushPullControlBackdrop.backgroundColor = CONTROL_BACKDROP_COLOR;
-            [self addSubview:_pushPullControlBackdrop];
-            
-            NSArray *pushPullItems = @[NSLocalizedString(@"SegmentPull", nil), NSLocalizedString(@"SegmentPush", nil)];
-            _pushPullControl = [[UISegmentedControl alloc] initWithItems:pushPullItems];
-            _pushPullControl.selectedSegmentIndex = 0;
-            VTAllowAutolayoutForView(_pushPullControl);
-            [_pushPullControlBackdrop addSubview:_pushPullControl];
-            
-            [_pushPullControl addTarget:self action:@selector(_handleDirectionChange) forControlEvents:UIControlEventValueChanged];
-            
-            [_pushPullControl.centerXAnchor constraintEqualToAnchor:_pushPullControlBackdrop.centerXAnchor].active = YES;
-            [_pushPullControl.centerYAnchor constraintEqualToAnchor:_pushPullControlBackdrop.centerYAnchor].active = YES;
-            [_pushPullControlBackdrop.heightAnchor constraintEqualToAnchor:_pushPullControl.heightAnchor constant:16.0].active = YES;
-            [_pushPullControlBackdrop.widthAnchor constraintEqualToAnchor:self.widthAnchor].active = YES;
-            
-            [_pushPullControlBackdrop.centerXAnchor constraintEqualToAnchor:self.centerXAnchor].active = YES;
-            [_pushPullControlBackdrop.topAnchor constraintEqualToAnchor:self.topAnchor].active = YES;
-        }
         
         { // Bottom Controls
             _bottomViewHost = [[UIView alloc] init];
@@ -89,7 +58,7 @@
             [self addSubview:_bottomViewHost];
             
             [_bottomViewHost.heightAnchor constraintEqualToConstant:70.0].active = YES;
-            [_bottomViewHost.widthAnchor constraintEqualToAnchor:_pushPullControlBackdrop.widthAnchor].active = YES;
+            [_bottomViewHost.widthAnchor constraintEqualToAnchor:self.widthAnchor].active = YES;
             [_bottomViewHost.bottomAnchor constraintEqualToAnchor:self.bottomAnchor].active = YES;
             [_bottomViewHost.centerXAnchor constraintEqualToAnchor:self.centerXAnchor].active = YES;
             
@@ -118,29 +87,17 @@
             [_durationLabel.leftAnchor constraintEqualToAnchor:_bottomViewHost.leftAnchor].active = YES;
             [_durationLabel.centerYAnchor constraintEqualToAnchor:_recordButton.centerYAnchor].active = YES;
             [_durationLabel.heightAnchor constraintEqualToConstant:30.0].active = YES;
-            
-            // Loop Toggle
-            _loopToggleView = [[UIView alloc] init];
-            _loopToggleView.hidden = YES; // EL TODO: add back when needed
-            VTAllowAutolayoutForView(_loopToggleView);
-            _loopToggleView.backgroundColor = [UIColor blueColor];
-            [_bottomViewHost addSubview:_loopToggleView];
-            
-            [_loopToggleView.leftAnchor constraintEqualToAnchor:_recordButton.rightAnchor constant:40.0].active = YES;
-            [_loopToggleView.centerYAnchor constraintEqualToAnchor:_bottomViewHost.centerYAnchor].active = YES;
-            [_loopToggleView.widthAnchor constraintEqualToConstant:30.0].active = YES;
-            [_loopToggleView.heightAnchor constraintEqualToConstant:30.0].active = YES;
         }
         
         { // Progress View
             _progressView = [[UIProgressView alloc] init];
-            _progressView.progressTintColor = [UIColor greenColor];
+            _progressView.progressTintColor = [UIColor redColor];
             VTAllowAutolayoutForView(_progressView);
             [self addSubview:_progressView];
-            
+
             [_progressView.widthAnchor constraintEqualToAnchor:self.widthAnchor].active = YES;
             [_progressView.heightAnchor constraintEqualToConstant:4.0].active = YES;
-            [_progressView.topAnchor constraintEqualToAnchor:_pushPullControlBackdrop.bottomAnchor].active = YES;
+            [_progressView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor].active = YES;
             [_progressView.centerXAnchor constraintEqualToAnchor:self.centerXAnchor].active = YES;
         }
         
@@ -157,7 +114,7 @@
             [self addLayoutGuide:_backdropSpaceGuide];
 
             // backdropSpaceGuide guide height and centerY represent the area between the backdrop and bottom host views
-            [_backdropSpaceGuide.topAnchor constraintEqualToAnchor:_pushPullControlBackdrop.bottomAnchor].active = YES;
+            [_backdropSpaceGuide.topAnchor constraintEqualToAnchor:self.topAnchor].active = YES;
             [_backdropSpaceGuide.bottomAnchor constraintEqualToAnchor:_bottomViewHost.topAnchor].active = YES;
 
             [_durationSlider.centerXAnchor constraintEqualToAnchor:self.leftAnchor constant:40.0].active = YES;
@@ -166,16 +123,24 @@
             _durationSlider.transform = CGAffineTransformMakeRotation(-M_PI_2);
         }
         
+        { // Push/Pull Buttons
+            _pushPullToggleControl = [[VTPushPullToggleControl alloc] init];
+            VTAllowAutolayoutForView(_pushPullToggleControl);
+            [self addSubview:_pushPullToggleControl];
+            
+            [_pushPullToggleControl addTarget:self action:@selector(_handleDirectionChange) forControlEvents:UIControlEventValueChanged];
+            
+            [_pushPullToggleControl.rightAnchor constraintEqualToAnchor:self.rightAnchor constant:-40.0].active = YES;
+            [_pushPullToggleControl.centerYAnchor constraintEqualToAnchor:_backdropSpaceGuide.centerYAnchor].active = YES;
+        }
+        
         { // Configure Default Property and View State
             _recording = NO;
             _shouldLoop = NO;
             _pushedZoomLevel = 1.0;
             _pulledZoomLevel = 2.0;
 
-            // EL TODO: A better pattern is to "update" our controls for our property values. That way it's the same code when
-            // or if the properties become readwrite. And various properties will influence various controls
             self.duration = 2.0;
-            
             [self _updateViewRecordingState];
             [self _updateProgress];
         }
@@ -211,9 +176,9 @@
     }
 }
 
-- (VTRecordDirection)direction
+- (VTVertigoDirection)direction
 {
-    return (VTRecordDirection)self.pushPullControl.selectedSegmentIndex;
+    return (VTVertigoDirection)self.pushPullToggleControl.direction;
 }
 
 - (void)setDuration:(NSTimeInterval)duration
@@ -271,14 +236,14 @@
     if (self.isRecording)
     {
         [self.recordButton setTitle:NSLocalizedString(@"Stop", nil) forState:UIControlStateNormal];
-        self.pushPullControl.userInteractionEnabled = NO;
+        self.pushPullToggleControl.userInteractionEnabled = NO;
         self.durationSlider.userInteractionEnabled = NO;
         self.progressView.hidden = NO;
     }
     else
     {
         [self.recordButton setTitle:@"" forState:UIControlStateNormal];
-        self.pushPullControl.userInteractionEnabled = YES;
+        self.pushPullToggleControl.userInteractionEnabled = YES;
         self.durationSlider.userInteractionEnabled = YES;
         self.progressView.hidden = YES;
     }

@@ -246,7 +246,7 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 {
     VTMutableZoomEffectSettings *zoomEffectSettings = [[VTMutableZoomEffectSettings alloc] init];
     zoomEffectSettings.duration = self.cameraControlView.duration;
-    if (self.cameraControlView.direction == VTRecordDirectionPush)
+    if (self.cameraControlView.direction == VTVertigoDirectionPush)
     {
         zoomEffectSettings.initalZoomLevel = self.cameraControlView.pulledZoomLevel;
         zoomEffectSettings.finalZoomLevel = self.cameraControlView.pushedZoomLevel;

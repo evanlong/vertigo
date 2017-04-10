@@ -113,7 +113,6 @@
         CGFloat totalAmount = ABS(self.zoomEffectSettings.finalZoomLevel - self.zoomEffectSettings.initalZoomLevel);
         CGFloat deltaFromInitial = ABS(self.zoomEffectSettings.initalZoomLevel - currentZoomLevel);
         CGFloat percentComplete = deltaFromInitial / totalAmount;
-        VTLogObject(@(percentComplete));
         
         id<VTCameraControllerDelegate> delegate = self.delegate;
         if ([delegate respondsToSelector:@selector(cameraController:didUpdateProgress:)])

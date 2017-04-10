@@ -23,6 +23,7 @@
 		FF1F2F8F1E82F86C009F4510 /* VTCameraControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = FF1F2F8E1E82F86C009F4510 /* VTCameraControlView.m */; };
 		FF2EE3211E24B0EC007D5E6C /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF2EE3201E24B0EC007D5E6C /* Photos.framework */; };
 		FF4440491E7AEFFA002B6F67 /* VTRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF4440481E7AEFFA002B6F67 /* VTRootViewController.m */; };
+		FF54F7D51E9C302B00D84F2C /* VTPushPullToggleControl.m in Sources */ = {isa = PBXBuildFile; fileRef = FF54F7D41E9C302B00D84F2C /* VTPushPullToggleControl.m */; };
 		FF74E2621E85951B00C6969F /* VTCameraController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF74E2611E85951B00C6969F /* VTCameraController.m */; };
 		FF8111AD1E8B2781004E87B4 /* HFKVOBlocks.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8111AC1E8B2781004E87B4 /* HFKVOBlocks.m */; };
 		FF84B7171E92FB7400F79413 /* VTZoomEffectSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = FF84B7161E92FB7400F79413 /* VTZoomEffectSettings.m */; };
@@ -58,6 +59,8 @@
 		FF2EE3201E24B0EC007D5E6C /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 		FF4440471E7AEFFA002B6F67 /* VTRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTRootViewController.h; sourceTree = "<group>"; };
 		FF4440481E7AEFFA002B6F67 /* VTRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTRootViewController.m; sourceTree = "<group>"; };
+		FF54F7D31E9C302B00D84F2C /* VTPushPullToggleControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTPushPullToggleControl.h; sourceTree = "<group>"; };
+		FF54F7D41E9C302B00D84F2C /* VTPushPullToggleControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTPushPullToggleControl.m; sourceTree = "<group>"; };
 		FF74E2601E85951B00C6969F /* VTCameraController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTCameraController.h; sourceTree = "<group>"; };
 		FF74E2611E85951B00C6969F /* VTCameraController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTCameraController.m; sourceTree = "<group>"; };
 		FF8111AB1E8B2781004E87B4 /* HFKVOBlocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HFKVOBlocks.h; sourceTree = "<group>"; };
@@ -175,6 +178,8 @@
 				FF1F2F8E1E82F86C009F4510 /* VTCameraControlView.m */,
 				FF1E036A1E8443110015A004 /* VTToggleButton.h */,
 				FF1E036B1E8443110015A004 /* VTToggleButton.m */,
+				FF54F7D31E9C302B00D84F2C /* VTPushPullToggleControl.h */,
+				FF54F7D41E9C302B00D84F2C /* VTPushPullToggleControl.m */,
 			);
 			name = CameraControls;
 			sourceTree = "<group>";
@@ -305,6 +310,7 @@
 				FF1F2F5A1E81ACF0009F4510 /* VTRequiresCameraPermissionView.m in Sources */,
 				FF19EE701E8841840001AFC4 /* VTCaptureTypes.m in Sources */,
 				FF1F2F5E1E81B67A009F4510 /* VTMath.m in Sources */,
+				FF54F7D51E9C302B00D84F2C /* VTPushPullToggleControl.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
