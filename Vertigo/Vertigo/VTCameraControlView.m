@@ -92,6 +92,7 @@
         { // Progress View
             _progressView = [[UIProgressView alloc] init];
             _progressView.progressTintColor = [UIColor redColor];
+            _progressView.trackTintColor = [UIColor clearColor];
             VTAllowAutolayoutForView(_progressView);
             [self addSubview:_progressView];
 
@@ -136,9 +137,9 @@
         
         { // Configure Default Property and View State
             _recording = NO;
-            _shouldLoop = NO;
             _pushedZoomLevel = 1.0;
             _pulledZoomLevel = 2.0;
+            _percentComplete = 0.0;
 
             self.duration = 2.0;
             [self _updateViewRecordingState];

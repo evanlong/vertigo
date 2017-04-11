@@ -109,15 +109,18 @@
 - (void)_videoZoomFactorDidChange
 {
     dispatch_async(self.sessionQueue, ^{
-        CGFloat currentZoomLevel = self.videoCaptureDevice.videoZoomFactor;
-        CGFloat totalAmount = ABS(self.zoomEffectSettings.finalZoomLevel - self.zoomEffectSettings.initalZoomLevel);
-        CGFloat deltaFromInitial = ABS(self.zoomEffectSettings.initalZoomLevel - currentZoomLevel);
-        CGFloat percentComplete = deltaFromInitial / totalAmount;
-        
-        id<VTCameraControllerDelegate> delegate = self.delegate;
-        if ([delegate respondsToSelector:@selector(cameraController:didUpdateProgress:)])
+        if (self.movieFileOutput.isRecording)
         {
-            [delegate cameraController:self didUpdateProgress:percentComplete];
+            CGFloat currentZoomLevel = self.videoCaptureDevice.videoZoomFactor;
+            CGFloat totalAmount = ABS(self.zoomEffectSettings.finalZoomLevel - self.zoomEffectSettings.initalZoomLevel);
+            CGFloat deltaFromInitial = ABS(self.zoomEffectSettings.initalZoomLevel - currentZoomLevel);
+            CGFloat percentComplete = deltaFromInitial / totalAmount;
+            
+            id<VTCameraControllerDelegate> delegate = self.delegate;
+            if ([delegate respondsToSelector:@selector(cameraController:didUpdateProgress:)])
+            {
+                [delegate cameraController:self didUpdateProgress:percentComplete];
+            }
         }
     });
 }

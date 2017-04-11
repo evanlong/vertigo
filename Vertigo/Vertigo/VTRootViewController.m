@@ -16,11 +16,13 @@
 #import "VTCameraPreviewView.h"
 #import "VTCameraController.h"
 #import "VTCameraControlView.h"
+#import "VTCountDownView.h"
 #import "VTRequiresCameraPermissionView.h"
 #import "VTZoomEffectSettings.h"
 
 typedef NS_ENUM(NSInteger, VTRecordingState) {
     VTRecordingStateWaiting,
+    VTRecordingStateCountingDown,
     VTRecordingStateTransitionToRecording,
     VTRecordingStateRecording,
     VTRecordingStateTransitionToWaiting,
@@ -38,6 +40,7 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 // Views
 @property (nonatomic, strong) VTCameraPreviewView *previewView; // camera preview
 @property (nonatomic, strong) VTCameraControlView *cameraControlView; // fixed controls are placed in here
+@property (nonatomic, strong) VTCountDownView *countDownView;
 
 @end
 
@@ -104,11 +107,24 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
     VTRecordingState recordingState = self.recordingState;
     if (recordingState == VTRecordingStateWaiting)
     {
-        AVCaptureVideoOrientation orientation = self.previewView.videoPreviewLayer.connection.videoOrientation;
-        
-        VTZoomEffectSettings *zoomEffectSettings = [self _settingsForCurrentCameraControlViewState];
-        [self.cameraController startRecordingWithOrientation:orientation withZoomEffectSettings:zoomEffectSettings];
-        self.recordingState = VTRecordingStateTransitionToRecording;
+        __weak typeof(self) weakSelf = self;
+        [self.countDownView startWithCompletion:^(BOOL finished) {
+            typeof(self) strongSelf = weakSelf;
+            if (finished && strongSelf)
+            {
+                AVCaptureVideoOrientation orientation = strongSelf.previewView.videoPreviewLayer.connection.videoOrientation;
+                
+                VTZoomEffectSettings *zoomEffectSettings = [strongSelf _settingsForCurrentCameraControlViewState];
+                [strongSelf.cameraController startRecordingWithOrientation:orientation withZoomEffectSettings:zoomEffectSettings];
+                strongSelf.recordingState = VTRecordingStateTransitionToRecording;
+            }
+        }];
+        self.recordingState = VTRecordingStateCountingDown;
+    }
+    else if (recordingState == VTRecordingStateCountingDown)
+    {
+        [self.countDownView stop];
+        self.recordingState = VTRecordingStateWaiting;
     }
     else if (recordingState == VTRecordingStateRecording)
     {
@@ -178,6 +194,7 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
         }];
 
         self.recordingState = VTRecordingStateWaiting;
+        self.cameraControlView.percentComplete = 0.0;
     });
 
     // EL TODO: cleanup of files in /tmp
@@ -226,10 +243,17 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
     self.cameraControlView.frame = viewBounds;
     self.cameraControlView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
     [self.view addSubview:self.cameraControlView];
+    
+    // 4. Countdown View
+    self.countDownView = [[VTCountDownView alloc] init];
+    VTAllowAutolayoutForView(self.countDownView);
+    [self.view addSubview:self.countDownView];
+    [self.countDownView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
+    [self.countDownView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor].active = YES;
 
     [self.cameraController startRunning];
     
-    [self _updatePreviewZoomLevel];    
+    [self _updatePreviewZoomLevel];
 }
 
 - (void)_setupForPermissionRequired
@@ -261,8 +285,11 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 
 - (void)_updateCameraControlView
 {
-    // maybe we put up a spinner if we are transitioning?
-    self.cameraControlView.recording = (self.recordingState == VTRecordingStateRecording);
+    // EL NOTE: maybe we put up a spinner if we are in a transitioning or count down state
+    // EL NOTE: Should cameraControlView know more about intermediate state? "recording" basically disables all controls except the recording button...
+    self.cameraControlView.recording = (self.recordingState == VTRecordingStateRecording ||
+                                        self.recordingState == VTRecordingStateCountingDown ||
+                                        self.recordingState == VTRecordingStateTransitionToRecording);
 }
 
 - (void)_updatePreviewZoomLevel

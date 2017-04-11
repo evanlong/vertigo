@@ -10,7 +10,11 @@
 
 @interface _VTArrowButton : UIControl
 
-- (instancetype)initWithArrowName:(NSString *)arrowName;
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithFrame:(CGRect)frame NS_UNAVAILABLE;
+- (instancetype)initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
+- (instancetype)initWithArrowName:(NSString *)arrowName NS_DESIGNATED_INITIALIZER;
+
 @property (nonatomic, assign) CGSize maskImageSize;
 @property (nonatomic, strong) UIVisualEffectView *blurView;
 @property (nonatomic, strong) UIImageView *arrowView;

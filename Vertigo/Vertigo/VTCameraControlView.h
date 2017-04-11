@@ -22,7 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly, assign) VTVertigoDirection direction;
 @property (nonatomic, readonly, assign) NSTimeInterval duration;
-@property (nonatomic, readonly, assign) BOOL shouldLoop;
 
 // EL NOTE: The pulled zoom level should always be greater than the pushed... how to enforce this
 // When these can be adjusted by the UI, the model can adjust these automatically and view can remain dumb
