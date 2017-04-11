@@ -28,3 +28,15 @@ The recorded video will be saved to your camera roll.
 Known Issues:
 - If Photo Library Permission is denied the recorded video will be discarded
 
+### Beta-5
+
+- Push/Pull now chosen via two circular buttons on right side of the screen
+- Slider for adjusting duration at 0.25 second intervals displayed on left half of the screen
+- Added a recording progress bar
+- Countdown Timer displayed after pressing the record button. This should help you synchronize camera movement to or from the object
+
+The recorded video automatically saves to your camera roll
+
+Known Issues:
+- Vertigo app discards recorded video if denied Photo Library Permission
+
