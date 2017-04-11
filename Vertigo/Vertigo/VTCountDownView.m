@@ -19,6 +19,8 @@
 @property (nonatomic, strong) UILabel *numberLabel;
 @property (nonatomic, copy) VTCountDownCompletion completion;
 
+@property (nonatomic, copy) NSString *labelText;
+
 @end
 
 @implementation VTCountDownView
@@ -35,14 +37,15 @@
         _startCount = 3;
 
         _numberLabel = [[UILabel alloc] init];
-        _numberLabel.font = [UIFont monospacedDigitSystemFontOfSize:64.0 weight:UIFontWeightBold];
-        _numberLabel.text = @"1";
         _numberLabel.textColor = [UIColor whiteColor];
+        _numberLabel.layer.shadowColor = [UIColor blackColor].CGColor;
+        _numberLabel.layer.shadowRadius = 2.0;
+        _numberLabel.layer.shadowOpacity = 0.75;
+        _numberLabel.layer.shadowOffset = CGSizeMake(0.0, 0.0);
         [self addSubview:_numberLabel];
-        [_numberLabel sizeToFit];
-        // EL NOTE: I've effectively hardcoded the size of this view to be a single digit by sizing it all to the _numberLabel
-        // Keeps things simple for now
+
         self.numberLabel.hidden = YES;
+        self.labelText = @"0";
     }
     return self;
 }
@@ -50,6 +53,7 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
+    [self.numberLabel sizeToFit];
     self.numberLabel.center = VTRectMidPoint(self.bounds);
 }
 
@@ -96,6 +100,23 @@
 
 #pragma mark - Private
 
+- (NSString *)labelText
+{
+    return self.numberLabel.attributedText.string;
+}
+
+- (void)setLabelText:(NSString *)labelText
+{
+    NSDictionary *attributes = @{NSForegroundColorAttributeName : [UIColor whiteColor],
+                                 NSStrokeColorAttributeName : [UIColor colorWithWhite:0.0 alpha:0.5],
+                                 NSStrokeWidthAttributeName : @(-1.0),
+                                 NSFontAttributeName : [UIFont monospacedDigitSystemFontOfSize:64.0 weight:UIFontWeightBold]};
+    self.numberLabel.attributedText = [[NSAttributedString alloc] initWithString:labelText attributes:attributes];
+
+    [self invalidateIntrinsicContentSize];
+    [self setNeedsLayout];
+}
+
 - (void)_notifyCompletion:(BOOL)finished
 {
     if (self.completion)
@@ -115,7 +136,7 @@
     }
     else
     {
-        self.numberLabel.text = [NSNumberFormatter localizedStringFromNumber:@(self.currentCount) numberStyle:NSNumberFormatterNoStyle];
+        self.labelText = [NSNumberFormatter localizedStringFromNumber:@(self.currentCount) numberStyle:NSNumberFormatterNoStyle];
         self.currentCount -= 1;
     }
 }
