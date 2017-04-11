@@ -104,6 +104,10 @@
         
         { // Slider Adjustment Controls
             _durationSlider = [[UISlider alloc] init];
+            _durationSlider.layer.shadowColor = [UIColor blackColor].CGColor;
+            _durationSlider.layer.shadowRadius = 2.0;
+            _durationSlider.layer.shadowOpacity = 0.75;
+            _durationSlider.layer.shadowOffset = CGSizeMake(0.0, 0.0);
             _durationSlider.minimumValue = DURATION_MIN;
             _durationSlider.maximumValue = DURATION_MAX;
             VTAllowAutolayoutForView(_durationSlider);
