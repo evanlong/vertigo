@@ -9,6 +9,7 @@
 #import "VTRootViewController.h"
 
 #import <AVFoundation/AVFoundation.h>
+#import <AVKit/AVKit.h>
 #import <Photos/Photos.h>
 
 #import "HFKVOBlocks.h"
@@ -191,6 +192,12 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
             {
                 // cleanup();
             }
+        }];
+        
+        AVPlayerViewController *playerViewController = [[AVPlayerViewController alloc] init];
+        playerViewController.player = [[AVPlayer alloc] initWithURL:outputFileURL];
+        [self presentViewController:playerViewController animated:YES completion:^{
+            VTLogFunctionMsg(@"Did present playerViewController");
         }];
 
         self.recordingState = VTRecordingStateWaiting;

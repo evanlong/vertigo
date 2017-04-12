@@ -22,6 +22,7 @@
 		FF1F2F671E81BEE7009F4510 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FF1F2F691E81BEE7009F4510 /* Localizable.strings */; };
 		FF1F2F8F1E82F86C009F4510 /* VTCameraControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = FF1F2F8E1E82F86C009F4510 /* VTCameraControlView.m */; };
 		FF2EE3211E24B0EC007D5E6C /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF2EE3201E24B0EC007D5E6C /* Photos.framework */; };
+		FF3A01481E9DA0F7007B5883 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF3A01471E9DA0F7007B5883 /* AVKit.framework */; };
 		FF4440491E7AEFFA002B6F67 /* VTRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF4440481E7AEFFA002B6F67 /* VTRootViewController.m */; };
 		FF54F7D51E9C302B00D84F2C /* VTPushPullToggleControl.m in Sources */ = {isa = PBXBuildFile; fileRef = FF54F7D41E9C302B00D84F2C /* VTPushPullToggleControl.m */; };
 		FF54F7D81E9C901600D84F2C /* VTCountDownView.m in Sources */ = {isa = PBXBuildFile; fileRef = FF54F7D71E9C901600D84F2C /* VTCountDownView.m */; };
@@ -58,6 +59,7 @@
 		FF1F2F8D1E82F86C009F4510 /* VTCameraControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTCameraControlView.h; sourceTree = "<group>"; };
 		FF1F2F8E1E82F86C009F4510 /* VTCameraControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTCameraControlView.m; sourceTree = "<group>"; };
 		FF2EE3201E24B0EC007D5E6C /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
+		FF3A01471E9DA0F7007B5883 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		FF4440471E7AEFFA002B6F67 /* VTRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTRootViewController.h; sourceTree = "<group>"; };
 		FF4440481E7AEFFA002B6F67 /* VTRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTRootViewController.m; sourceTree = "<group>"; };
 		FF54F7D31E9C302B00D84F2C /* VTPushPullToggleControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTPushPullToggleControl.h; sourceTree = "<group>"; };
@@ -79,6 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF3A01481E9DA0F7007B5883 /* AVKit.framework in Frameworks */,
 				FF2EE3211E24B0EC007D5E6C /* Photos.framework in Frameworks */,
 				FF0F26FC1E2421AF00D98C90 /* UIKit.framework in Frameworks */,
 				FF0B623F1E2092B3003BCDB3 /* AVFoundation.framework in Frameworks */,
@@ -155,6 +158,7 @@
 		FF0B623D1E2092B3003BCDB3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FF3A01471E9DA0F7007B5883 /* AVKit.framework */,
 				FF2EE3201E24B0EC007D5E6C /* Photos.framework */,
 				FF0F26FB1E2421AF00D98C90 /* UIKit.framework */,
 				FF0B623E1E2092B3003BCDB3 /* AVFoundation.framework */,
