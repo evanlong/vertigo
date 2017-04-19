@@ -59,11 +59,13 @@
 
 - (CGSize)intrinsicContentSize
 {
+    [self.numberLabel sizeToFit];
     return self.numberLabel.bounds.size;
 }
 
 - (CGSize)sizeThatFits:(CGSize)size
 {
+    [self.numberLabel sizeToFit];
     return self.numberLabel.bounds.size;
 }
 
@@ -80,10 +82,7 @@
     self.numberLabel.hidden = NO;
     self.currentCount = self.startCount;
 
-    __weak typeof(self) weakSelf = self;
-    self.countdownTimer = [NSTimer scheduledTimerWithTimeInterval:0.83 repeats:YES block:^(NSTimer *_Nonnull timer) {
-        [weakSelf _update];
-    }];
+    self.countdownTimer = [NSTimer scheduledTimerWithTimeInterval:0.83 target:self selector:@selector(_update) userInfo:nil repeats:YES];
     [self _update];
 }
 
@@ -95,7 +94,11 @@
     [self.countdownTimer invalidate];
     self.countdownTimer = nil;
     
-    [self _notifyCompletion:finished];
+    if (self.completion)
+    {
+        self.completion(finished);
+        self.completion = NULL;
+    }
 }
 
 #pragma mark - Private
@@ -115,15 +118,6 @@
 
     [self invalidateIntrinsicContentSize];
     [self setNeedsLayout];
-}
-
-- (void)_notifyCompletion:(BOOL)finished
-{
-    if (self.completion)
-    {
-        self.completion(finished);
-        self.completion = NULL;
-    }
 }
 
 - (void)_update

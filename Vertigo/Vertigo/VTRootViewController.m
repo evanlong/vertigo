@@ -193,12 +193,14 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
                 // cleanup();
             }
         }];
-        
+
+#if 0
         AVPlayerViewController *playerViewController = [[AVPlayerViewController alloc] init];
         playerViewController.player = [[AVPlayer alloc] initWithURL:outputFileURL];
         [self presentViewController:playerViewController animated:YES completion:^{
             VTLogFunctionMsg(@"Did present playerViewController");
         }];
+#endif
 
         self.recordingState = VTRecordingStateWaiting;
         self.cameraControlView.percentComplete = 0.0;
