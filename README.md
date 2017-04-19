@@ -40,3 +40,10 @@ The recorded video automatically saves to your camera roll
 Known Issues:
 - Vertigo app discards recorded video if denied Photo Library Permission
 
+### Beta-7
+
+- Fix crash when recording was started on iOS 9.3.x
+- Disable Duo lens for now. This avoids occasional perspective shift that would occur sometimes while recording
+- 
+
+

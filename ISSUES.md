@@ -41,7 +41,6 @@
     + Error handling
 - If the device is auto focusing, recording doesn't start. if it's in the process of focusing should give some visual feedback
     + Only provide feedback if it's in states leading to recording
-- Disable Duo camera to avoid sudden perspective shifts I sometimes see while recording
 
 # Future Goals / Ideas
 

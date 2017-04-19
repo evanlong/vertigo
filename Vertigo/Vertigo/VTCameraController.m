@@ -248,16 +248,12 @@
     AVCaptureDevice *videoCaptureDevice = nil;
     if (VTOSAtLeast(10,0,0))
     {
-        videoCaptureDevice = [AVCaptureDevice defaultDeviceWithDeviceType:AVCaptureDeviceTypeBuiltInDuoCamera mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionBack];
+        videoCaptureDevice = [AVCaptureDevice defaultDeviceWithDeviceType:AVCaptureDeviceTypeBuiltInWideAngleCamera mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionBack];
+
+        // Fallback to front facing camera if back is not available for some reason. AVCam notes this is in cases where users drops phone and breaks the camera
         if (!videoCaptureDevice)
         {
-            videoCaptureDevice = [AVCaptureDevice defaultDeviceWithDeviceType:AVCaptureDeviceTypeBuiltInWideAngleCamera mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionBack];
-            
-            // Fallback to front facing camera if back is not available for some reason. AVCam notes this is in cases where users drop the phone
-            if (!videoCaptureDevice)
-            {
-                videoCaptureDevice = [AVCaptureDevice defaultDeviceWithDeviceType:AVCaptureDeviceTypeBuiltInWideAngleCamera mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionFront];
-            }
+            videoCaptureDevice = [AVCaptureDevice defaultDeviceWithDeviceType:AVCaptureDeviceTypeBuiltInWideAngleCamera mediaType:AVMediaTypeVideo position:AVCaptureDevicePositionFront];
         }
     }
     else
