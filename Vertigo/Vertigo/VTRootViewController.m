@@ -19,7 +19,20 @@
 #import "VTCameraControlView.h"
 #import "VTCountDownView.h"
 #import "VTRequiresCameraPermissionView.h"
+#import "VTSaveVideoView.h"
 #import "VTZoomEffectSettings.h"
+
+@interface _VTActivityItemProvider : UIActivityItemProvider
+@end
+
+@implementation _VTActivityItemProvider
+
+- (id)item
+{
+    return self.placeholderItem;
+}
+
+@end
 
 typedef NS_ENUM(NSInteger, VTRecordingState) {
     VTRecordingStateWaiting,
@@ -29,7 +42,7 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
     VTRecordingStateTransitionToWaiting,
 };
 
-@interface VTRootViewController () <VTCameraControlViewDelegate, VTCameraControllerDelegate>
+@interface VTRootViewController () <VTCameraControlViewDelegate, VTCameraControllerDelegate, VTSaveVideoViewDelegate>
 
 @property (nonatomic, strong) AVCaptureSession *captureSession;
 @property (nonatomic, strong) AVCaptureDevice *videoCaptureDevice;
@@ -38,10 +51,14 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 @property (nonatomic, strong) VTCameraController *cameraController;
 @property (nonatomic, assign) VTRecordingState recordingState;
 
-// Views
+// Recording Views
+@property (nonatomic, strong) UIView *recordingParentView;
 @property (nonatomic, strong) VTCameraPreviewView *previewView; // camera preview
 @property (nonatomic, strong) VTCameraControlView *cameraControlView; // fixed controls are placed in here
 @property (nonatomic, strong) VTCountDownView *countDownView;
+
+// Save View
+@property (nonatomic, strong) VTSaveVideoView *saveVideoView;
 
 @end
 
@@ -171,6 +188,7 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 - (void)cameraController:(VTCameraController *)cameraController didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
 {
     dispatch_async(dispatch_get_main_queue(), ^{
+#if 0
         [PHPhotoLibrary requestAuthorization:^( PHAuthorizationStatus status ) {
             if (status == PHAuthorizationStatusAuthorized)
             {
@@ -193,21 +211,17 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
                 // cleanup();
             }
         }];
-
-#if 0
-        AVPlayerViewController *playerViewController = [[AVPlayerViewController alloc] init];
-        playerViewController.player = [[AVPlayer alloc] initWithURL:outputFileURL];
-        [self presentViewController:playerViewController animated:YES completion:^{
-            VTLogFunctionMsg(@"Did present playerViewController");
-        }];
 #endif
 
         self.recordingState = VTRecordingStateWaiting;
         self.cameraControlView.percentComplete = 0.0;
+        
+        // EL NOTE: The URL is passed to the share video, it might be better to hold this type of state in this view controller instead. And based
+        // our decisions off the events coming from the view instead of the data we stick on there
+        [self _startShareFlowWithVideoURL:outputFileURL];
     });
 
-    // EL TODO: cleanup of files in /tmp
-    // Check for errors as a result of the recording
+    // EL TODO: Check for errors as a result of the recordinga
 }
 
 - (void)cameraController:(VTCameraController *)cameraController didUpdateProgress:(CGFloat)progress
@@ -215,6 +229,20 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
     dispatch_async(dispatch_get_main_queue(), ^{
         self.cameraControlView.percentComplete = progress;
     });
+}
+
+#pragma mark - VTSaveVideoViewDelegate
+
+- (void)saveVideoViewDidPressShare:(VTSaveVideoView *)saveVideoView
+{
+    UIActivityItemProvider *item = [[_VTActivityItemProvider alloc] initWithPlaceholderItem:saveVideoView.videoURL];
+    UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[item] applicationActivities:@[]];
+    [self presentViewController:activityViewController animated:YES completion:NULL];
+}
+
+- (void)saveVideoViewDidPressDiscard:(VTSaveVideoView *)saveVideoView
+{
+    [self _endShareFlowWithVideoURL:saveVideoView.videoURL];
 }
 
 #pragma mark - Private (Setup)
@@ -239,26 +267,29 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 
     // 2. Setup Camera Preview and Connect
     CGRect viewBounds = self.view.bounds;
-    self.previewView = [[VTCameraPreviewView alloc] init];
-    self.previewView.frame = viewBounds;
+
+    self.recordingParentView = [[UIView alloc] initWithFrame:viewBounds];
+    self.recordingParentView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+    [self.view addSubview:self.recordingParentView];
+
+    self.previewView = [[VTCameraPreviewView alloc] initWithFrame:viewBounds];
     self.previewView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
     self.previewView.clipsToBounds = NO;
-    [self.view addSubview:self.previewView];
+    [self.recordingParentView addSubview:self.previewView];
     self.previewView.session = self.cameraController.captureSession;
     
     // 3. Control Host View
-    self.cameraControlView = [[VTCameraControlView alloc] init];
+    self.cameraControlView = [[VTCameraControlView alloc] initWithFrame:viewBounds];
     self.cameraControlView.delegate = self;
-    self.cameraControlView.frame = viewBounds;
     self.cameraControlView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-    [self.view addSubview:self.cameraControlView];
+    [self.recordingParentView addSubview:self.cameraControlView];
     
     // 4. Countdown View
     self.countDownView = [[VTCountDownView alloc] init];
     VTAllowAutolayoutForView(self.countDownView);
-    [self.view addSubview:self.countDownView];
-    [self.countDownView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
-    [self.countDownView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor].active = YES;
+    [self.recordingParentView addSubview:self.countDownView];
+    [self.countDownView.centerXAnchor constraintEqualToAnchor:self.recordingParentView.centerXAnchor].active = YES;
+    [self.countDownView.centerYAnchor constraintEqualToAnchor:self.recordingParentView.centerYAnchor].active = YES;
 
     [self.cameraController startRunning];
     
@@ -267,8 +298,7 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 
 - (void)_setupForPermissionRequired
 {
-    VTRequiresCameraPermissionView *requirePermissionView = [[VTRequiresCameraPermissionView alloc] init];
-    requirePermissionView.frame = self.view.bounds;
+    VTRequiresCameraPermissionView *requirePermissionView = [[VTRequiresCameraPermissionView alloc] initWithFrame:self.view.bounds];
     requirePermissionView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
     [self.view addSubview:requirePermissionView];
 }
@@ -296,6 +326,7 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 {
     // EL NOTE: maybe we put up a spinner if we are in a transitioning or count down state
     // EL NOTE: Should cameraControlView know more about intermediate state? "recording" basically disables all controls except the recording button...
+    // EL NOTE: Instead of of "recording" perhaps we simply rename from "recording" to "disableControlsForRecording"
     self.cameraControlView.recording = (self.recordingState == VTRecordingStateRecording ||
                                         self.recordingState == VTRecordingStateCountingDown ||
                                         self.recordingState == VTRecordingStateTransitionToRecording);
@@ -305,6 +336,27 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 {
     VTZoomEffectSettings *zoomEffectSettings = [self _settingsForCurrentCameraControlViewState];
     [self.cameraController updatePreviewZoomLevel:zoomEffectSettings.initalZoomLevel];
+}
+
+- (void)_startShareFlowWithVideoURL:(NSURL *)url
+{
+    self.saveVideoView = [[VTSaveVideoView alloc] initWithVideoURL:url];
+    self.saveVideoView.delegate = self;
+    self.saveVideoView.frame = self.view.bounds;
+    self.saveVideoView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+    [self.view addSubview:self.saveVideoView];
+    self.recordingParentView.hidden = YES;
+}
+
+- (void)_endShareFlowWithVideoURL:(NSURL *)url
+{
+    [self.saveVideoView removeFromSuperview];
+    self.saveVideoView = nil;
+    self.recordingParentView.hidden = NO;
+
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+        [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
+    });
 }
 
 @end

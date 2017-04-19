@@ -2,6 +2,12 @@
 
 - Present most recently recorded video for the user, let them decide what to do with that media (save vs share)
 
+- Info panel
+    + Help and tutorials
+    + My own video samples
+    + YouTube Video samples
+    + Info on open source that is used
+
 - UI handles rotation based on device orientation
     + Allow some UI elements to rotate in place
 - Include some text, or animation indicating the direction of movement of the phone based on push VS pull mode. A lot of times people don't know they need to move the phone while recording

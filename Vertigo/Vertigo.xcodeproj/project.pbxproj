@@ -30,6 +30,7 @@
 		FF8111AD1E8B2781004E87B4 /* HFKVOBlocks.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8111AC1E8B2781004E87B4 /* HFKVOBlocks.m */; };
 		FF84B7171E92FB7400F79413 /* VTZoomEffectSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = FF84B7161E92FB7400F79413 /* VTZoomEffectSettings.m */; };
 		FFA05F601E89A344009137DA /* VTZoomEffect.m in Sources */ = {isa = PBXBuildFile; fileRef = FFA05F5F1E89A344009137DA /* VTZoomEffect.m */; };
+		FFCAB58F1EA7DB3F00290390 /* VTSaveVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = FFCAB58E1EA7DB3F00290390 /* VTSaveVideoView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -74,6 +75,8 @@
 		FF84B7161E92FB7400F79413 /* VTZoomEffectSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTZoomEffectSettings.m; sourceTree = "<group>"; };
 		FFA05F5E1E89A344009137DA /* VTZoomEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTZoomEffect.h; sourceTree = "<group>"; };
 		FFA05F5F1E89A344009137DA /* VTZoomEffect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTZoomEffect.m; sourceTree = "<group>"; };
+		FFCAB58D1EA7DB3F00290390 /* VTSaveVideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTSaveVideoView.h; sourceTree = "<group>"; };
+		FFCAB58E1EA7DB3F00290390 /* VTSaveVideoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTSaveVideoView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -176,6 +179,8 @@
 				FF1F2F591E81ACF0009F4510 /* VTRequiresCameraPermissionView.m */,
 				FF54F7D61E9C901600D84F2C /* VTCountDownView.h */,
 				FF54F7D71E9C901600D84F2C /* VTCountDownView.m */,
+				FFCAB58D1EA7DB3F00290390 /* VTSaveVideoView.h */,
+				FFCAB58E1EA7DB3F00290390 /* VTSaveVideoView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -319,6 +324,7 @@
 				FF8111AD1E8B2781004E87B4 /* HFKVOBlocks.m in Sources */,
 				FF1F2F5A1E81ACF0009F4510 /* VTRequiresCameraPermissionView.m in Sources */,
 				FF19EE701E8841840001AFC4 /* VTCaptureTypes.m in Sources */,
+				FFCAB58F1EA7DB3F00290390 /* VTSaveVideoView.m in Sources */,
 				FF1F2F5E1E81B67A009F4510 /* VTMath.m in Sources */,
 				FF54F7D51E9C302B00D84F2C /* VTPushPullToggleControl.m in Sources */,
 			);
