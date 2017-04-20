@@ -1,6 +1,7 @@
 # Features
 
-- Present most recently recorded video for the user, let them decide what to do with that media (save vs share)
+- UI handles rotation based on device orientation
+    + Allow some UI elements to rotate in place
 
 - Info panel
     + Help and tutorials
@@ -8,11 +9,9 @@
     + YouTube Video samples
     + Info on open source that is used
 
-- UI handles rotation based on device orientation
-    + Allow some UI elements to rotate in place
 - Include some text, or animation indicating the direction of movement of the phone based on push VS pull mode. A lot of times people don't know they need to move the phone while recording
 - Looping / Preview Mode
-    + This might go hand-in-hand with the sharing aspect. That is does the user want to "keep" or "retake" the photo. Once taken, immediately go to "replay" the clip
+    + Sharing currently loops, looping/preview would occur in realtime
 - Tap to automatic focus and/or lighting adjustment
 - Save app state/settings between launches
 - Play a start/end recording sound
@@ -27,9 +26,7 @@
 
 - Improve record button
     + Transition animation between recording / waiting modes
-- Slider UI
-    + Duration and zoom level appear inline with the slider or next to the slider
-    + As value changes a magnified value is presented in the center of the screen
+- Sharrow and Discard buttons on panels
 - Countdown to recording
     + Improve the coundown animation
     + For push text animates up

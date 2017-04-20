@@ -22,18 +22,6 @@
 #import "VTSaveVideoView.h"
 #import "VTZoomEffectSettings.h"
 
-@interface _VTActivityItemProvider : UIActivityItemProvider
-@end
-
-@implementation _VTActivityItemProvider
-
-- (id)item
-{
-    return self.placeholderItem;
-}
-
-@end
-
 typedef NS_ENUM(NSInteger, VTRecordingState) {
     VTRecordingStateWaiting,
     VTRecordingStateCountingDown,
@@ -235,8 +223,7 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 
 - (void)saveVideoViewDidPressShare:(VTSaveVideoView *)saveVideoView
 {
-    UIActivityItemProvider *item = [[_VTActivityItemProvider alloc] initWithPlaceholderItem:saveVideoView.videoURL];
-    UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[item] applicationActivities:@[]];
+    UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[saveVideoView.videoURL] applicationActivities:@[]];
     [self presentViewController:activityViewController animated:YES completion:NULL];
 }
 

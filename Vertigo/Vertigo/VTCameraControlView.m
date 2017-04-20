@@ -11,9 +11,11 @@
 #import "VTMath.h"
 #import "VTPushPullToggleControl.h"
 
-#define CONTROL_BACKDROP_COLOR          [UIColor colorWithWhite:0.1 alpha:0.70]
-#define DURATION_MIN                    1.0
-#define DURATION_MAX                    8.0
+#define CONTROL_BACKDROP_COLOR              [UIColor colorWithWhite:0.1 alpha:0.70]
+#define DURATION_MIN                        1.0
+#define DURATION_MAX                        8.0
+
+#define DURATION_SLIDER_HEIGHT_MULTIPLIER   0.8
 
 @interface VTCameraControlView ()
 
@@ -32,6 +34,8 @@
 
 @property (nonatomic, strong) UILayoutGuide *backdropSpaceGuide;
 
+@property (nonatomic, assign, getter=isTouchingDurationSlider) BOOL touchingDurationSlider;
+
 @end
 
 @implementation VTCameraControlView
@@ -43,6 +47,8 @@
 }
 
 @synthesize duration = _duration;
+
+#pragma mark - UIView
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -74,19 +80,6 @@
             [_recordButton.centerYAnchor constraintEqualToAnchor:_bottomViewHost.centerYAnchor].active = YES;
             [_recordButton.widthAnchor constraintEqualToConstant:50.0].active = YES;
             [_recordButton.heightAnchor constraintEqualToConstant:50.0].active = YES;
-            
-            // Duration Label
-            _durationLabel = [[UILabel alloc] init];
-            _durationLabel.font = [UIFont monospacedDigitSystemFontOfSize:16.0 weight:UIFontWeightRegular];
-            VTAllowAutolayoutForView(_durationLabel);
-            _durationLabel.textColor = self.tintColor;
-            _durationLabel.textAlignment = NSTextAlignmentCenter;
-            [_bottomViewHost addSubview:_durationLabel];
-            
-            [_durationLabel.rightAnchor constraintEqualToAnchor:_recordButton.leftAnchor].active = YES;
-            [_durationLabel.leftAnchor constraintEqualToAnchor:_bottomViewHost.leftAnchor].active = YES;
-            [_durationLabel.centerYAnchor constraintEqualToAnchor:_recordButton.centerYAnchor].active = YES;
-            [_durationLabel.heightAnchor constraintEqualToConstant:30.0].active = YES;
         }
         
         { // Progress View
@@ -115,17 +108,34 @@
             
             [_durationSlider addTarget:self action:@selector(_handleDurationSliderChange) forControlEvents:UIControlEventValueChanged];
             
+            [_durationSlider addTarget:self action:@selector(_handleDurationSliderTouchDown) forControlEvents:UIControlEventTouchDown];
+            [_durationSlider addTarget:self action:@selector(_handleDurationSliderClear) forControlEvents:UIControlEventTouchCancel];
+            [_durationSlider addTarget:self action:@selector(_handleDurationSliderClear) forControlEvents:UIControlEventTouchUpInside];
+            [_durationSlider addTarget:self action:@selector(_handleDurationSliderClear) forControlEvents:UIControlEventTouchUpOutside];
+            
             _backdropSpaceGuide = [[UILayoutGuide alloc] init];
             [self addLayoutGuide:_backdropSpaceGuide];
 
             // backdropSpaceGuide guide height and centerY represent the area between the backdrop and bottom host views
             [_backdropSpaceGuide.topAnchor constraintEqualToAnchor:self.topAnchor].active = YES;
             [_backdropSpaceGuide.bottomAnchor constraintEqualToAnchor:_bottomViewHost.topAnchor].active = YES;
+            [_backdropSpaceGuide.leftAnchor constraintEqualToAnchor:_durationSlider.centerXAnchor].active = YES;
 
             [_durationSlider.centerXAnchor constraintEqualToAnchor:self.leftAnchor constant:40.0].active = YES;
             [_durationSlider.centerYAnchor constraintEqualToAnchor:_backdropSpaceGuide.centerYAnchor].active = YES;
-            [_durationSlider.widthAnchor constraintEqualToAnchor:_backdropSpaceGuide.heightAnchor multiplier:0.8].active = YES;
+            [_durationSlider.widthAnchor constraintEqualToAnchor:_backdropSpaceGuide.heightAnchor multiplier:DURATION_SLIDER_HEIGHT_MULTIPLIER].active = YES;
             _durationSlider.transform = CGAffineTransformMakeRotation(-M_PI_2);
+            
+            // Duration Label
+            _durationLabel = [[UILabel alloc] init];
+            _durationLabel.font = [UIFont monospacedDigitSystemFontOfSize:24.0 weight:UIFontWeightRegular];
+            _durationLabel.layer.shadowColor = [UIColor blackColor].CGColor;
+            _durationLabel.layer.shadowRadius = 2.0;
+            _durationLabel.layer.shadowOpacity = 1.0;
+            _durationLabel.layer.shadowOffset = CGSizeMake(0.0, 0.0);
+            _durationLabel.textColor = self.tintColor;
+            _durationLabel.textAlignment = NSTextAlignmentCenter;
+            [self addSubview:_durationLabel];
         }
         
         { // Push/Pull Buttons
@@ -145,13 +155,27 @@
             _pulledZoomLevel = 2.0;
             _percentComplete = 0.0;
 
-            self.duration = 2.0;
-            [self _updateViewRecordingState];
-            [self _updateProgress];
+            [UIView performWithoutAnimation:^{
+                self.duration = 2.0;
+                [self _updateViewRecordingState];
+                [self _updateProgress];
+                [self _updateDurationLabelTransform];
+            }];
         }
     }
     return self;
 }
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+
+    [UIView performWithoutAnimation:^{
+        [self _updateDurationLabelPosition];
+    }];
+}
+
+#pragma mark - VTCameraControlView
 
 - (void)setDelegate:(id<VTCameraControlViewDelegate>)delegate
 {
@@ -189,8 +213,8 @@
 - (void)setDuration:(NSTimeInterval)duration
 {
     // EL NOTE: To reduce number of _update* calls we could round in this setter intead of getter. Doing so would require
-    // resetting the slider's value back to its original value after it updates this property. As a result the rawDuration
-    // property would no longer have any meaning
+    // resetting the slider's value back to its original value after it updates this property (this avoids a jittery effect as sliders is dragged)
+    // As a result the rawDuration property would no longer have any meaning
 
     duration = VTClamp(duration, DURATION_MIN, DURATION_MAX);
     if (_duration != duration)
@@ -198,6 +222,7 @@
         _duration = duration;
         [self _updateDurationSlider];
         [self _updateDurationLabelText];
+        [self _updateDurationLabelPosition];
     }
 }
 
@@ -209,6 +234,15 @@
 - (NSTimeInterval)rawDuration
 {
     return _duration;
+}
+
+- (void)setTouchingDurationSlider:(BOOL)touchingDurationSlider
+{
+    if (_touchingDurationSlider != touchingDurationSlider)
+    {
+        _touchingDurationSlider = touchingDurationSlider;
+        [self _updateDurationLabelTransform];
+    }
 }
 
 #pragma mark - Events
@@ -232,6 +266,16 @@
 - (void)_handleDurationSliderChange
 {
     self.duration = self.durationSlider.value;
+}
+
+- (void)_handleDurationSliderTouchDown
+{
+    self.touchingDurationSlider = YES;
+}
+
+- (void)_handleDurationSliderClear
+{
+    self.touchingDurationSlider = NO;
 }
 
 #pragma mark - Private
@@ -266,7 +310,44 @@
 
 - (void)_updateDurationLabelText
 {
-    self.durationLabel.text = [NSString stringWithFormat:NSLocalizedString(@"DurationToggleSeconds", nil), self.duration];
+    NSDictionary *attributes = @{NSForegroundColorAttributeName : [UIColor whiteColor],
+                                 NSStrokeColorAttributeName : [UIColor colorWithWhite:0.0 alpha:0.5],
+                                 NSStrokeWidthAttributeName : @(-2.0),
+                                 NSFontAttributeName : [UIFont monospacedDigitSystemFontOfSize:22.0 weight:UIFontWeightBold]};
+    NSString *durationText = [NSString stringWithFormat:NSLocalizedString(@"DurationToggleSeconds", nil), self.duration];
+    self.durationLabel.attributedText = [[NSAttributedString alloc] initWithString:durationText attributes:attributes];
+}
+
+- (void)_updateDurationLabelPosition
+{
+    [self.durationLabel sizeToFit];
+
+    CGFloat durationLabelHeight = CGRectGetHeight(self.durationLabel.bounds);
+    CGRect guideFrame = self.backdropSpaceGuide.layoutFrame;
+    CGFloat sliderHeight = CGRectGetWidth(self.durationSlider.bounds) - durationLabelHeight; // width -> height since slider is rotated 90 degrees
+    CGFloat guideCenterY = CGRectGetMidY(guideFrame);
+    CGFloat minY = guideCenterY - sliderHeight * 0.5;
+    CGFloat maxY = guideCenterY + sliderHeight * 0.5;
+
+    CGFloat positionY = VTMapValueFromRangeToNewRange(self.rawDuration, DURATION_MAX, DURATION_MIN, minY, maxY);
+    
+    [UIView animateWithDuration:0.1 delay:0.0 options:(UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionCurveLinear) animations:^{
+        self.durationLabel.center = CGPointMake(CGRectGetMaxX(guideFrame) + CGRectGetWidth(self.durationLabel.bounds), positionY);
+    } completion:NULL];
+}
+
+- (void)_updateDurationLabelTransform
+{
+    CGAffineTransform t = CGAffineTransformIdentity;
+    if (self.isTouchingDurationSlider)
+    {
+        t = CGAffineTransformScale(t, 1.15, 1.15);
+        t = CGAffineTransformTranslate(t, 5.0, 0.0);
+    }
+    
+    [UIView animateWithDuration:0.18 delay:0.0 options:(UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionCurveEaseOut) animations:^{
+        self.durationLabel.transform = t;
+    } completion:NULL];
 }
 
 @end

@@ -42,3 +42,5 @@ CGFloat VTFloatRound(CGFloat value);
  @return value rounded to nearest factor
  */
 CGFloat VTRoundToNearestFactor(CGFloat value, CGFloat factor);
+
+CGFloat VTMapValueFromRangeToNewRange(CGFloat value, CGFloat minRange, CGFloat maxRange, CGFloat newMinRange, CGFloat newMaxRange);

@@ -73,3 +73,10 @@ CGFloat VTRoundToNearestFactor(CGFloat value, CGFloat factor)
     return VTFloatRound(value / factor) * factor;
 #endif
 }
+
+CGFloat VTMapValueFromRangeToNewRange(CGFloat value, CGFloat minRange, CGFloat maxRange, CGFloat newMinRange, CGFloat newMaxRange)
+{
+    CGFloat percentage = (value - minRange) / (maxRange - minRange);
+    CGFloat newValue = ((newMaxRange - newMinRange) * percentage) + newMinRange;
+    return newValue;
+}
