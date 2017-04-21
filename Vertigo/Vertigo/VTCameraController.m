@@ -143,8 +143,8 @@
         [_videoCaptureDevice hf_removeBlockObserverWithToken:self.videoZoomFactorToken];
 
         _videoCaptureDevice = videoCaptureDevice;
-        
-        __weak typeof(self) weakSelf = self;
+
+        VTWeakifySelf(weakSelf);
         self.rampingVideoZoomToken = [videoCaptureDevice hf_addBlockObserver:^(AVCaptureDevice *_Nonnull object, NSDictionary *_Nonnull change) {
             [weakSelf _rampingVideoZoomDidChange];
         } forKeyPath:VTKeyPath(self.videoCaptureDevice, rampingVideoZoom)];
@@ -343,7 +343,7 @@
         movieFileOutputConnection.videoOrientation = orientation;
         
         // Start recording to a temporary file.
-        NSString *outputFileName = [NSUUID UUID].UUIDString;
+        NSString *outputFileName = @"vertigo";
         NSString *outputFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[outputFileName stringByAppendingPathExtension:@"mov"]];
         [self.movieFileOutput startRecordingToOutputFileURL:[NSURL fileURLWithPath:outputFilePath] recordingDelegate:self];
         

@@ -113,9 +113,9 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
     VTRecordingState recordingState = self.recordingState;
     if (recordingState == VTRecordingStateWaiting)
     {
-        __weak typeof(self) weakSelf = self;
+        VTWeakifySelf(weakSelf);
         [self.countDownView startWithCompletion:^(BOOL finished) {
-            typeof(self) strongSelf = weakSelf;
+            VTStrongifySelf(strongSelf, weakSelf);
             if (finished && strongSelf)
             {
                 AVCaptureVideoOrientation orientation = strongSelf.previewView.videoPreviewLayer.connection.videoOrientation;
@@ -229,7 +229,20 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 
 - (void)saveVideoViewDidPressDiscard:(VTSaveVideoView *)saveVideoView
 {
-    [self _endShareFlowWithVideoURL:saveVideoView.videoURL];
+    NSURL *videoURL = saveVideoView.videoURL;
+    UIAlertController *confirmDiscardAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"SharePanelDiscardTitle", nil) message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+
+    VTWeakifySelf(weakSelf);
+    [confirmDiscardAlert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"SharePanelDiscard", nil) style:UIAlertActionStyleDestructive handler:^(UIAlertAction *_Nonnull action) {
+        VTStrongifySelf(strongSelf, weakSelf);
+        [strongSelf _endShareFlowWithVideoURL:videoURL];
+    }]];
+    
+    [confirmDiscardAlert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"SharePanelCancel", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction *_Nonnull action) {
+        // NOP
+    }]];
+
+    [self presentViewController:confirmDiscardAlert animated:YES completion:NULL];
 }
 
 #pragma mark - Private (Setup)

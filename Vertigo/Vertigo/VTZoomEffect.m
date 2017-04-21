@@ -74,7 +74,7 @@ static const NSInteger FRAMES_PER_SECOND = 120;
         self.expectedFinalZoomLevel = self.finalZoomLevel;
         self.firstTick = YES;
         
-        __weak typeof(self) weakSelf = self;
+        VTWeakifySelf(weakSelf);
         dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, self.queue);
         dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, 1.0/FRAMES_PER_SECOND * NSEC_PER_SEC, 0.01 * NSEC_PER_SEC);
         dispatch_source_set_event_handler(timer, ^{

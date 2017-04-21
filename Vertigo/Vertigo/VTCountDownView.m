@@ -41,7 +41,7 @@
         _numberLabel.layer.shadowColor = [UIColor blackColor].CGColor;
         _numberLabel.layer.shadowRadius = 2.0;
         _numberLabel.layer.shadowOpacity = 0.75;
-        _numberLabel.layer.shadowOffset = CGSizeMake(0.0, 0.0);
+        _numberLabel.layer.shadowOffset = CGSizeZero;
         [self addSubview:_numberLabel];
 
         self.numberLabel.hidden = YES;

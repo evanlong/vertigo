@@ -12,3 +12,8 @@
 "SegmentPull" = "Pull";
 "DurationToggleSeconds" = "%.2fs";
 "Stop" = "Stop";
+
+// Sharing
+"SharePanelDiscardTitle" = "Discard Vertigo Video?";
+"SharePanelDiscard" = "Discard";
+"SharePanelCancel" = "Cancel";

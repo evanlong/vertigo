@@ -15,9 +15,9 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
 - (instancetype)initWithArrowName:(NSString *)arrowName NS_DESIGNATED_INITIALIZER;
 
-@property (nonatomic, assign) CGSize maskImageSize;
 @property (nonatomic, strong) UIVisualEffectView *blurView;
 @property (nonatomic, strong) UIImageView *arrowView;
+@property (nonatomic, strong) UIImageView *maskImageView;
 
 @end
 
@@ -34,8 +34,15 @@
         [self addSubview:_blurView];
 
         UIImage *maskImage = [UIImage imageNamed:@"CircleMask"];
-        _blurView.maskView = [[UIImageView alloc] initWithImage:maskImage];
-        _maskImageSize = maskImage.size;
+        _maskImageView = [[UIImageView alloc] initWithImage:maskImage];
+        if (VTOSAtLeast(10, 0, 0))
+        {
+            _blurView.maskView = _maskImageView;
+        }
+        else
+        {
+            _blurView.layer.mask = _maskImageView.layer;
+        }
 
         _arrowView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:arrowName]];
         _arrowView.userInteractionEnabled = NO;
@@ -58,7 +65,7 @@
 
 - (CGSize)intrinsicContentSize
 {
-    return self.maskImageSize;
+    return self.maskImageView.image.size;
 }
 
 - (void)setSelected:(BOOL)selected

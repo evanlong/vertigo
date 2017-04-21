@@ -17,6 +17,14 @@
     #define ISA(object, __class__) [object isKindOfClass:[__class__ class]]
 #endif
 
+#ifndef VTWeakifySelf
+    #define VTWeakifySelf(weakSelfName) __weak typeof(self) weakSelfName = self
+#endif
+
+#ifndef VTStrongifySelf
+    #define VTStrongifySelf(strongSelfName, weakSelfName) typeof(self) strongSelfName = weakSelfName;
+#endif
+
 #ifndef VTKeyPath
     #define VTKeyPath(object, keyPath) (YES ? @#keyPath : ((void)object.keyPath, @""))
 #endif

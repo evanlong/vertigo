@@ -48,9 +48,7 @@
 @property (nonatomic, strong) AVPlayerItem *playerItem;
 
 @property (nonatomic, strong) _VTPlayerView *playerView;
-@property (nonatomic, strong) UIView *bottomViewHost;
-@property (nonatomic, strong) UIButton *discardButton;
-@property (nonatomic, strong) UIButton *shareButton;
+@property (nonatomic, strong) UIToolbar *bottomToolbar;
 
 @end
 
@@ -69,43 +67,29 @@
         _playerView = [[_VTPlayerView alloc] init];
         _playerView.player = _player;
         [self addSubview:_playerView];
-        
+
         { // Bottom Controls
-            _bottomViewHost = [[UIView alloc] init];
-            VTAllowAutolayoutForView(_bottomViewHost);
-            _bottomViewHost.backgroundColor = CONTROL_BACKDROP_COLOR;
-            [self addSubview:_bottomViewHost];
+            _bottomToolbar = [[UIToolbar alloc] init];
+            VTAllowAutolayoutForView(_bottomToolbar);
+            _bottomToolbar.tintColor = [UIColor whiteColor];
+            _bottomToolbar.barStyle = UIBarStyleBlack;
+            [self addSubview:_bottomToolbar];
             
-            [_bottomViewHost.heightAnchor constraintEqualToConstant:70.0].active = YES;
-            [_bottomViewHost.widthAnchor constraintEqualToAnchor:self.widthAnchor].active = YES;
-            [_bottomViewHost.bottomAnchor constraintEqualToAnchor:self.bottomAnchor].active = YES;
-            [_bottomViewHost.centerXAnchor constraintEqualToAnchor:self.centerXAnchor].active = YES;
+            UIBarButtonItem *spacer1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+            UIBarButtonItem *spacer2 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+            UIBarButtonItem *leftSpacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+            UIBarButtonItem *rightSpacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+            UIBarButtonItem *fixedSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+            fixedSpace.width = 30.0;
             
-            // Share
-            _shareButton = [[UIButton alloc] init];
-            VTAllowAutolayoutForView(_shareButton);
-            _shareButton.backgroundColor = [UIColor blueColor];
-            [_bottomViewHost addSubview:_shareButton];
+            UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(_handleShareButtonPress)];
+            UIBarButtonItem *trashButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self action:@selector(_handleDiscardButtonPress)];
+            _bottomToolbar.items = @[leftSpacer, trashButton, spacer1, shareButton, spacer2, fixedSpace, rightSpacer];
             
-            [_shareButton addTarget:self action:@selector(_handleShareButtonPress) forControlEvents:UIControlEventTouchUpInside];
-            
-            [_shareButton.centerXAnchor constraintEqualToAnchor:_bottomViewHost.centerXAnchor].active = YES;
-            [_shareButton.centerYAnchor constraintEqualToAnchor:_bottomViewHost.centerYAnchor].active = YES;
-            [_shareButton.widthAnchor constraintEqualToConstant:50.0].active = YES;
-            [_shareButton.heightAnchor constraintEqualToConstant:50.0].active = YES;
-            
-            // Duration Label
-            _discardButton = [[UIButton alloc] init];
-            VTAllowAutolayoutForView(_discardButton);
-            _discardButton.backgroundColor = [UIColor redColor];
-            [_bottomViewHost addSubview:_discardButton];
-            
-            [_discardButton addTarget:self action:@selector(_handleDiscardButtonPress) forControlEvents:UIControlEventTouchUpInside];
-            
-            [_discardButton.rightAnchor constraintEqualToAnchor:_shareButton.leftAnchor constant:-30.0].active = YES;
-            [_discardButton.centerYAnchor constraintEqualToAnchor:_shareButton.centerYAnchor].active = YES;
-            [_discardButton.widthAnchor constraintEqualToConstant:40.0].active = YES;
-            [_discardButton.heightAnchor constraintEqualToConstant:40.0].active = YES;
+            [_bottomToolbar.bottomAnchor constraintEqualToAnchor:self.bottomAnchor].active = YES;
+            [_bottomToolbar.centerXAnchor constraintEqualToAnchor:self.centerXAnchor].active = YES;
+            [_bottomToolbar.leftAnchor constraintEqualToAnchor:self.leftAnchor].active = YES;
+            [_bottomToolbar.rightAnchor constraintEqualToAnchor:self.rightAnchor].active = YES;
         }
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_itemDidPlayToEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:_playerItem];

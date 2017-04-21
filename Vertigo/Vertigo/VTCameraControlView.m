@@ -100,7 +100,7 @@
             _durationSlider.layer.shadowColor = [UIColor blackColor].CGColor;
             _durationSlider.layer.shadowRadius = 2.0;
             _durationSlider.layer.shadowOpacity = 0.75;
-            _durationSlider.layer.shadowOffset = CGSizeMake(0.0, 0.0);
+            _durationSlider.layer.shadowOffset = CGSizeZero;
             _durationSlider.minimumValue = DURATION_MIN;
             _durationSlider.maximumValue = DURATION_MAX;
             VTAllowAutolayoutForView(_durationSlider);
@@ -128,12 +128,10 @@
             
             // Duration Label
             _durationLabel = [[UILabel alloc] init];
-            _durationLabel.font = [UIFont monospacedDigitSystemFontOfSize:24.0 weight:UIFontWeightRegular];
             _durationLabel.layer.shadowColor = [UIColor blackColor].CGColor;
             _durationLabel.layer.shadowRadius = 2.0;
             _durationLabel.layer.shadowOpacity = 1.0;
-            _durationLabel.layer.shadowOffset = CGSizeMake(0.0, 0.0);
-            _durationLabel.textColor = self.tintColor;
+            _durationLabel.layer.shadowOffset = CGSizeZero;
             _durationLabel.textAlignment = NSTextAlignmentCenter;
             [self addSubview:_durationLabel];
         }
