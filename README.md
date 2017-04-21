@@ -42,8 +42,15 @@ Known Issues:
 
 ### Beta-7
 
-- Fix crash when recording was started on iOS 9.3.x
-- Disable Duo lens for now. This avoids occasional perspective shift that would occur sometimes while recording
-- 
+- SHARING!
+    + Recorded video played in a loop on the share screen
+    + Option to Share this video from within Vertigo
+    + Videos no longer automatically save to the camera roll
+- Duration Slider value displayed inline with the slider
+- Improve contrast on various controls for bright scenes
+- FIX: crash when recording was started on iOS 9.3.x
+- FIX: push/pull button masking on iOS 9.3.x
+- Disable Duo lens on iPhone 7 Plus as this avoids occasional perspective shifts that would occur as recording started
+
 
 

@@ -26,7 +26,6 @@
 
 - Improve record button
     + Transition animation between recording / waiting modes
-- Sharrow and Discard buttons on panels
 - Countdown to recording
     + Improve the coundown animation
     + For push text animates up
