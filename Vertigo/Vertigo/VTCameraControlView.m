@@ -265,16 +265,27 @@
 
 - (void)_updateViewRecordingState
 {
+    [UIView animateWithDuration:0.2 delay:0.0 options:(UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowUserInteraction) animations:^{
+        if (self.isRecording)
+        {
+            self.pushPullToggleControl.alpha = 0.0;
+            self.durationLabel.alpha = 0.0;
+            self.durationSlider.alpha = 0.0;
+        }
+        else
+        {
+            self.pushPullToggleControl.alpha = 1.0;
+            self.durationLabel.alpha = 1.0;
+            self.durationSlider.alpha = 1.0;
+        }
+    } completion:NULL];
+    
     if (self.isRecording)
     {
-        self.pushPullToggleControl.userInteractionEnabled = NO;
-        self.durationSlider.userInteractionEnabled = NO;
         self.progressView.hidden = NO;
     }
     else
     {
-        self.pushPullToggleControl.userInteractionEnabled = YES;
-        self.durationSlider.userInteractionEnabled = YES;
         self.progressView.hidden = YES;
     }
     

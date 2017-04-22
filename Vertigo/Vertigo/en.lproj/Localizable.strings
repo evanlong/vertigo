@@ -8,10 +8,7 @@
 
 "RequiresCameraPermission" = "Vertigo requires camera permission";
 "RequiresCameraPermissionTapHere" = "Tap here to enable camera permissions in Settings";
-"SegmentPush" = "Push";
-"SegmentPull" = "Pull";
 "DurationToggleSeconds" = "%.2fs";
-"Stop" = "Stop";
 
 // Sharing
 "SharePanelDiscardTitle" = "Discard Vertigo Video?";
