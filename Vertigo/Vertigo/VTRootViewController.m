@@ -14,6 +14,7 @@
 
 #import "HFKVOBlocks.h"
 
+#import "VTAnalytics.h"
 #import "VTCameraPreviewView.h"
 #import "VTCameraController.h"
 #import "VTCameraControlView.h"
@@ -113,6 +114,8 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
     VTRecordingState recordingState = self.recordingState;
     if (recordingState == VTRecordingStateWaiting)
     {
+        VTAnalyticsTrackEvent(VTAnalyticsDidPressRecordingWhileWaitingEvent);
+
         VTWeakifySelf(weakSelf);
         [self.countDownView startWithCompletion:^(BOOL finished) {
             VTStrongifySelf(strongSelf, weakSelf);
@@ -129,11 +132,15 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
     }
     else if (recordingState == VTRecordingStateCountingDown)
     {
+        VTAnalyticsTrackEvent(VTAnalyticsDidPressRecordingWhileCountingDownEvent);
+
         [self.countDownView stop];
         self.recordingState = VTRecordingStateWaiting;
     }
     else if (recordingState == VTRecordingStateRecording)
     {
+        VTAnalyticsTrackEvent(VTAnalyticsDidPressRecordingWhileRecordingEvent);
+
         [self.cameraController stopRecording];
         self.recordingState = VTRecordingStateTransitionToWaiting;
     }
@@ -150,6 +157,8 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 - (void)cameraControllerDidStartRunning:(VTCameraController *)cameraController
 {
     dispatch_async(dispatch_get_main_queue(), ^{
+        VTAnalyticsTrackEvent(VTAnalyticsDidStartRecordingEvent);
+
         // Following AVCam state here, since it started running successfully make sure previewLayer connection has write orientation
         UIInterfaceOrientation statusBarOrientation = [UIApplication sharedApplication].statusBarOrientation;
         AVCaptureVideoOrientation initialVideoOrientation = AVCaptureVideoOrientationPortrait;
@@ -223,6 +232,8 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 
 - (void)saveVideoViewDidPressShare:(VTSaveVideoView *)saveVideoView
 {
+    VTAnalyticsTrackEvent(VTAnalyticsDidPressShareEvent);
+
     UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[saveVideoView.videoURL] applicationActivities:@[]];
     [self presentViewController:activityViewController animated:YES completion:NULL];
 }

@@ -12,6 +12,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+#import "VertigoDefines.h"
+
 // Helpers
 #ifndef ISA
     #define ISA(object, __class__) [object isKindOfClass:[__class__ class]]

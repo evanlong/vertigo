@@ -1,5 +1,8 @@
 # Features
 
+- License Information
+    + Place in a settings bundle
+
 - UI handles rotation based on device orientation
     + Allow some UI elements to rotate in place
 

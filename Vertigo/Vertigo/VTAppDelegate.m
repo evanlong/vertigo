@@ -8,6 +8,9 @@
 
 #import "VTAppDelegate.h"
 
+#import <HockeySDK/HockeySDK.h>
+
+#import "VTAnalytics.h"
 #import "VTMainViewController.h"
 #import "VTRootViewController.h"
 
@@ -19,6 +22,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"395411f1ab4040c4946d4e3c63687d5c"];
+    // Do some additional configuration if needed here
+    [[BITHockeyManager sharedHockeyManager] startManager];
+    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
+
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     
 #if 0
@@ -28,6 +36,8 @@
 #endif
     self.window.rootViewController = mainVC;
     [self.window makeKeyAndVisible];
+    
+    VTAnalyticsTrackEvent(VTAnalyticsAppDidLaunchEvent);
     
     return YES;
 }

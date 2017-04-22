@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		FF0185FD1EAA774F005AEB06 /* VTRecordButton.m in Sources */ = {isa = PBXBuildFile; fileRef = FF0185FC1EAA774F005AEB06 /* VTRecordButton.m */; };
+		FF01864D1EAB8051005AEB06 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF01864B1EAB8051005AEB06 /* HockeySDK.framework */; };
+		FF01864E1EAB8051005AEB06 /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = FF01864C1EAB8051005AEB06 /* HockeySDKResources.bundle */; };
+		FF0186521EAB89F0005AEB06 /* VTAnalytics.m in Sources */ = {isa = PBXBuildFile; fileRef = FF0186511EAB89F0005AEB06 /* VTAnalytics.m */; };
 		FF0B62231E20567B003BCDB3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FF0B62221E20567B003BCDB3 /* main.m */; };
 		FF0B62261E20567B003BCDB3 /* VTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FF0B62251E20567B003BCDB3 /* VTAppDelegate.m */; };
 		FF0B622E1E20567B003BCDB3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF0B622D1E20567B003BCDB3 /* Assets.xcassets */; };
@@ -37,6 +40,11 @@
 /* Begin PBXFileReference section */
 		FF0185FB1EAA774F005AEB06 /* VTRecordButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTRecordButton.h; sourceTree = "<group>"; };
 		FF0185FC1EAA774F005AEB06 /* VTRecordButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTRecordButton.m; sourceTree = "<group>"; };
+		FF01864B1EAB8051005AEB06 /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HockeySDK.framework; sourceTree = "<group>"; };
+		FF01864C1EAB8051005AEB06 /* HockeySDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = HockeySDKResources.bundle; sourceTree = "<group>"; };
+		FF0186501EAB89F0005AEB06 /* VTAnalytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTAnalytics.h; sourceTree = "<group>"; };
+		FF0186511EAB89F0005AEB06 /* VTAnalytics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTAnalytics.m; sourceTree = "<group>"; };
+		FF0186531EAB8A5B005AEB06 /* VertigoDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertigoDefines.h; sourceTree = "<group>"; };
 		FF0B621E1E20567B003BCDB3 /* Vertigo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vertigo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF0B62221E20567B003BCDB3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		FF0B62241E20567B003BCDB3 /* VTAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VTAppDelegate.h; sourceTree = "<group>"; };
@@ -90,6 +98,7 @@
 				FF3A01481E9DA0F7007B5883 /* AVKit.framework in Frameworks */,
 				FF2EE3211E24B0EC007D5E6C /* Photos.framework in Frameworks */,
 				FF0F26FC1E2421AF00D98C90 /* UIKit.framework in Frameworks */,
+				FF01864D1EAB8051005AEB06 /* HockeySDK.framework in Frameworks */,
 				FF0B623F1E2092B3003BCDB3 /* AVFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -97,6 +106,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		FF01864A1EAB8051005AEB06 /* HockeySDK.embeddedframework */ = {
+			isa = PBXGroup;
+			children = (
+				FF01864B1EAB8051005AEB06 /* HockeySDK.framework */,
+				FF01864C1EAB8051005AEB06 /* HockeySDKResources.bundle */,
+			);
+			name = HockeySDK.embeddedframework;
+			path = "HockeySDK-iOS/HockeySDK.embeddedframework";
+			sourceTree = "<group>";
+		};
+		FF01864F1EAB89D3005AEB06 /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				FF0186501EAB89F0005AEB06 /* VTAnalytics.h */,
+				FF0186511EAB89F0005AEB06 /* VTAnalytics.m */,
+			);
+			name = Analytics;
+			sourceTree = "<group>";
+		};
 		FF0B62151E20567B003BCDB3 = {
 			isa = PBXGroup;
 			children = (
@@ -119,6 +147,7 @@
 			children = (
 				FF0B62241E20567B003BCDB3 /* VTAppDelegate.h */,
 				FF0B62251E20567B003BCDB3 /* VTAppDelegate.m */,
+				FF01864F1EAB89D3005AEB06 /* Analytics */,
 				FF74E25F1E8594EB00C6969F /* Controller */,
 				FF2EE31C1E24AB7D007D5E6C /* Model */,
 				FF0F26F61E241B4800D98C90 /* Views */,
@@ -135,6 +164,7 @@
 			children = (
 				FF0B62221E20567B003BCDB3 /* main.m */,
 				FF0F26FA1E24216900D98C90 /* VertigoPrefixHeader.pch */,
+				FF0186531EAB8A5B005AEB06 /* VertigoDefines.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -164,6 +194,7 @@
 		FF0B623D1E2092B3003BCDB3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FF01864A1EAB8051005AEB06 /* HockeySDK.embeddedframework */,
 				FF3A01471E9DA0F7007B5883 /* AVKit.framework */,
 				FF2EE3201E24B0EC007D5E6C /* Photos.framework */,
 				FF0F26FB1E2421AF00D98C90 /* UIKit.framework */,
@@ -303,6 +334,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FF0B62311E20567B003BCDB3 /* LaunchScreen.storyboard in Resources */,
+				FF01864E1EAB8051005AEB06 /* HockeySDKResources.bundle in Resources */,
 				FF0B622E1E20567B003BCDB3 /* Assets.xcassets in Resources */,
 				FF1F2F671E81BEE7009F4510 /* Localizable.strings in Resources */,
 			);
@@ -327,6 +359,7 @@
 				FF4440491E7AEFFA002B6F67 /* VTRootViewController.m in Sources */,
 				FF0B623A1E2057A4003BCDB3 /* VTMainViewController.m in Sources */,
 				FF8111AD1E8B2781004E87B4 /* HFKVOBlocks.m in Sources */,
+				FF0186521EAB89F0005AEB06 /* VTAnalytics.m in Sources */,
 				FF1F2F5A1E81ACF0009F4510 /* VTRequiresCameraPermissionView.m in Sources */,
 				FF19EE701E8841840001AFC4 /* VTCaptureTypes.m in Sources */,
 				FFCAB58F1EA7DB3F00290390 /* VTSaveVideoView.m in Sources */,
@@ -459,6 +492,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 8J2J47QA72;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/HockeySDK-iOS/HockeySDK.embeddedframework",
+				);
 				GCC_PREFIX_HEADER = Vertigo/VertigoPrefixHeader.pch;
 				INFOPLIST_FILE = Vertigo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -472,6 +509,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 8J2J47QA72;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/HockeySDK-iOS/HockeySDK.embeddedframework",
+				);
 				GCC_PREFIX_HEADER = Vertigo/VertigoPrefixHeader.pch;
 				INFOPLIST_FILE = Vertigo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
