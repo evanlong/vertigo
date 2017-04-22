@@ -10,12 +10,12 @@
 
 #import "VTMath.h"
 #import "VTPushPullToggleControl.h"
+#import "VTRecordButton.h"
 
-#define CONTROL_BACKDROP_COLOR              [UIColor colorWithWhite:0.1 alpha:0.70]
 #define DURATION_MIN                        1.0
 #define DURATION_MAX                        8.0
 
-#define DURATION_SLIDER_HEIGHT_MULTIPLIER   0.8
+#define DURATION_SLIDER_HEIGHT_MULTIPLIER   0.9
 
 @interface VTCameraControlView ()
 
@@ -28,8 +28,7 @@
 @property (nonatomic, strong) UISlider *durationSlider;
 @property (nonatomic, strong) UIProgressView *progressView;
 
-@property (nonatomic, strong) UIView *bottomViewHost;
-@property (nonatomic, strong) UIButton *recordButton;
+@property (nonatomic, strong) VTRecordButton *recordButton;
 @property (nonatomic, strong) UILabel *durationLabel;
 
 @property (nonatomic, strong) UILayoutGuide *backdropSpaceGuide;
@@ -57,29 +56,15 @@
     {
         self.tintColor = [UIColor whiteColor];
         
-        { // Bottom Controls
-            _bottomViewHost = [[UIView alloc] init];
-            VTAllowAutolayoutForView(_bottomViewHost);
-            _bottomViewHost.backgroundColor = CONTROL_BACKDROP_COLOR;
-            [self addSubview:_bottomViewHost];
-            
-            [_bottomViewHost.heightAnchor constraintEqualToConstant:70.0].active = YES;
-            [_bottomViewHost.widthAnchor constraintEqualToAnchor:self.widthAnchor].active = YES;
-            [_bottomViewHost.bottomAnchor constraintEqualToAnchor:self.bottomAnchor].active = YES;
-            [_bottomViewHost.centerXAnchor constraintEqualToAnchor:self.centerXAnchor].active = YES;
-            
-            // Record
-            _recordButton = [[UIButton alloc] init];
+        { // Record
+            _recordButton = [[VTRecordButton alloc] init];
             VTAllowAutolayoutForView(_recordButton);
-            _recordButton.backgroundColor = [UIColor redColor];
-            [_bottomViewHost addSubview:_recordButton];
+            [self addSubview:_recordButton];
             
             [_recordButton addTarget:self action:@selector(_handleRecordButtonPress) forControlEvents:UIControlEventTouchUpInside];
             
-            [_recordButton.centerXAnchor constraintEqualToAnchor:_bottomViewHost.centerXAnchor].active = YES;
-            [_recordButton.centerYAnchor constraintEqualToAnchor:_bottomViewHost.centerYAnchor].active = YES;
-            [_recordButton.widthAnchor constraintEqualToConstant:50.0].active = YES;
-            [_recordButton.heightAnchor constraintEqualToConstant:50.0].active = YES;
+            [_recordButton.centerXAnchor constraintEqualToAnchor:self.centerXAnchor].active = YES;
+            [_recordButton.bottomAnchor constraintEqualToAnchor:self.bottomAnchor constant:-20.0].active = YES;
         }
         
         { // Progress View
@@ -118,7 +103,7 @@
 
             // backdropSpaceGuide guide height and centerY represent the area between the backdrop and bottom host views
             [_backdropSpaceGuide.topAnchor constraintEqualToAnchor:self.topAnchor].active = YES;
-            [_backdropSpaceGuide.bottomAnchor constraintEqualToAnchor:_bottomViewHost.topAnchor].active = YES;
+            [_backdropSpaceGuide.bottomAnchor constraintEqualToAnchor:_recordButton.topAnchor].active = YES;
             [_backdropSpaceGuide.leftAnchor constraintEqualToAnchor:_durationSlider.centerXAnchor].active = YES;
 
             [_durationSlider.centerXAnchor constraintEqualToAnchor:self.leftAnchor constant:40.0].active = YES;
@@ -282,18 +267,18 @@
 {
     if (self.isRecording)
     {
-        [self.recordButton setTitle:NSLocalizedString(@"Stop", nil) forState:UIControlStateNormal];
         self.pushPullToggleControl.userInteractionEnabled = NO;
         self.durationSlider.userInteractionEnabled = NO;
         self.progressView.hidden = NO;
     }
     else
     {
-        [self.recordButton setTitle:@"" forState:UIControlStateNormal];
         self.pushPullToggleControl.userInteractionEnabled = YES;
         self.durationSlider.userInteractionEnabled = YES;
         self.progressView.hidden = YES;
     }
+    
+    self.recordButton.recording = self.isRecording;
 }
 
 - (void)_updateProgress

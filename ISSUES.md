@@ -24,14 +24,12 @@
 
 # Better UI
 
-- Improve record button
-    + Transition animation between recording / waiting modes
 - Countdown to recording
     + Improve the coundown animation
     + For push text animates up
     + For pull text animates down
 - Progress of the recording 0-100%
-    + Place on the bottom
+    + Place on the bottom - Currently how it is done and works well
     + Progress bar on the push/pull indicator?
     + Progress bar some place else?
     + Countdown timer of duration?
@@ -39,6 +37,8 @@
 
 # Bugs
 
+- If a podcast or some other media is playing on the device, the sharing screen is blank for a moment
+    + Present a screen grab of the first frame of video
 - address TODO in code
     + Error handling
 - If the device is auto focusing, recording doesn't start. if it's in the process of focusing should give some visual feedback

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FF0185FD1EAA774F005AEB06 /* VTRecordButton.m in Sources */ = {isa = PBXBuildFile; fileRef = FF0185FC1EAA774F005AEB06 /* VTRecordButton.m */; };
 		FF0B62231E20567B003BCDB3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FF0B62221E20567B003BCDB3 /* main.m */; };
 		FF0B62261E20567B003BCDB3 /* VTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FF0B62251E20567B003BCDB3 /* VTAppDelegate.m */; };
 		FF0B622E1E20567B003BCDB3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF0B622D1E20567B003BCDB3 /* Assets.xcassets */; };
@@ -34,6 +35,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		FF0185FB1EAA774F005AEB06 /* VTRecordButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTRecordButton.h; sourceTree = "<group>"; };
+		FF0185FC1EAA774F005AEB06 /* VTRecordButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTRecordButton.m; sourceTree = "<group>"; };
 		FF0B621E1E20567B003BCDB3 /* Vertigo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vertigo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF0B62221E20567B003BCDB3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		FF0B62241E20567B003BCDB3 /* VTAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VTAppDelegate.h; sourceTree = "<group>"; };
@@ -194,6 +197,8 @@
 				FF1E036B1E8443110015A004 /* VTToggleButton.m */,
 				FF54F7D31E9C302B00D84F2C /* VTPushPullToggleControl.h */,
 				FF54F7D41E9C302B00D84F2C /* VTPushPullToggleControl.m */,
+				FF0185FB1EAA774F005AEB06 /* VTRecordButton.h */,
+				FF0185FC1EAA774F005AEB06 /* VTRecordButton.m */,
 			);
 			name = CameraControls;
 			sourceTree = "<group>";
@@ -326,6 +331,7 @@
 				FF19EE701E8841840001AFC4 /* VTCaptureTypes.m in Sources */,
 				FFCAB58F1EA7DB3F00290390 /* VTSaveVideoView.m in Sources */,
 				FF1F2F5E1E81B67A009F4510 /* VTMath.m in Sources */,
+				FF0185FD1EAA774F005AEB06 /* VTRecordButton.m in Sources */,
 				FF54F7D51E9C302B00D84F2C /* VTPushPullToggleControl.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
