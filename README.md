@@ -52,5 +52,8 @@ Known Issues:
 - FIX: push/pull button masking on iOS 9.3.x
 - Disable Duo lens on iPhone 7 Plus as this avoids occasional perspective shifts that would occur as recording started
 
+### Beta-8
 
+- UI: Improved the record button
+- Continue to test Sharing flow
 

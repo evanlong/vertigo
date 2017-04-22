@@ -2,6 +2,8 @@
 
 - License Information
     + Place in a settings bundle
+- Marketing Screenshots
+- App Description
 
 - UI handles rotation based on device orientation
     + Allow some UI elements to rotate in place
