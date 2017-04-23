@@ -23,6 +23,8 @@
 #import "VTSaveVideoView.h"
 #import "VTZoomEffectSettings.h"
 
+#define USE_MARKETING_IMAGE 0
+
 typedef NS_ENUM(NSInteger, VTRecordingState) {
     VTRecordingStateWaiting,
     VTRecordingStateCountingDown,
@@ -48,6 +50,9 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 
 // Save View
 @property (nonatomic, strong) VTSaveVideoView *saveVideoView;
+
+// Marketing
+@property (nonatomic, strong) UIImageView *marketingImageView;
 
 @end
 
@@ -283,11 +288,19 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
     self.recordingParentView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
     [self.view addSubview:self.recordingParentView];
 
+#if USE_MARKETING_IMAGE
+    self.marketingImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"patio11"]];
+    self.marketingImageView.frame = viewBounds;
+    self.marketingImageView.contentMode = UIViewContentModeScaleAspectFill;
+    self.marketingImageView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+    [self.recordingParentView addSubview:self.marketingImageView];
+#else
     self.previewView = [[VTCameraPreviewView alloc] initWithFrame:viewBounds];
     self.previewView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
     self.previewView.clipsToBounds = NO;
     [self.recordingParentView addSubview:self.previewView];
     self.previewView.session = self.cameraController.captureSession;
+#endif
     
     // 3. Control Host View
     self.cameraControlView = [[VTCameraControlView alloc] initWithFrame:viewBounds];
