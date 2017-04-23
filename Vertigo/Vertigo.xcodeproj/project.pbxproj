@@ -35,6 +35,7 @@
 		FF84B7171E92FB7400F79413 /* VTZoomEffectSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = FF84B7161E92FB7400F79413 /* VTZoomEffectSettings.m */; };
 		FFA05F601E89A344009137DA /* VTZoomEffect.m in Sources */ = {isa = PBXBuildFile; fileRef = FFA05F5F1E89A344009137DA /* VTZoomEffect.m */; };
 		FFCAB58F1EA7DB3F00290390 /* VTSaveVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = FFCAB58E1EA7DB3F00290390 /* VTSaveVideoView.m */; };
+		FFE511301EAD40B900084A67 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = FFE5112F1EAD40B900084A67 /* Settings.bundle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -88,6 +89,7 @@
 		FFA05F5F1E89A344009137DA /* VTZoomEffect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTZoomEffect.m; sourceTree = "<group>"; };
 		FFCAB58D1EA7DB3F00290390 /* VTSaveVideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTSaveVideoView.h; sourceTree = "<group>"; };
 		FFCAB58E1EA7DB3F00290390 /* VTSaveVideoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTSaveVideoView.m; sourceTree = "<group>"; };
+		FFE5112F1EAD40B900084A67 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -187,6 +189,7 @@
 				FF0B622F1E20567B003BCDB3 /* LaunchScreen.storyboard */,
 				FF0B62321E20567B003BCDB3 /* Info.plist */,
 				FF1F2F691E81BEE7009F4510 /* Localizable.strings */,
+				FFE5112F1EAD40B900084A67 /* Settings.bundle */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -335,6 +338,7 @@
 			files = (
 				FF0B62311E20567B003BCDB3 /* LaunchScreen.storyboard in Resources */,
 				FF01864E1EAB8051005AEB06 /* HockeySDKResources.bundle in Resources */,
+				FFE511301EAD40B900084A67 /* Settings.bundle in Resources */,
 				FF0B622E1E20567B003BCDB3 /* Assets.xcassets in Resources */,
 				FF1F2F671E81BEE7009F4510 /* Localizable.strings in Resources */,
 			);
