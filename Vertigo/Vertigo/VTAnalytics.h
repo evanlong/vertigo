@@ -28,3 +28,4 @@ VT_EXTERN NSString *const VTAnalyticsDidStartRecordingEvent;
 
 // Sharing
 VT_EXTERN NSString *const VTAnalyticsDidPressShareEvent;
+VT_EXTERN NSString *const VTAnalyticsDidPressSaveEvent;

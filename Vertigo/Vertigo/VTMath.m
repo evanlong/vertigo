@@ -80,3 +80,38 @@ CGFloat VTMapValueFromRangeToNewRange(CGFloat value, CGFloat minRange, CGFloat m
     CGFloat newValue = ((newMaxRange - newMinRange) * percentage) + newMinRange;
     return newValue;
 }
+
+#pragma mark - Push / Pull
+
+static CGFloat _VTZoomRate(CGFloat minZoom, CGFloat maxZoom, NSTimeInterval duration)
+{
+    return log2(maxZoom / minZoom) / duration;
+}
+
+CGFloat VTPushEffectZoomPowerScale(CGFloat zoomLevel1, CGFloat zoomLevel2, NSTimeInterval currentTime, NSTimeInterval duration)
+{
+    CGFloat minZoom = MIN(zoomLevel1, zoomLevel2);
+    CGFloat maxZoom = MAX(zoomLevel1, zoomLevel2);
+    CGFloat rate = _VTZoomRate(minZoom, maxZoom, duration);
+    return 1.0 / pow(2, rate * (currentTime - duration));
+}
+
+CGFloat VTPullEffectZoomPowerScale(CGFloat zoomLevel1, CGFloat zoomLevel2, NSTimeInterval currentTime, NSTimeInterval duration)
+{
+    CGFloat minZoom = MIN(zoomLevel1, zoomLevel2);
+    CGFloat maxZoom = MAX(zoomLevel1, zoomLevel2);
+    CGFloat rate = _VTZoomRate(minZoom, maxZoom, duration);
+    return pow(2, rate * currentTime);
+}
+
+CGFloat VTVertigoEffectZoomPowerScale(CGFloat initialZoomLevel, CGFloat finalZoomLevel, NSTimeInterval currentTime, NSTimeInterval duration)
+{
+    if (initialZoomLevel < finalZoomLevel)
+    {
+        return VTPullEffectZoomPowerScale(initialZoomLevel, finalZoomLevel, currentTime, duration);
+    }
+    else
+    {
+        return VTPushEffectZoomPowerScale(initialZoomLevel, finalZoomLevel, currentTime, duration);
+    }
+}

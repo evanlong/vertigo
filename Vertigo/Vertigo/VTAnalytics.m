@@ -18,3 +18,4 @@ NSString *const VTAnalyticsDidStartRecordingEvent = @"VTAnalyticsDidStartRecordi
 
 // Sharing
 NSString *const VTAnalyticsDidPressShareEvent = @"VTAnalyticsDidPressShareEvent";
+NSString *const VTAnalyticsDidPressSaveEvent = @"VTAnalyticsDidPressSaveEvent";

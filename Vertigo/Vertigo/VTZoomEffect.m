@@ -95,6 +95,7 @@ static const NSInteger FRAMES_PER_SECOND = 120;
 {
     if (self.isRunning)
     {
+        dispatch_source_cancel(self.timer);
         self.timer = nil;
 
         id<VTZoomEffectDelegate> delegate = self.delegate;

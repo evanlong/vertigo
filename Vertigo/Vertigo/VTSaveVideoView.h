@@ -6,6 +6,8 @@
 //
 //
 
+#import "VTZoomEffectSettings.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol VTSaveVideoViewDelegate;
@@ -21,12 +23,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) NSURL *videoURL;
 @property (nonatomic, weak) id<VTSaveVideoViewDelegate> delegate;
 
+@property (nonatomic, copy, readonly) VTZoomEffectSettings *settings;
+
 @end
 
 @protocol VTSaveVideoViewDelegate <NSObject>
 
 @optional
 - (void)saveVideoViewDidPressShare:(VTSaveVideoView *)saveVideoView;
+- (void)saveVideoViewDidPressSave:(VTSaveVideoView *)saveVideoView;
 - (void)saveVideoViewDidPressDiscard:(VTSaveVideoView *)saveVideoView;
 
 @end

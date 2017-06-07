@@ -19,6 +19,7 @@
 #import "VTCameraController.h"
 #import "VTCameraControlView.h"
 #import "VTCountDownView.h"
+#import "VTMath.h"
 #import "VTRequiresCameraPermissionView.h"
 #import "VTSaveVideoView.h"
 #import "VTZoomEffectSettings.h"
@@ -152,11 +153,6 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
     // else: nop transitioning between recording <-> waiting states
 }
 
-- (void)cameraControlViewDidChangeDirection:(VTCameraControlView *)cameraControlView
-{
-    [self _updatePreviewZoomLevel];
-}
-
 #pragma mark - VTCameraControllerDelegate
 
 - (void)cameraControllerDidStartRunning:(VTCameraController *)cameraController
@@ -223,7 +219,7 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
         [self _startShareFlowWithVideoURL:outputFileURL];
     });
 
-    // EL TODO: Check for errors as a result of the recordinga
+    // EL TODO: Check for errors as a result of the recording
 }
 
 - (void)cameraController:(VTCameraController *)cameraController didUpdateProgress:(CGFloat)progress
@@ -239,8 +235,19 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 {
     VTAnalyticsTrackEvent(VTAnalyticsDidPressShareEvent);
 
-    UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[saveVideoView.videoURL] applicationActivities:@[]];
-    [self presentViewController:activityViewController animated:YES completion:NULL];
+    // EL TODO: Modal With some progress...
+    AVAsset *asset = [AVAsset assetWithURL:saveVideoView.videoURL];
+    [self _composeAsset:asset withZoomEffectSettings:saveVideoView.settings completion:^(NSURL *composedAssetURL) {
+        UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[composedAssetURL] applicationActivities:@[]];
+        [self presentViewController:activityViewController animated:YES completion:NULL];
+    }];
+}
+
+- (void)saveVideoViewDidPressSave:(VTSaveVideoView *)saveVideoView
+{
+    VTLogFunction;
+    VTAnalyticsTrackEvent(VTAnalyticsDidPressSaveEvent);
+    VTLogObject(saveVideoView.settings);
 }
 
 - (void)saveVideoViewDidPressDiscard:(VTSaveVideoView *)saveVideoView
@@ -251,7 +258,9 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
     VTWeakifySelf(weakSelf);
     [confirmDiscardAlert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"SharePanelDiscard", nil) style:UIAlertActionStyleDestructive handler:^(UIAlertAction *_Nonnull action) {
         VTStrongifySelf(strongSelf, weakSelf);
-        [strongSelf _endShareFlowWithVideoURL:videoURL];
+        NSString *composedVideoPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"composed.mov"];
+        NSURL *composedVideoURL = [NSURL fileURLWithPath:composedVideoPath];
+        [strongSelf _endShareFlowWithVideoURLs:@[videoURL, composedVideoURL]];
     }]];
     
     [confirmDiscardAlert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"SharePanelCancel", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction *_Nonnull action) {
@@ -316,8 +325,6 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
     [self.countDownView.centerYAnchor constraintEqualToAnchor:self.recordingParentView.centerYAnchor].active = YES;
 
     [self.cameraController startRunning];
-    
-    [self _updatePreviewZoomLevel];
 }
 
 - (void)_setupForPermissionRequired
@@ -356,12 +363,6 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
                                         self.recordingState == VTRecordingStateTransitionToRecording);
 }
 
-- (void)_updatePreviewZoomLevel
-{
-    VTZoomEffectSettings *zoomEffectSettings = [self _settingsForCurrentCameraControlViewState];
-    [self.cameraController updatePreviewZoomLevel:zoomEffectSettings.initalZoomLevel];
-}
-
 - (void)_startShareFlowWithVideoURL:(NSURL *)url
 {
     self.saveVideoView = [[VTSaveVideoView alloc] initWithVideoURL:url];
@@ -372,15 +373,64 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
     self.recordingParentView.hidden = YES;
 }
 
-- (void)_endShareFlowWithVideoURL:(NSURL *)url
+- (void)_endShareFlowWithVideoURLs:(NSArray<NSURL *> *)urls
 {
     [self.saveVideoView removeFromSuperview];
     self.saveVideoView = nil;
     self.recordingParentView.hidden = NO;
-
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
-        [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
+        for (NSURL *url in urls)
+        {
+            [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
+        }
     });
+}
+
+- (void)_composeAsset:(AVAsset *)asset withZoomEffectSettings:(VTZoomEffectSettings *)zoomEffectSettings completion:(void(^)(NSURL *composedAssetURL))completion
+{
+    AVMutableVideoComposition *videoComposition = [AVMutableVideoComposition videoCompositionWithAsset:asset applyingCIFiltersWithHandler:^(AVAsynchronousCIImageFilteringRequest * _Nonnull request) {
+        NSError *err = nil;
+        CIImage *filtered = request.sourceImage;
+        
+        NSTimeInterval duration = 1.0 * asset.duration.value / asset.duration.timescale;
+        NSTimeInterval currentTime = 1.0 * request.compositionTime.value / request.compositionTime.timescale;
+        
+        CGFloat pushPowerScale = VTVertigoEffectZoomPowerScale(zoomEffectSettings.initalZoomLevel, zoomEffectSettings.finalZoomLevel, currentTime, duration);
+
+        // Map scale rate change to tx/ty change
+        CGSize size = filtered.extent.size;
+        CGFloat tx = ABS(size.width - (pushPowerScale * size.width)) / -2.0;
+        CGFloat ty = ABS(size.height - (pushPowerScale * size.height)) / -2.0;
+        CGAffineTransform t = CGAffineTransformIdentity;
+        
+        t = CGAffineTransformTranslate(t, tx, ty);
+        t = CGAffineTransformScale(t, pushPowerScale, pushPowerScale);
+        filtered = [filtered imageByApplyingTransform:t];
+        
+        if (filtered)
+        {
+            [request finishWithImage:filtered context:nil];
+        }
+        else
+        {
+            [request finishWithError:err];
+        }
+    }];
+    
+    NSString *composedVideoPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"composed.mov"];
+    NSURL *composedVideoURL = [NSURL fileURLWithPath:composedVideoPath];
+    [[NSFileManager defaultManager] removeItemAtPath:composedVideoPath error:nil];
+    
+    AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:asset presetName:AVAssetExportPresetHighestQuality];
+    exportSession.videoComposition = videoComposition;
+    exportSession.outputURL = composedVideoURL;
+    exportSession.outputFileType = AVFileTypeQuickTimeMovie;
+    
+    [exportSession exportAsynchronouslyWithCompletionHandler:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completion(composedVideoURL);
+        });
+    }];
 }
 
 @end

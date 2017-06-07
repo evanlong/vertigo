@@ -28,9 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 //! captureSession of the VTCameraController can be used to configure a AVCaptureVideoPreviewLayer
 @property (nonatomic, readonly, strong) AVCaptureSession *captureSession;
 
-// previewZoomLevel clamp to the range [minimumZoomLevel, maximumZoomLevel]
-- (void)updatePreviewZoomLevel:(CGFloat)previewZoomLevel;
-
 // EL NOTE: Note start/stop running called by things like viewDid(Dis)Appear
 /*!
  The startRunning, stopRunning, startRecordingWithOrientation, stopRecording are all asynchronous in nature. Delegate callbacks will

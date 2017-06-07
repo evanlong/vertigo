@@ -123,6 +123,7 @@
         
         { // Push/Pull Buttons
             _pushPullToggleControl = [[VTPushPullToggleControl alloc] init];
+            _pushPullToggleControl.hidden = YES;
             VTAllowAutolayoutForView(_pushPullToggleControl);
             [self addSubview:_pushPullToggleControl];
             
