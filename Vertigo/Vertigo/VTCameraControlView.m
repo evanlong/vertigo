@@ -88,6 +88,8 @@
             _durationSlider.layer.shadowOffset = CGSizeZero;
             _durationSlider.minimumValue = DURATION_MIN;
             _durationSlider.maximumValue = DURATION_MAX;
+            _durationSlider.minimumTrackTintColor = [UIColor whiteColor];
+            _durationSlider.maximumTrackTintColor = [UIColor whiteColor];
             VTAllowAutolayoutForView(_durationSlider);
             [self addSubview:_durationSlider];
             
@@ -106,7 +108,7 @@
             [_backdropSpaceGuide.bottomAnchor constraintEqualToAnchor:_recordButton.topAnchor].active = YES;
             [_backdropSpaceGuide.leftAnchor constraintEqualToAnchor:_durationSlider.centerXAnchor].active = YES;
 
-            [_durationSlider.centerXAnchor constraintEqualToAnchor:self.leftAnchor constant:40.0].active = YES;
+            [_durationSlider.centerXAnchor constraintEqualToAnchor:self.rightAnchor constant:-40.0].active = YES;
             [_durationSlider.centerYAnchor constraintEqualToAnchor:_backdropSpaceGuide.centerYAnchor].active = YES;
             [_durationSlider.widthAnchor constraintEqualToAnchor:_backdropSpaceGuide.heightAnchor multiplier:DURATION_SLIDER_HEIGHT_MULTIPLIER].active = YES;
             _durationSlider.transform = CGAffineTransformMakeRotation(-M_PI_2);
@@ -327,7 +329,7 @@
     CGFloat positionY = VTMapValueFromRangeToNewRange(self.rawDuration, DURATION_MAX, DURATION_MIN, minY, maxY);
     
     [UIView animateWithDuration:0.1 delay:0.0 options:(UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionCurveLinear) animations:^{
-        self.durationLabel.center = CGPointMake(CGRectGetMaxX(guideFrame) + CGRectGetWidth(self.durationLabel.bounds), positionY);
+        self.durationLabel.center = CGPointMake(CGRectGetMaxX(guideFrame) - CGRectGetWidth(self.durationLabel.bounds), positionY);
     } completion:NULL];
 }
 

@@ -8,109 +8,12 @@
 
 #import "VTPushPullToggleControl.h"
 
-@interface _VTArrowButton : UIControl
-
-- (instancetype)init NS_UNAVAILABLE;
-- (instancetype)initWithFrame:(CGRect)frame NS_UNAVAILABLE;
-- (instancetype)initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
-- (instancetype)initWithArrowName:(NSString *)arrowName NS_DESIGNATED_INITIALIZER;
-
-@property (nonatomic, strong) UIVisualEffectView *blurView;
-@property (nonatomic, strong) UIImageView *arrowView;
-@property (nonatomic, strong) UIImageView *maskImageView;
-
-@end
-
-@implementation _VTArrowButton
-
-- (instancetype)initWithArrowName:(NSString *)arrowName
-{
-    self = [super initWithFrame:CGRectZero];
-    if (self)
-    {
-        _blurView = [[UIVisualEffectView alloc] init];
-        _blurView.userInteractionEnabled = NO;
-        VTAllowAutolayoutForView(_blurView);
-        [self addSubview:_blurView];
-
-        UIImage *maskImage = [UIImage imageNamed:@"CircleMask"];
-        _maskImageView = [[UIImageView alloc] initWithImage:maskImage];
-        if (VTOSAtLeast(10, 0, 0))
-        {
-            _blurView.maskView = _maskImageView;
-        }
-        else
-        {
-            _blurView.layer.mask = _maskImageView.layer;
-        }
-
-        _arrowView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:arrowName]];
-        _arrowView.userInteractionEnabled = NO;
-        _arrowView.tintColor = [UIColor blackColor];
-        VTAllowAutolayoutForView(_arrowView);
-        [self addSubview:_arrowView];
-        
-        [_blurView.heightAnchor constraintEqualToAnchor:_arrowView.heightAnchor].active = YES;
-        [_blurView.widthAnchor constraintEqualToAnchor:_arrowView.widthAnchor].active = YES;
-        
-        [_blurView.centerXAnchor constraintEqualToAnchor:self.centerXAnchor].active = YES;
-        [_blurView.centerYAnchor constraintEqualToAnchor:self.centerYAnchor].active = YES;
-        [_arrowView.centerXAnchor constraintEqualToAnchor:_blurView.centerXAnchor].active = YES;
-        [_arrowView.centerYAnchor constraintEqualToAnchor:_blurView.centerYAnchor].active = YES;
-        
-        [self _updateWithCurrentState];
-    }
-    return self;
-}
-
-- (CGSize)intrinsicContentSize
-{
-    return self.maskImageView.image.size;
-}
-
-- (void)setSelected:(BOOL)selected
-{
-    [super setSelected:selected];
-    [self _updateWithCurrentState];
-}
-
-- (void)setHighlighted:(BOOL)highlighted
-{
-    [super setHighlighted:highlighted];
-    [self _updateWithCurrentState];
-}
-
-#pragma mark - Private
-
-- (void)_updateWithCurrentState
-{
-    if (self.isSelected)
-    {
-        self.arrowView.tintColor = [UIColor blackColor];
-        self.blurView.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
-        self.transform = CGAffineTransformMakeScale(1.35, 1.35);
-    }
-    else if (self.isHighlighted)
-    {
-        self.arrowView.tintColor = [UIColor whiteColor];
-        self.blurView.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-        self.transform = CGAffineTransformIdentity;
-    }
-    else
-    {
-        self.arrowView.tintColor = [UIColor colorWithWhite:1.0 alpha:0.75];
-        self.blurView.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
-        self.transform = CGAffineTransformIdentity;
-    }
-}
-
-@end
-
+#import "VTOverlayButton.h"
 
 @interface VTPushPullToggleControl ()
 
-@property (nonatomic, strong) _VTArrowButton *pushButton;
-@property (nonatomic, strong) _VTArrowButton *pullButton;
+@property (nonatomic, strong) VTOverlayButton *pushButton;
+@property (nonatomic, strong) VTOverlayButton *pullButton;
 
 @end
 
@@ -121,11 +24,11 @@
     self = [super initWithFrame:frame];
     if (self)
     {
-        _pushButton = [[_VTArrowButton alloc] initWithArrowName:@"PushIcon"];
+        _pushButton = [[VTOverlayButton alloc] initWithOverlayImageName:@"PushIcon"];
         VTAllowAutolayoutForView(_pushButton);
         [self addSubview:_pushButton];
         
-        _pullButton = [[_VTArrowButton alloc] initWithArrowName:@"PullIcon"];
+        _pullButton = [[VTOverlayButton alloc] initWithOverlayImageName:@"PullIcon"];
         VTAllowAutolayoutForView(_pullButton);
         [self addSubview:_pullButton];
         

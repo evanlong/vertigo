@@ -11,6 +11,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AVKit/AVKit.h>
 
+#import "VTOverlayButton.h"
 #import "VTMath.h"
 #import "VTZoomEffect.h"
 
@@ -53,12 +54,16 @@
 @property (nonatomic, strong) UIView *clippingView;
 
 @property (nonatomic, strong) _VTPlayerView *playerView;
-@property (nonatomic, strong) UIToolbar *bottomToolbar;
 
 @property (nonatomic, assign) float secondsComplete;
 @property (nonatomic, assign) float secondsTotal;
 
 @property (nonatomic, strong) UISlider *zoomAdjustSlider;
+@property (nonatomic, strong) UILayoutGuide *sliderSpaceGuide;
+
+@property (nonatomic, strong) VTOverlayButton *backArrowButton;
+
+@property (nonatomic, strong) VTOverlayButton *shareButton;
 
 @end
 
@@ -85,11 +90,29 @@
         [_clippingView addSubview:_playerView];
 
         _zoomAdjustSlider = [[UISlider alloc] init];
-        _zoomAdjustSlider.tintColor = [UIColor whiteColor];
         VTAllowAutolayoutForView(_zoomAdjustSlider);
+        _zoomAdjustSlider.layer.shadowColor = [UIColor blackColor].CGColor;
+        _zoomAdjustSlider.layer.shadowRadius = 2.25;
+        _zoomAdjustSlider.layer.shadowOpacity = 1.0;
+        _zoomAdjustSlider.layer.shadowOffset = CGSizeZero;
+        _zoomAdjustSlider.tintColor = [UIColor whiteColor];
         _zoomAdjustSlider.minimumValue = -2.0;
         _zoomAdjustSlider.maximumValue = 2.0;
+        _zoomAdjustSlider.minimumTrackTintColor = [UIColor whiteColor];
+        _zoomAdjustSlider.maximumTrackTintColor = [UIColor whiteColor];
+        _zoomAdjustSlider.minimumValueImage = [UIImage imageNamed:@"LeftIcon"];
+        _zoomAdjustSlider.maximumValueImage = [UIImage imageNamed:@"RightIcon"];
         [self addSubview:_zoomAdjustSlider];
+        
+        _backArrowButton = [[VTOverlayButton alloc] initWithOverlayImageName:@"BackIcon"];
+        VTAllowAutolayoutForView(_backArrowButton);
+        [_backArrowButton addTarget:self action:@selector(_handleDiscardButtonPress) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:_backArrowButton];
+        
+        _shareButton = [[VTOverlayButton alloc] initWithOverlayImageName:@"Sharrow"];
+        VTAllowAutolayoutForView(_shareButton);
+        [_shareButton addTarget:self action:@selector(_handleShareButtonPress) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:_shareButton];
         
         VTWeakifySelf(weakSelf);
         [_player addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1.0/60.0, 60) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
@@ -100,42 +123,45 @@
                 strongSelf.secondsComplete = 1.0 * time.value / time.timescale;
             }
         }];
-
-        { // Bottom Controls
-            _bottomToolbar = [[UIToolbar alloc] init];
-            VTAllowAutolayoutForView(_bottomToolbar);
-            _bottomToolbar.tintColor = [UIColor whiteColor];
-            _bottomToolbar.barStyle = UIBarStyleBlack;
-            [self addSubview:_bottomToolbar];
-            
-            UIBarButtonItem *spacer1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-            UIBarButtonItem *spacer2 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-            UIBarButtonItem *leftSpacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-            UIBarButtonItem *rightSpacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-            UIBarButtonItem *fixedSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-            fixedSpace.width = 30.0;
-            
-            UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(_handleShareButtonPress)];
-            UIBarButtonItem *trashButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self action:@selector(_handleDiscardButtonPress)];
-            _bottomToolbar.items = @[leftSpacer, trashButton, spacer1, shareButton, spacer2, fixedSpace, rightSpacer];
-            
-            [_bottomToolbar.bottomAnchor constraintEqualToAnchor:self.bottomAnchor].active = YES;
-            [_bottomToolbar.centerXAnchor constraintEqualToAnchor:self.centerXAnchor].active = YES;
-            [_bottomToolbar.leftAnchor constraintEqualToAnchor:self.leftAnchor].active = YES;
-            [_bottomToolbar.rightAnchor constraintEqualToAnchor:self.rightAnchor].active = YES;
+        
+        { // Bottom Share/Save Controls
+            [_shareButton.centerXAnchor constraintEqualToAnchor:self.centerXAnchor].active = YES;
+            [_shareButton.bottomAnchor constraintEqualToAnchor:self.bottomAnchor constant:-20.0].active = YES;
+        }
+        
+        { // Back Arrow
+            [_backArrowButton.leftAnchor constraintEqualToAnchor:self.leftAnchor constant:24.0].active = YES;
+            [_backArrowButton.topAnchor constraintEqualToAnchor:self.topAnchor constant:24.0].active = YES;
         }
         
         {
-            [_zoomAdjustSlider.centerXAnchor constraintEqualToAnchor:self.centerXAnchor].active = YES;
-            [_zoomAdjustSlider.topAnchor constraintEqualToAnchor:self.topAnchor constant:30.0].active = YES;
-            [_zoomAdjustSlider.widthAnchor constraintEqualToAnchor:self.widthAnchor multiplier:0.8].active = YES;
+            UILayoutGuide *sliderGuideTopInset = [[UILayoutGuide alloc] init];
+            [self addLayoutGuide:sliderGuideTopInset];
+            [sliderGuideTopInset.topAnchor constraintEqualToAnchor:self.topAnchor].active = YES;
+            [sliderGuideTopInset.bottomAnchor constraintEqualToAnchor:_backArrowButton.bottomAnchor].active = YES;
+            
+            UILayoutGuide *sliderGuideBottomInset = [[UILayoutGuide alloc] init];
+            [self addLayoutGuide:sliderGuideBottomInset];
+            [sliderGuideBottomInset.topAnchor constraintEqualToAnchor:_shareButton.topAnchor].active = YES;
+            [sliderGuideBottomInset.bottomAnchor constraintEqualToAnchor:self.bottomAnchor].active = YES;
+            
+            _sliderSpaceGuide = [[UILayoutGuide alloc] init];
+            [self addLayoutGuide:_sliderSpaceGuide];
+            [_sliderSpaceGuide.topAnchor constraintEqualToAnchor:sliderGuideTopInset.bottomAnchor].active = YES;
+            [_sliderSpaceGuide.bottomAnchor constraintEqualToAnchor:sliderGuideBottomInset.topAnchor].active = YES;
+            [_sliderSpaceGuide.leftAnchor constraintEqualToAnchor:_zoomAdjustSlider.centerXAnchor].active = YES;
+            
+            [_zoomAdjustSlider.centerXAnchor constraintEqualToAnchor:self.rightAnchor constant:-40.0].active = YES;
+            [_zoomAdjustSlider.centerYAnchor constraintEqualToAnchor:_sliderSpaceGuide.centerYAnchor].active = YES;
+            [_zoomAdjustSlider.widthAnchor constraintEqualToAnchor:_sliderSpaceGuide.heightAnchor].active = YES;
+            _zoomAdjustSlider.transform = CGAffineTransformMakeRotation(-M_PI_2);
         }
         
         {
             [_clippingView.centerXAnchor constraintEqualToAnchor:self.centerXAnchor].active = YES;
             [_clippingView.centerYAnchor constraintEqualToAnchor:self.centerYAnchor].active = YES;
-            [_clippingView.widthAnchor constraintEqualToAnchor:self.widthAnchor multiplier:0.8].active = YES;
-            [_clippingView.heightAnchor constraintEqualToAnchor:self.heightAnchor multiplier:0.8].active = YES;
+            [_clippingView.widthAnchor constraintEqualToAnchor:self.widthAnchor multiplier:1.0].active = YES;
+            [_clippingView.heightAnchor constraintEqualToAnchor:self.heightAnchor multiplier:1.0].active = YES;
             
             [_playerView.centerXAnchor constraintEqualToAnchor:_clippingView.centerXAnchor].active = YES;
             [_playerView.centerYAnchor constraintEqualToAnchor:_clippingView.centerYAnchor].active = YES;
@@ -145,8 +171,6 @@
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_itemDidPlayToEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:_playerItem];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
-        
-        self.backgroundColor = [UIColor colorWithWhite:0.2 alpha:1.0];
     }
     return self;
 }
@@ -156,6 +180,8 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:_playerItem];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
 }
+
+#pragma mark - UIView
 
 - (void)didMoveToSuperview
 {
@@ -177,7 +203,7 @@
 - (VTZoomEffectSettings *)settings
 {
     CGFloat targetScale = VTRoundToNearestFactor(self.zoomAdjustSlider.value, 0.01);
-    BOOL isPull = targetScale >= 0.0;
+    BOOL isPull = targetScale <= 0.0;
     targetScale = ABS(targetScale) + 1.0;
     
     VTMutableZoomEffectSettings *settings = [[VTMutableZoomEffectSettings alloc] init];

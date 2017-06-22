@@ -1,9 +1,17 @@
 # Features
 
-- License Information
-    + Place in a settings bundle
-- Marketing Screenshots
-- App Description
+- Sharing and Editing 2.0
+    + UI Changes to Save Flow
+        * Vertical adjustment slider for zoom editing
+            - Icons for Push/Pull - OK
+            - Animation showing camera movement...
+        * Delete / Back Button - OK
+        * UI for 'delete', 'share'
+        * Progress Bar as playback occurs during editing/sharing
+    + NSOperation-ify the editing/compositing
+
+- Icons
+    + Draw arrows with same line weight, but differing total size. Currently things are just the same rotated and scaled to various sizes. Should try and keep weight same for consistency
 
 - UI handles rotation based on device orientation
     + Allow some UI elements to rotate in place
