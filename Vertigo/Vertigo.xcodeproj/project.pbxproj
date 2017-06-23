@@ -28,6 +28,7 @@
 		FF2EE3211E24B0EC007D5E6C /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF2EE3201E24B0EC007D5E6C /* Photos.framework */; };
 		FF3A01481E9DA0F7007B5883 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF3A01471E9DA0F7007B5883 /* AVKit.framework */; };
 		FF4440491E7AEFFA002B6F67 /* VTRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF4440481E7AEFFA002B6F67 /* VTRootViewController.m */; };
+		FF54C3F41EFC33B8002CA48A /* VTPieProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = FF54C3F31EFC33B8002CA48A /* VTPieProgressView.m */; };
 		FF54F7D51E9C302B00D84F2C /* VTPushPullToggleControl.m in Sources */ = {isa = PBXBuildFile; fileRef = FF54F7D41E9C302B00D84F2C /* VTPushPullToggleControl.m */; };
 		FF54F7D81E9C901600D84F2C /* VTCountDownView.m in Sources */ = {isa = PBXBuildFile; fileRef = FF54F7D71E9C901600D84F2C /* VTCountDownView.m */; };
 		FF717B831EFB2ABF00902AAA /* VTOverlayButton.m in Sources */ = {isa = PBXBuildFile; fileRef = FF717B821EFB2ABF00902AAA /* VTOverlayButton.m */; };
@@ -76,6 +77,8 @@
 		FF3A01471E9DA0F7007B5883 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		FF4440471E7AEFFA002B6F67 /* VTRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTRootViewController.h; sourceTree = "<group>"; };
 		FF4440481E7AEFFA002B6F67 /* VTRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTRootViewController.m; sourceTree = "<group>"; };
+		FF54C3F21EFC33B8002CA48A /* VTPieProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTPieProgressView.h; sourceTree = "<group>"; };
+		FF54C3F31EFC33B8002CA48A /* VTPieProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTPieProgressView.m; sourceTree = "<group>"; };
 		FF54F7D31E9C302B00D84F2C /* VTPushPullToggleControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTPushPullToggleControl.h; sourceTree = "<group>"; };
 		FF54F7D41E9C302B00D84F2C /* VTPushPullToggleControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTPushPullToggleControl.m; sourceTree = "<group>"; };
 		FF54F7D61E9C901600D84F2C /* VTCountDownView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTCountDownView.h; sourceTree = "<group>"; };
@@ -215,14 +218,16 @@
 				FF1E03691E8440DB0015A004 /* CameraControls */,
 				FF0F26F71E241B5500D98C90 /* VTCameraPreviewView.h */,
 				FF0F26F81E241B5500D98C90 /* VTCameraPreviewView.m */,
-				FF1F2F581E81ACF0009F4510 /* VTRequiresCameraPermissionView.h */,
-				FF1F2F591E81ACF0009F4510 /* VTRequiresCameraPermissionView.m */,
 				FF54F7D61E9C901600D84F2C /* VTCountDownView.h */,
 				FF54F7D71E9C901600D84F2C /* VTCountDownView.m */,
-				FFCAB58D1EA7DB3F00290390 /* VTSaveVideoView.h */,
-				FFCAB58E1EA7DB3F00290390 /* VTSaveVideoView.m */,
 				FF717B811EFB2ABF00902AAA /* VTOverlayButton.h */,
 				FF717B821EFB2ABF00902AAA /* VTOverlayButton.m */,
+				FF54C3F21EFC33B8002CA48A /* VTPieProgressView.h */,
+				FF54C3F31EFC33B8002CA48A /* VTPieProgressView.m */,
+				FF1F2F581E81ACF0009F4510 /* VTRequiresCameraPermissionView.h */,
+				FF1F2F591E81ACF0009F4510 /* VTRequiresCameraPermissionView.m */,
+				FFCAB58D1EA7DB3F00290390 /* VTSaveVideoView.h */,
+				FFCAB58E1EA7DB3F00290390 /* VTSaveVideoView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -376,6 +381,7 @@
 				FF0185FD1EAA774F005AEB06 /* VTRecordButton.m in Sources */,
 				FF54F7D51E9C302B00D84F2C /* VTPushPullToggleControl.m in Sources */,
 				FF717B831EFB2ABF00902AAA /* VTOverlayButton.m in Sources */,
+				FF54C3F41EFC33B8002CA48A /* VTPieProgressView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -6,7 +6,6 @@
             - Icons for Push/Pull - OK
             - Animation showing camera movement...
         * Delete / Back Button - OK
-        * UI for 'delete', 'share'
         * Progress Bar as playback occurs during editing/sharing
     + NSOperation-ify the editing/compositing
 
