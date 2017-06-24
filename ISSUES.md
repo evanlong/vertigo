@@ -7,11 +7,11 @@
         * Progress Bar as playback occurs during editing/sharing
     + Cache results of a "process/composite" operation
 
-- Icons
-    + Draw arrows with same line weight, but differing total size. Currently things are just the same rotated and scaled to various sizes. Should try and keep weight same for consistency
-
 - UI handles rotation based on device orientation
     + Allow some UI elements to rotate in place
+
+- Icons
+    + Draw arrows with same line weight, but differing total size. Currently things are just the same rotated and scaled to various sizes. Should try and keep weight same for consistency
 
 - Info panel
     + Help and tutorials
