@@ -19,12 +19,20 @@
     #define ISA(object, __class__) [object isKindOfClass:[__class__ class]]
 #endif
 
+#ifndef VTWeakifyVar
+    #define VTWeakifyVar(weakVarName, strongVarName) __weak typeof(strongVarName) weakVarName = strongVarName
+#endif
+
+#ifndef VTStrongifyVar
+    #define VTStrongifyVar(strongVarName, weakVarName) __strong typeof(weakVarName) strongVarName = weakVarName
+#endif
+
 #ifndef VTWeakifySelf
-    #define VTWeakifySelf(weakSelfName) __weak typeof(self) weakSelfName = self
+    #define VTWeakifySelf(weakSelfName) VTWeakifyVar(weakSelfName, self)
 #endif
 
 #ifndef VTStrongifySelf
-    #define VTStrongifySelf(strongSelfName, weakSelfName) typeof(self) strongSelfName = weakSelfName;
+    #define VTStrongifySelf(strongSelfName, weakSelfName) VTStrongifyVar(strongSelfName, weakSelfName)
 #endif
 
 #ifndef VTKeyPath

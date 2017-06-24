@@ -25,6 +25,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy, readonly) VTZoomEffectSettings *settings;
 
+@property (nonatomic, assign) BOOL hideControls;
+- (void)setHideControls:(BOOL)hideControls animated:(BOOL)animated;
+
 @end
 
 @protocol VTSaveVideoViewDelegate <NSObject>

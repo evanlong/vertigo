@@ -18,11 +18,31 @@
 #import "VTCameraPreviewView.h"
 #import "VTCameraController.h"
 #import "VTCameraControlView.h"
+#import "VTCompositeZoomEffectOperation.h"
 #import "VTCountDownView.h"
 #import "VTMath.h"
+#import "VTPieProgressView.h"
 #import "VTRequiresCameraPermissionView.h"
 #import "VTSaveVideoView.h"
 #import "VTZoomEffectSettings.h"
+
+typedef void(^VTViewWillDisappear)(void);
+@interface _VTDismissActivityViewController : UIActivityViewController
+@property (nonatomic, copy) VTViewWillDisappear viewWillDisappear;
+@end
+
+@implementation _VTDismissActivityViewController
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    if (self.viewWillDisappear)
+    {
+        self.viewWillDisappear();
+    }
+}
+
+@end
 
 #define USE_MARKETING_IMAGE 0
 
@@ -43,6 +63,9 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 @property (nonatomic, strong) VTCameraController *cameraController;
 @property (nonatomic, assign) VTRecordingState recordingState;
 
+// Compositing
+@property (nonatomic, strong) NSOperationQueue *processingQueue;
+
 // Recording Views
 @property (nonatomic, strong) UIView *recordingParentView;
 @property (nonatomic, strong) VTCameraPreviewView *previewView; // camera preview
@@ -58,6 +81,35 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 @end
 
 @implementation VTRootViewController
+
+static id commonInit(VTRootViewController *self)
+{
+    if (self)
+    {
+        self->_processingQueue = [[NSOperationQueue alloc] init];
+    }
+    return self;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self)
+    {
+        self = commonInit(self);
+    }
+    return self;
+}
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self)
+    {
+        self = commonInit(self);
+    }
+    return self;
+}
 
 #pragma mark - UIViewController
 
@@ -235,10 +287,14 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 {
     VTAnalyticsTrackEvent(VTAnalyticsDidPressShareEvent);
 
-    // EL TODO: Modal With some progress...
+    [saveVideoView setHideControls:YES animated:YES];
+
     AVAsset *asset = [AVAsset assetWithURL:saveVideoView.videoURL];
     [self _composeAsset:asset withZoomEffectSettings:saveVideoView.settings completion:^(NSURL *composedAssetURL) {
-        UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[composedAssetURL] applicationActivities:@[]];
+        _VTDismissActivityViewController *activityViewController = [[_VTDismissActivityViewController alloc] initWithActivityItems:@[composedAssetURL] applicationActivities:@[]];
+        activityViewController.viewWillDisappear = ^{
+            [saveVideoView setHideControls:NO animated:YES];
+        };
         [self presentViewController:activityViewController animated:YES completion:NULL];
     }];
 }
@@ -388,49 +444,50 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 
 - (void)_composeAsset:(AVAsset *)asset withZoomEffectSettings:(VTZoomEffectSettings *)zoomEffectSettings completion:(void(^)(NSURL *composedAssetURL))completion
 {
-    AVMutableVideoComposition *videoComposition = [AVMutableVideoComposition videoCompositionWithAsset:asset applyingCIFiltersWithHandler:^(AVAsynchronousCIImageFilteringRequest * _Nonnull request) {
-        NSError *err = nil;
-        CIImage *filtered = request.sourceImage;
-        
-        NSTimeInterval duration = 1.0 * asset.duration.value / asset.duration.timescale;
-        NSTimeInterval currentTime = 1.0 * request.compositionTime.value / request.compositionTime.timescale;
-        
-        CGFloat pushPowerScale = VTVertigoEffectZoomPowerScale(zoomEffectSettings.initalZoomLevel, zoomEffectSettings.finalZoomLevel, currentTime, duration);
+    VTCompositeZoomEffectOperation *compositeOperation = [[VTCompositeZoomEffectOperation alloc] initWithAsset:asset zoomEffectSettings:zoomEffectSettings];
+    [self.processingQueue addOperation:compositeOperation];
 
-        // Map scale rate change to tx/ty change
-        CGSize size = filtered.extent.size;
-        CGFloat tx = ABS(size.width - (pushPowerScale * size.width)) / -2.0;
-        CGFloat ty = ABS(size.height - (pushPowerScale * size.height)) / -2.0;
-        CGAffineTransform t = CGAffineTransformIdentity;
-        
-        t = CGAffineTransformTranslate(t, tx, ty);
-        t = CGAffineTransformScale(t, pushPowerScale, pushPowerScale);
-        filtered = [filtered imageByApplyingTransform:t];
-        
-        if (filtered)
-        {
-            [request finishWithImage:filtered context:nil];
-        }
-        else
-        {
-            [request finishWithError:err];
-        }
+    UIView *overlayHost = [[UIView alloc] init];
+    VTAllowAutolayoutForView(overlayHost);
+    overlayHost.backgroundColor = [UIColor colorWithWhite:0.1 alpha:0.4];
+    [self.view addSubview:overlayHost];
+
+    [overlayHost.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
+    [overlayHost.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor].active = YES;
+    [overlayHost.widthAnchor constraintEqualToAnchor:self.view.widthAnchor].active = YES;
+    [overlayHost.heightAnchor constraintEqualToAnchor:self.view.heightAnchor].active = YES;
+
+    VTPieProgressView *progressView = [[VTPieProgressView alloc] init];
+    VTAllowAutolayoutForView(progressView);
+    [self.view addSubview:progressView];
+    
+    progressView.alpha = 0.0;
+    progressView.transform = CGAffineTransformMakeScale(0.80, 0.80);
+    [UIView animateWithDuration:0.33 animations:^{
+        progressView.alpha = 1.0;
+        progressView.transform = CGAffineTransformIdentity;
     }];
     
-    NSString *composedVideoPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"composed.mov"];
-    NSURL *composedVideoURL = [NSURL fileURLWithPath:composedVideoPath];
-    [[NSFileManager defaultManager] removeItemAtPath:composedVideoPath error:nil];
-    
-    AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:asset presetName:AVAssetExportPresetHighestQuality];
-    exportSession.videoComposition = videoComposition;
-    exportSession.outputURL = composedVideoURL;
-    exportSession.outputFileType = AVFileTypeQuickTimeMovie;
-    
-    [exportSession exportAsynchronouslyWithCompletionHandler:^{
+    [progressView.centerXAnchor constraintEqualToAnchor:self.view.centerXAnchor].active = YES;
+    [progressView.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor].active = YES;
+
+    id token = [compositeOperation hf_addBlockObserver:^(VTCompositeZoomEffectOperation *compositeOperation, NSDictionary *change) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            completion(composedVideoURL);
+            progressView.progress = compositeOperation.progress;
         });
-    }];
+    } forKeyPath:VTKeyPath(compositeOperation, progress)];
+
+    VTWeakifyVar(weakCompositeOperation, compositeOperation);
+    compositeOperation.completionBlock = ^{
+        VTStrongifySelf(strongOperation, weakCompositeOperation);
+        [strongOperation hf_removeBlockObserverWithToken:token];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [progressView removeFromSuperview];
+            [overlayHost removeFromSuperview];
+            completion(strongOperation.composedVideoURL);
+        });
+    };
 }
 
 @end

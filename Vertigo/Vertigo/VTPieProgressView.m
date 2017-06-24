@@ -11,7 +11,7 @@
 #import "VTMath.h"
 
 #define INTRINSIC_MARGIN            24.0
-#define PIE_DIMENSION               140.0
+#define PIE_DIMENSION               100.0
 
 @interface _VTPieView : UIView
 @property (nonatomic, assign) float progress;

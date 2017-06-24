@@ -38,6 +38,7 @@
 		FFA05F601E89A344009137DA /* VTZoomEffect.m in Sources */ = {isa = PBXBuildFile; fileRef = FFA05F5F1E89A344009137DA /* VTZoomEffect.m */; };
 		FFCAB58F1EA7DB3F00290390 /* VTSaveVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = FFCAB58E1EA7DB3F00290390 /* VTSaveVideoView.m */; };
 		FFE511301EAD40B900084A67 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = FFE5112F1EAD40B900084A67 /* Settings.bundle */; };
+		FFEC7DE91EFD896F00005151 /* VTCompositeZoomEffectOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = FFEC7DE81EFD896F00005151 /* VTCompositeZoomEffectOperation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -96,6 +97,8 @@
 		FFCAB58D1EA7DB3F00290390 /* VTSaveVideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTSaveVideoView.h; sourceTree = "<group>"; };
 		FFCAB58E1EA7DB3F00290390 /* VTSaveVideoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTSaveVideoView.m; sourceTree = "<group>"; };
 		FFE5112F1EAD40B900084A67 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		FFEC7DE71EFD896F00005151 /* VTCompositeZoomEffectOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTCompositeZoomEffectOperation.h; sourceTree = "<group>"; };
+		FFEC7DE81EFD896F00005151 /* VTCompositeZoomEffectOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTCompositeZoomEffectOperation.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,6 +161,7 @@
 				FF01864F1EAB89D3005AEB06 /* Analytics */,
 				FF74E25F1E8594EB00C6969F /* Controller */,
 				FF2EE31C1E24AB7D007D5E6C /* Model */,
+				FFEC7DE61EFD891F00005151 /* Processing */,
 				FF0F26F61E241B4800D98C90 /* Views */,
 				FF0B623B1E2057A8003BCDB3 /* ViewControllers */,
 				FF1F2F5B1E81B668009F4510 /* Utils */,
@@ -288,6 +292,15 @@
 			name = NonVendor;
 			sourceTree = "<group>";
 		};
+		FFEC7DE61EFD891F00005151 /* Processing */ = {
+			isa = PBXGroup;
+			children = (
+				FFEC7DE71EFD896F00005151 /* VTCompositeZoomEffectOperation.h */,
+				FFEC7DE81EFD896F00005151 /* VTCompositeZoomEffectOperation.m */,
+			);
+			name = Processing;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -371,6 +384,7 @@
 				FF1E036C1E8443110015A004 /* VTToggleButton.m in Sources */,
 				FF0F26F91E241B5500D98C90 /* VTCameraPreviewView.m in Sources */,
 				FF4440491E7AEFFA002B6F67 /* VTRootViewController.m in Sources */,
+				FFEC7DE91EFD896F00005151 /* VTCompositeZoomEffectOperation.m in Sources */,
 				FF0B623A1E2057A4003BCDB3 /* VTMainViewController.m in Sources */,
 				FF8111AD1E8B2781004E87B4 /* HFKVOBlocks.m in Sources */,
 				FF0186521EAB89F0005AEB06 /* VTAnalytics.m in Sources */,

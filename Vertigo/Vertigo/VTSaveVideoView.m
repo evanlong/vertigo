@@ -58,12 +58,11 @@
 @property (nonatomic, assign) float secondsComplete;
 @property (nonatomic, assign) float secondsTotal;
 
+@property (nonatomic, strong) UIView *controlHostView;
+@property (nonatomic, strong) VTOverlayButton *backArrowButton;
+@property (nonatomic, strong) VTOverlayButton *shareButton;
 @property (nonatomic, strong) UISlider *zoomAdjustSlider;
 @property (nonatomic, strong) UILayoutGuide *sliderSpaceGuide;
-
-@property (nonatomic, strong) VTOverlayButton *backArrowButton;
-
-@property (nonatomic, strong) VTOverlayButton *shareButton;
 
 @end
 
@@ -88,6 +87,10 @@
         VTAllowAutolayoutForView(_playerView);
         _playerView.player = _player;
         [_clippingView addSubview:_playerView];
+        
+        _controlHostView = [[UIView alloc] init];
+        VTAllowAutolayoutForView(_controlHostView);
+        [self addSubview:_controlHostView];
 
         _zoomAdjustSlider = [[UISlider alloc] init];
         VTAllowAutolayoutForView(_zoomAdjustSlider);
@@ -102,17 +105,17 @@
         _zoomAdjustSlider.maximumTrackTintColor = [UIColor whiteColor];
         _zoomAdjustSlider.minimumValueImage = [UIImage imageNamed:@"LeftIcon"];
         _zoomAdjustSlider.maximumValueImage = [UIImage imageNamed:@"RightIcon"];
-        [self addSubview:_zoomAdjustSlider];
-        
+        [_controlHostView addSubview:_zoomAdjustSlider];
+
         _backArrowButton = [[VTOverlayButton alloc] initWithOverlayImageName:@"BackIcon"];
         VTAllowAutolayoutForView(_backArrowButton);
         [_backArrowButton addTarget:self action:@selector(_handleDiscardButtonPress) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:_backArrowButton];
+        [_controlHostView addSubview:_backArrowButton];
         
         _shareButton = [[VTOverlayButton alloc] initWithOverlayImageName:@"Sharrow"];
         VTAllowAutolayoutForView(_shareButton);
         [_shareButton addTarget:self action:@selector(_handleShareButtonPress) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:_shareButton];
+        [_controlHostView addSubview:_shareButton];
         
         VTWeakifySelf(weakSelf);
         [_player addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1.0/60.0, 60) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
@@ -124,34 +127,41 @@
             }
         }];
         
+        {
+            [_controlHostView.widthAnchor constraintEqualToAnchor:self.widthAnchor].active = YES;
+            [_controlHostView.heightAnchor constraintEqualToAnchor:self.heightAnchor].active = YES;
+            [_controlHostView.centerXAnchor constraintEqualToAnchor:self.centerXAnchor].active = YES;
+            [_controlHostView.centerYAnchor constraintEqualToAnchor:self.centerYAnchor].active = YES;
+        }
+        
         { // Bottom Share/Save Controls
-            [_shareButton.centerXAnchor constraintEqualToAnchor:self.centerXAnchor].active = YES;
-            [_shareButton.bottomAnchor constraintEqualToAnchor:self.bottomAnchor constant:-20.0].active = YES;
+            [_shareButton.centerXAnchor constraintEqualToAnchor:_controlHostView.centerXAnchor].active = YES;
+            [_shareButton.bottomAnchor constraintEqualToAnchor:_controlHostView.bottomAnchor constant:-20.0].active = YES;
         }
         
         { // Back Arrow
-            [_backArrowButton.leftAnchor constraintEqualToAnchor:self.leftAnchor constant:24.0].active = YES;
-            [_backArrowButton.topAnchor constraintEqualToAnchor:self.topAnchor constant:24.0].active = YES;
+            [_backArrowButton.leftAnchor constraintEqualToAnchor:_controlHostView.leftAnchor constant:24.0].active = YES;
+            [_backArrowButton.topAnchor constraintEqualToAnchor:_controlHostView.topAnchor constant:24.0].active = YES;
         }
         
         {
             UILayoutGuide *sliderGuideTopInset = [[UILayoutGuide alloc] init];
-            [self addLayoutGuide:sliderGuideTopInset];
-            [sliderGuideTopInset.topAnchor constraintEqualToAnchor:self.topAnchor].active = YES;
+            [_controlHostView addLayoutGuide:sliderGuideTopInset];
+            [sliderGuideTopInset.topAnchor constraintEqualToAnchor:_controlHostView.topAnchor].active = YES;
             [sliderGuideTopInset.bottomAnchor constraintEqualToAnchor:_backArrowButton.bottomAnchor].active = YES;
             
             UILayoutGuide *sliderGuideBottomInset = [[UILayoutGuide alloc] init];
-            [self addLayoutGuide:sliderGuideBottomInset];
+            [_controlHostView addLayoutGuide:sliderGuideBottomInset];
             [sliderGuideBottomInset.topAnchor constraintEqualToAnchor:_shareButton.topAnchor].active = YES;
-            [sliderGuideBottomInset.bottomAnchor constraintEqualToAnchor:self.bottomAnchor].active = YES;
+            [sliderGuideBottomInset.bottomAnchor constraintEqualToAnchor:_controlHostView.bottomAnchor].active = YES;
             
             _sliderSpaceGuide = [[UILayoutGuide alloc] init];
-            [self addLayoutGuide:_sliderSpaceGuide];
+            [_controlHostView addLayoutGuide:_sliderSpaceGuide];
             [_sliderSpaceGuide.topAnchor constraintEqualToAnchor:sliderGuideTopInset.bottomAnchor].active = YES;
             [_sliderSpaceGuide.bottomAnchor constraintEqualToAnchor:sliderGuideBottomInset.topAnchor].active = YES;
             [_sliderSpaceGuide.leftAnchor constraintEqualToAnchor:_zoomAdjustSlider.centerXAnchor].active = YES;
             
-            [_zoomAdjustSlider.centerXAnchor constraintEqualToAnchor:self.rightAnchor constant:-40.0].active = YES;
+            [_zoomAdjustSlider.centerXAnchor constraintEqualToAnchor:_controlHostView.rightAnchor constant:-40.0].active = YES;
             [_zoomAdjustSlider.centerYAnchor constraintEqualToAnchor:_sliderSpaceGuide.centerYAnchor].active = YES;
             [_zoomAdjustSlider.widthAnchor constraintEqualToAnchor:_sliderSpaceGuide.heightAnchor].active = YES;
             _zoomAdjustSlider.transform = CGAffineTransformMakeRotation(-M_PI_2);
@@ -221,6 +231,32 @@
     settings.duration = self.secondsTotal;
     
     return [settings copy];
+}
+
+- (void)setHideControls:(BOOL)hideControls
+{
+    [self setHideControls:hideControls animated:NO];
+}
+
+- (void)setHideControls:(BOOL)hideControls animated:(BOOL)animated
+{
+    if (_hideControls != hideControls)
+    {
+        _hideControls = hideControls;
+        void(^block)(void) = ^{
+            self.controlHostView.alpha = hideControls ? 0.0 : 1.0;
+            self.controlHostView.transform = hideControls ? CGAffineTransformMakeScale(0.97, 0.97) : CGAffineTransformIdentity;
+        };
+        
+        if (animated)
+        {
+            [UIView animateWithDuration:0.33 animations:block];
+        }
+        else
+        {
+            block();
+        }
+    }
 }
 
 #pragma mark - Events
