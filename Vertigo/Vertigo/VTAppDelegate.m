@@ -14,6 +14,8 @@
 #import "VTMainViewController.h"
 #import "VTRootViewController.h"
 
+#import <AVFoundation/AVFoundation.h>
+
 @interface VTAppDelegate ()
 
 @end
@@ -41,6 +43,8 @@
     
     VTAnalyticsTrackEvent(VTAnalyticsAppDidLaunchEvent);
     
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:nil];
+
     return YES;
 }
 
