@@ -74,6 +74,7 @@ typedef NS_ENUM(NSInteger, VTRecordingState) {
 
 // Save View
 @property (nonatomic, strong) VTSaveVideoView *saveVideoView;
+@property (nonatomic, assign) BOOL didTakeActionOnVideo;
 
 // Marketing
 @property (nonatomic, strong) UIImageView *marketingImageView;
@@ -295,6 +296,9 @@ static id commonInit(VTRootViewController *self)
         activityViewController.viewWillDisappear = ^{
             [saveVideoView setHideControls:NO animated:YES];
         };
+        activityViewController.completionWithItemsHandler = ^(UIActivityType activityType, BOOL completed, NSArray *returnedItems, NSError *activityError) {
+            self.didTakeActionOnVideo = completed || self.didTakeActionOnVideo;
+        };
         [self presentViewController:activityViewController animated:YES completion:NULL];
     }];
 }
@@ -309,21 +313,27 @@ static id commonInit(VTRootViewController *self)
 - (void)saveVideoViewDidPressDiscard:(VTSaveVideoView *)saveVideoView
 {
     NSURL *videoURL = saveVideoView.videoURL;
-    UIAlertController *confirmDiscardAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"SharePanelDiscardTitle", nil) message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-
-    VTWeakifySelf(weakSelf);
-    [confirmDiscardAlert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"SharePanelDiscard", nil) style:UIAlertActionStyleDestructive handler:^(UIAlertAction *_Nonnull action) {
-        VTStrongifySelf(strongSelf, weakSelf);
-        NSString *composedVideoPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"composed.mov"];
-        NSURL *composedVideoURL = [NSURL fileURLWithPath:composedVideoPath];
-        [strongSelf _endShareFlowWithVideoURLs:@[videoURL, composedVideoURL]];
-    }]];
-    
-    [confirmDiscardAlert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"SharePanelCancel", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction *_Nonnull action) {
-        // NOP
-    }]];
-
-    [self presentViewController:confirmDiscardAlert animated:YES completion:NULL];
+    NSString *composedVideoPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"composed.mov"];
+    NSURL *composedVideoURL = [NSURL fileURLWithPath:composedVideoPath];
+    if (self.didTakeActionOnVideo)
+    {
+        [self _endShareFlowWithVideoURLs:@[videoURL, composedVideoURL]];
+    }
+    else
+    {
+        UIAlertController *confirmDiscardAlert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"SharePanelDiscardTitle", nil) message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        
+        VTWeakifySelf(weakSelf);
+        [confirmDiscardAlert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"SharePanelDiscard", nil) style:UIAlertActionStyleDestructive handler:^(UIAlertAction *_Nonnull action) {
+            [weakSelf _endShareFlowWithVideoURLs:@[videoURL, composedVideoURL]];
+        }]];
+        
+        [confirmDiscardAlert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"SharePanelCancel", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction *_Nonnull action) {
+            // NOP
+        }]];
+        
+        [self presentViewController:confirmDiscardAlert animated:YES completion:NULL];
+    }
 }
 
 #pragma mark - Private (Setup)
@@ -434,6 +444,7 @@ static id commonInit(VTRootViewController *self)
     [self.saveVideoView removeFromSuperview];
     self.saveVideoView = nil;
     self.recordingParentView.hidden = NO;
+    self.didTakeActionOnVideo = NO;
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
         for (NSURL *url in urls)
         {

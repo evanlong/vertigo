@@ -6,7 +6,6 @@
             - Animation showing camera movement and zoom level
         * Progress Bar as playback occurs during editing/sharing
     + Cache results of a "process/composite" operation
-    + If a save/share action has been take, then don't present the confirmation for discard
 
 - Icons
     + Draw arrows with same line weight, but differing total size. Currently things are just the same rotated and scaled to various sizes. Should try and keep weight same for consistency
