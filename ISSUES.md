@@ -6,6 +6,7 @@
             - Animation showing camera movement and zoom level
         * Progress Bar as playback occurs during editing/sharing
     + Cache results of a "process/composite" operation
+    - Improve Transtion TO sharing screen and FROM sharing screen
 
 - UI handles rotation based on device orientation
     + Allow some UI elements to rotate in place
