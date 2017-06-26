@@ -10,3 +10,8 @@ typedef NS_ENUM(NSInteger, VTVertigoDirection) {
     VTVertigoDirectionPull, // Start close and end far from object. Close -> Far
     VTVertigoDirectionPush, // Start far and end close to object. Far -> Close
 };
+
+typedef struct {
+    VTVertigoDirection direction;
+    CGFloat magnitude;
+} VTDirectionMagnitude;

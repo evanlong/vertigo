@@ -4,21 +4,28 @@
     + UI Changes to Save Flow
         * Vertical adjustment slider for zoom editing
             - Animation showing camera movement and zoom level
-        * Progress Bar as playback occurs during editing/sharing
+                + Try and all white varient instead of the colorized version
+                - Don't animate in middle position of slider. Just leave in static position
+            - Tapping the slider up/down arrows indicators should trigger fine grained adjustments
+            - Display start->end zoom level that the editing slider is adjusting
+    + As slider drags, display the first / final frames and relative zoom adjustments that are takin gplace
     + Cache results of a "process/composite" operation
-    - Improve Transtion TO sharing screen and FROM sharing screen
+    + Improve Transtion TO sharing screen and FROM sharing screen
+
+
+- Info Button / Panel
+    + On each screen consider overlaying a help, tip sheet
+    + More detailed popup showing:
+        + Help and tutorials
+        + My own video samples
+        + YouTube Video samples
+        + Info on open source that is used
 
 - UI handles rotation based on device orientation
     + Allow some UI elements to rotate in place
 
 - Icons
     + Draw arrows with same line weight, but differing total size. Currently things are just the same rotated and scaled to various sizes. Should try and keep weight same for consistency
-
-- Info panel
-    + Help and tutorials
-    + My own video samples
-    + YouTube Video samples
-    + Info on open source that is used
 
 - Include some text, or animation indicating the direction of movement of the phone based on push VS pull mode. A lot of times people don't know they need to move the phone while recording
 - Looping / Preview Mode

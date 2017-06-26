@@ -36,6 +36,8 @@
 		FF8111AD1E8B2781004E87B4 /* HFKVOBlocks.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8111AC1E8B2781004E87B4 /* HFKVOBlocks.m */; };
 		FF84B7171E92FB7400F79413 /* VTZoomEffectSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = FF84B7161E92FB7400F79413 /* VTZoomEffectSettings.m */; };
 		FFA05F601E89A344009137DA /* VTZoomEffect.m in Sources */ = {isa = PBXBuildFile; fileRef = FFA05F5F1E89A344009137DA /* VTZoomEffect.m */; };
+		FFA556FD1F005FF400B2E35A /* QCMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = FFA556FA1F005FF400B2E35A /* QCMethod.m */; };
+		FFA556FE1F005FF400B2E35A /* VTPushPullAnimationView.m in Sources */ = {isa = PBXBuildFile; fileRef = FFA556FC1F005FF400B2E35A /* VTPushPullAnimationView.m */; };
 		FFCAB58F1EA7DB3F00290390 /* VTSaveVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = FFCAB58E1EA7DB3F00290390 /* VTSaveVideoView.m */; };
 		FFE511301EAD40B900084A67 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = FFE5112F1EAD40B900084A67 /* Settings.bundle */; };
 		FFEC7DE91EFD896F00005151 /* VTCompositeZoomEffectOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = FFEC7DE81EFD896F00005151 /* VTCompositeZoomEffectOperation.m */; };
@@ -94,6 +96,10 @@
 		FF84B7161E92FB7400F79413 /* VTZoomEffectSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTZoomEffectSettings.m; sourceTree = "<group>"; };
 		FFA05F5E1E89A344009137DA /* VTZoomEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTZoomEffect.h; sourceTree = "<group>"; };
 		FFA05F5F1E89A344009137DA /* VTZoomEffect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTZoomEffect.m; sourceTree = "<group>"; };
+		FFA556F91F005FF400B2E35A /* QCMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QCMethod.h; sourceTree = "<group>"; };
+		FFA556FA1F005FF400B2E35A /* QCMethod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QCMethod.m; sourceTree = "<group>"; };
+		FFA556FB1F005FF400B2E35A /* VTPushPullAnimationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTPushPullAnimationView.h; sourceTree = "<group>"; };
+		FFA556FC1F005FF400B2E35A /* VTPushPullAnimationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTPushPullAnimationView.m; sourceTree = "<group>"; };
 		FFCAB58D1EA7DB3F00290390 /* VTSaveVideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTSaveVideoView.h; sourceTree = "<group>"; };
 		FFCAB58E1EA7DB3F00290390 /* VTSaveVideoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTSaveVideoView.m; sourceTree = "<group>"; };
 		FFE5112F1EAD40B900084A67 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
@@ -219,6 +225,7 @@
 		FF0F26F61E241B4800D98C90 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				FFA556F81F005FE900B2E35A /* Animation */,
 				FF1E03691E8440DB0015A004 /* CameraControls */,
 				FF0F26F71E241B5500D98C90 /* VTCameraPreviewView.h */,
 				FF0F26F81E241B5500D98C90 /* VTCameraPreviewView.m */,
@@ -290,6 +297,17 @@
 				FF8111AC1E8B2781004E87B4 /* HFKVOBlocks.m */,
 			);
 			name = NonVendor;
+			sourceTree = "<group>";
+		};
+		FFA556F81F005FE900B2E35A /* Animation */ = {
+			isa = PBXGroup;
+			children = (
+				FFA556F91F005FF400B2E35A /* QCMethod.h */,
+				FFA556FA1F005FF400B2E35A /* QCMethod.m */,
+				FFA556FB1F005FF400B2E35A /* VTPushPullAnimationView.h */,
+				FFA556FC1F005FF400B2E35A /* VTPushPullAnimationView.m */,
+			);
+			name = Animation;
 			sourceTree = "<group>";
 		};
 		FFEC7DE61EFD891F00005151 /* Processing */ = {
@@ -380,6 +398,7 @@
 				FF1F2F8F1E82F86C009F4510 /* VTCameraControlView.m in Sources */,
 				FF0B62231E20567B003BCDB3 /* main.m in Sources */,
 				FFA05F601E89A344009137DA /* VTZoomEffect.m in Sources */,
+				FFA556FE1F005FF400B2E35A /* VTPushPullAnimationView.m in Sources */,
 				FF74E2621E85951B00C6969F /* VTCameraController.m in Sources */,
 				FF1E036C1E8443110015A004 /* VTToggleButton.m in Sources */,
 				FF0F26F91E241B5500D98C90 /* VTCameraPreviewView.m in Sources */,
@@ -389,6 +408,7 @@
 				FF8111AD1E8B2781004E87B4 /* HFKVOBlocks.m in Sources */,
 				FF0186521EAB89F0005AEB06 /* VTAnalytics.m in Sources */,
 				FF1F2F5A1E81ACF0009F4510 /* VTRequiresCameraPermissionView.m in Sources */,
+				FFA556FD1F005FF400B2E35A /* QCMethod.m in Sources */,
 				FF19EE701E8841840001AFC4 /* VTCaptureTypes.m in Sources */,
 				FFCAB58F1EA7DB3F00290390 /* VTSaveVideoView.m in Sources */,
 				FF1F2F5E1E81B67A009F4510 /* VTMath.m in Sources */,

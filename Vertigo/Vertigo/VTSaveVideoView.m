@@ -11,8 +11,10 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AVKit/AVKit.h>
 
+#import "VTCaptureTypes.h"
 #import "VTOverlayButton.h"
 #import "VTMath.h"
+#import "VTPushPullAnimationView.h"
 #import "VTZoomEffect.h"
 
 #define CONTROL_BACKDROP_COLOR          [UIColor colorWithWhite:0.1 alpha:0.70]
@@ -63,6 +65,10 @@
 @property (nonatomic, strong) VTOverlayButton *shareButton;
 @property (nonatomic, strong) UISlider *zoomAdjustSlider;
 @property (nonatomic, strong) UILayoutGuide *sliderSpaceGuide;
+@property (nonatomic, strong) UIView *sliderMidpointView;
+
+@property (nonatomic, strong) VTPushPullAnimationView *pushAnimationView;
+@property (nonatomic, strong) VTPushPullAnimationView *pullAnimationView;
 
 @end
 
@@ -91,6 +97,15 @@
         _controlHostView = [[UIView alloc] init];
         VTAllowAutolayoutForView(_controlHostView);
         [self addSubview:_controlHostView];
+        
+        _sliderMidpointView = [[UIView alloc] init];
+        _sliderMidpointView.backgroundColor = [UIColor whiteColor];
+        _sliderMidpointView.layer.shadowColor = [UIColor blackColor].CGColor;
+        _sliderMidpointView.layer.shadowRadius = 2.25;
+        _sliderMidpointView.layer.shadowOpacity = 1.0;
+        _sliderMidpointView.layer.shadowOffset = CGSizeZero;
+        VTAllowAutolayoutForView(_sliderMidpointView);
+        [_controlHostView addSubview:_sliderMidpointView];
 
         _zoomAdjustSlider = [[UISlider alloc] init];
         VTAllowAutolayoutForView(_zoomAdjustSlider);
@@ -105,7 +120,16 @@
         _zoomAdjustSlider.maximumTrackTintColor = [UIColor whiteColor];
         _zoomAdjustSlider.minimumValueImage = [UIImage imageNamed:@"LeftIcon"];
         _zoomAdjustSlider.maximumValueImage = [UIImage imageNamed:@"RightIcon"];
+        [_zoomAdjustSlider addTarget:self action:@selector(_handleZoomSliderValueChanged) forControlEvents:UIControlEventValueChanged];
         [_controlHostView addSubview:_zoomAdjustSlider];
+        
+        _pullAnimationView = [[VTPushPullAnimationView alloc] init];
+        VTAllowAutolayoutForView(_pullAnimationView);
+        [_controlHostView addSubview:_pullAnimationView];
+
+        _pushAnimationView = [[VTPushPullAnimationView alloc] init];
+        VTAllowAutolayoutForView(_pushAnimationView);
+        [_controlHostView addSubview:_pushAnimationView];
 
         _backArrowButton = [[VTOverlayButton alloc] initWithOverlayImageName:@"BackIcon"];
         VTAllowAutolayoutForView(_backArrowButton);
@@ -165,6 +189,19 @@
             [_zoomAdjustSlider.centerYAnchor constraintEqualToAnchor:_sliderSpaceGuide.centerYAnchor].active = YES;
             [_zoomAdjustSlider.widthAnchor constraintEqualToAnchor:_sliderSpaceGuide.heightAnchor].active = YES;
             _zoomAdjustSlider.transform = CGAffineTransformMakeRotation(-M_PI_2);
+            
+            [_sliderMidpointView.widthAnchor constraintEqualToConstant:40.0].active = YES;
+            [_sliderMidpointView.heightAnchor constraintEqualToConstant:4.0].active = YES;
+            [_sliderMidpointView.rightAnchor constraintEqualToAnchor:_sliderSpaceGuide.leftAnchor constant:-20.0].active = YES;
+            [_sliderMidpointView.centerYAnchor constraintEqualToAnchor:_sliderSpaceGuide.centerYAnchor].active = YES;
+        }
+        
+        {
+            [_pushAnimationView.centerYAnchor constraintEqualToAnchor:_controlHostView.centerYAnchor].active = YES;
+            [_pushAnimationView.leftAnchor constraintEqualToAnchor:_controlHostView.leftAnchor constant:10.0].active = YES;
+
+            [_pullAnimationView.centerYAnchor constraintEqualToAnchor:_controlHostView.centerYAnchor].active = YES;
+            [_pullAnimationView.leftAnchor constraintEqualToAnchor:_controlHostView.leftAnchor constant:10.0].active = YES;
         }
         
         {
@@ -197,6 +234,7 @@
 {
     [super didMoveToSuperview];
     [self _updatePlayback];
+    [self _updatePushPullAnimationVisibility];
 }
 
 #pragma mark - VTSaveVideoView
@@ -212,12 +250,11 @@
 
 - (VTZoomEffectSettings *)settings
 {
-    CGFloat targetScale = VTRoundToNearestFactor(self.zoomAdjustSlider.value, 0.01);
-    BOOL isPull = targetScale <= 0.0;
-    targetScale = ABS(targetScale) + 1.0;
+    const VTDirectionMagnitude dm = [self _directionMagnitide];
+    const CGFloat targetScale = dm.magnitude;
     
     VTMutableZoomEffectSettings *settings = [[VTMutableZoomEffectSettings alloc] init];
-    if (isPull)
+    if (dm.direction == VTVertigoDirectionPull)
     {
         settings.initalZoomLevel = 1.0;
         settings.finalZoomLevel = targetScale;
@@ -288,6 +325,11 @@
     }
 }
 
+- (void)_handleZoomSliderValueChanged
+{
+    [self _updatePushPullAnimationVisibility];
+}
+
 # pragma mark - Notifications
 
 - (void)_itemDidPlayToEnd:(NSNotification *)notification
@@ -306,6 +348,8 @@
 
 - (void)_updatePlayback
 {
+    [self _restartPushPullAnimation];
+
     [self.player seekToTime:kCMTimeZero];
 
     if (self.superview && [UIApplication sharedApplication].applicationState == UIApplicationStateActive)
@@ -323,6 +367,43 @@
     VTZoomEffectSettings *settings = self.settings;
     CGFloat scale = VTVertigoEffectZoomPowerScale(settings.initalZoomLevel, settings.finalZoomLevel, self.secondsComplete, self.secondsTotal);
     self.playerView.transform = CGAffineTransformMakeScale(scale, scale);
+}
+
+#pragma mark - Private
+
+- (void)_restartPushPullAnimation
+{
+    [self.pushAnimationView removeAllAnimations];
+    [self.pullAnimationView removeAllAnimations];
+    
+    [self.pushAnimationView addPullAnimationReverse:YES totalDuration:MAX(1.0, self.secondsTotal) completionBlock:NULL];
+    [self.pullAnimationView addPullAnimationReverse:NO totalDuration:MAX(1.0, self.secondsTotal) completionBlock:NULL];
+}
+
+- (void)_updatePushPullAnimationVisibility
+{
+    VTDirectionMagnitude dm = [self _directionMagnitide];
+    if (dm.direction == VTVertigoDirectionPush)
+    {
+        self.pushAnimationView.hidden = NO;
+        self.pullAnimationView.hidden = YES;
+    }
+    else
+    {
+        self.pushAnimationView.hidden = YES;
+        self.pullAnimationView.hidden = NO;
+    }
+}
+
+- (VTDirectionMagnitude)_directionMagnitide
+{
+    VTDirectionMagnitude dm;
+    
+    CGFloat targetScale = VTRoundToNearestFactor(self.zoomAdjustSlider.value, 0.01);
+    dm.direction = targetScale <= 0.0 ? VTVertigoDirectionPull : VTVertigoDirectionPush;
+    dm.magnitude = ABS(targetScale) + 1.0;
+    
+    return dm;
 }
 
 @end
