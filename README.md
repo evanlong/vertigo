@@ -57,3 +57,30 @@ Known Issues:
 - UI: Improved the record button
 - Continue to test Sharing flow
 
+
+### Beta-11
+
+Instead of locking the user to a 1x -> 2x or 2x -> 1x zoom level, it is now possible to record the video, and adjust the Vertigo Effect on the post processing / share screen.
+
+New flow for recording the Vertigo Effect:
+
+1. Select a duration
+2. Record your video while moving closer or further away from an object
+3. On the Sharing/Editing screen use the slider on the right to adjust the push/pull amount (zoom level change) over the duration of the recording
+4. Share or Save the video using the share button
+
+### Beta-12
+
+- Background audio continues playing while using Vertigo Camera
+- Share screen includes an animation indicating camera movement through the scene relative to a stationary object
+
+Instead of locking the user to a 1x -> 2x or 2x -> 1x zoom level, it is now possible to record the video, and adjust the Vertigo Effect on the post processing / share screen.
+
+New flow for recording the Vertigo Effect:
+
+1. Select a duration
+2. Record your video while moving closer or further away from an object
+3. On the Sharing/Editing screen use the slider on the right to adjust the push/pull amount (zoom level change) over the duration of the recording
+4. Share or Save the video using the share button
+
+

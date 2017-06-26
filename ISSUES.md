@@ -3,6 +3,7 @@
 - Sharing and Editing 2.0
     + UI Changes to Save Flow
         * Vertical adjustment slider for zoom editing
+            - Pentagon should be indepedent object seperate from the camera
             - Animation showing camera movement and zoom level
                 + Try and all white varient instead of the colorized version
                 - Don't animate in middle position of slider. Just leave in static position
