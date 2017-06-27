@@ -36,6 +36,7 @@
 		FF8111AD1E8B2781004E87B4 /* HFKVOBlocks.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8111AC1E8B2781004E87B4 /* HFKVOBlocks.m */; };
 		FF84B7171E92FB7400F79413 /* VTZoomEffectSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = FF84B7161E92FB7400F79413 /* VTZoomEffectSettings.m */; };
 		FFA05F601E89A344009137DA /* VTZoomEffect.m in Sources */ = {isa = PBXBuildFile; fileRef = FFA05F5F1E89A344009137DA /* VTZoomEffect.m */; };
+		FFA4536E1F01BF9800C5C3E5 /* VTTargetAnimationView.m in Sources */ = {isa = PBXBuildFile; fileRef = FFA4536D1F01BF9800C5C3E5 /* VTTargetAnimationView.m */; };
 		FFA556FD1F005FF400B2E35A /* QCMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = FFA556FA1F005FF400B2E35A /* QCMethod.m */; };
 		FFA556FE1F005FF400B2E35A /* VTPushPullAnimationView.m in Sources */ = {isa = PBXBuildFile; fileRef = FFA556FC1F005FF400B2E35A /* VTPushPullAnimationView.m */; };
 		FFCAB58F1EA7DB3F00290390 /* VTSaveVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = FFCAB58E1EA7DB3F00290390 /* VTSaveVideoView.m */; };
@@ -96,6 +97,8 @@
 		FF84B7161E92FB7400F79413 /* VTZoomEffectSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTZoomEffectSettings.m; sourceTree = "<group>"; };
 		FFA05F5E1E89A344009137DA /* VTZoomEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTZoomEffect.h; sourceTree = "<group>"; };
 		FFA05F5F1E89A344009137DA /* VTZoomEffect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTZoomEffect.m; sourceTree = "<group>"; };
+		FFA4536C1F01BF9800C5C3E5 /* VTTargetAnimationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTTargetAnimationView.h; sourceTree = "<group>"; };
+		FFA4536D1F01BF9800C5C3E5 /* VTTargetAnimationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTTargetAnimationView.m; sourceTree = "<group>"; };
 		FFA556F91F005FF400B2E35A /* QCMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QCMethod.h; sourceTree = "<group>"; };
 		FFA556FA1F005FF400B2E35A /* QCMethod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QCMethod.m; sourceTree = "<group>"; };
 		FFA556FB1F005FF400B2E35A /* VTPushPullAnimationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTPushPullAnimationView.h; sourceTree = "<group>"; };
@@ -306,6 +309,8 @@
 				FFA556FA1F005FF400B2E35A /* QCMethod.m */,
 				FFA556FB1F005FF400B2E35A /* VTPushPullAnimationView.h */,
 				FFA556FC1F005FF400B2E35A /* VTPushPullAnimationView.m */,
+				FFA4536C1F01BF9800C5C3E5 /* VTTargetAnimationView.h */,
+				FFA4536D1F01BF9800C5C3E5 /* VTTargetAnimationView.m */,
 			);
 			name = Animation;
 			sourceTree = "<group>";
@@ -414,6 +419,7 @@
 				FF1F2F5E1E81B67A009F4510 /* VTMath.m in Sources */,
 				FF0185FD1EAA774F005AEB06 /* VTRecordButton.m in Sources */,
 				FF54F7D51E9C302B00D84F2C /* VTPushPullToggleControl.m in Sources */,
+				FFA4536E1F01BF9800C5C3E5 /* VTTargetAnimationView.m in Sources */,
 				FF717B831EFB2ABF00902AAA /* VTOverlayButton.m in Sources */,
 				FF54C3F41EFC33B8002CA48A /* VTPieProgressView.m in Sources */,
 			);

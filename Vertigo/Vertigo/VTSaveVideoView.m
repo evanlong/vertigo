@@ -15,6 +15,7 @@
 #import "VTOverlayButton.h"
 #import "VTMath.h"
 #import "VTPushPullAnimationView.h"
+#import "VTTargetAnimationView.h"
 #import "VTZoomEffect.h"
 
 #define CONTROL_BACKDROP_COLOR          [UIColor colorWithWhite:0.1 alpha:0.70]
@@ -67,6 +68,7 @@
 @property (nonatomic, strong) UILayoutGuide *sliderSpaceGuide;
 @property (nonatomic, strong) UIView *sliderMidpointView;
 
+@property (nonatomic, strong) VTTargetAnimationView *targetAnimationView;
 @property (nonatomic, strong) VTPushPullAnimationView *pushAnimationView;
 @property (nonatomic, strong) VTPushPullAnimationView *pullAnimationView;
 
@@ -122,6 +124,11 @@
         _zoomAdjustSlider.maximumValueImage = [UIImage imageNamed:@"RightIcon"];
         [_zoomAdjustSlider addTarget:self action:@selector(_handleZoomSliderValueChanged) forControlEvents:UIControlEventValueChanged];
         [_controlHostView addSubview:_zoomAdjustSlider];
+        
+        _targetAnimationView = [[VTTargetAnimationView alloc] init];
+        VTAllowAutolayoutForView(_targetAnimationView);
+        [_targetAnimationView addBorderAnimation];
+        [_controlHostView addSubview:_targetAnimationView];
         
         _pullAnimationView = [[VTPushPullAnimationView alloc] init];
         VTAllowAutolayoutForView(_pullAnimationView);
@@ -197,6 +204,9 @@
         }
         
         {
+            [_targetAnimationView.centerXAnchor constraintEqualToAnchor:_pushAnimationView.centerXAnchor].active = YES;
+            [_targetAnimationView.bottomAnchor constraintEqualToAnchor:_pushAnimationView.topAnchor].active = YES;
+            
             [_pushAnimationView.centerYAnchor constraintEqualToAnchor:_controlHostView.centerYAnchor].active = YES;
             [_pushAnimationView.leftAnchor constraintEqualToAnchor:_controlHostView.leftAnchor constant:10.0].active = YES;
 

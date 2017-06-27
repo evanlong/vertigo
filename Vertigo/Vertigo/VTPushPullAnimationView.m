@@ -1,7 +1,7 @@
 //
 //  VTPushPullAnimationView.m
 //
-//  Code generated using QuartzCode 1.56.0 on 6/25/17.
+//  Code generated using QuartzCode 1.56.0 on 6/26/17.
 //  www.quartzcodeapp.com
 //
 
@@ -118,12 +118,6 @@
     }
     
     
-    CAShapeLayer * vertigoObject = [CAShapeLayer layer];
-    vertigoObject.frame = CGRectMake(35, 5, 30, 30);
-    vertigoObject.path = [self vertigoObjectPath].CGPath;
-    [self.layer addSublayer:vertigoObject];
-    self.layers[@"vertigoObject"] = vertigoObject;
-    
     [self resetLayerPropertiesForLayerIdentifiers:nil];
 }
 
@@ -185,18 +179,6 @@
         recordingLight.strokeColor = [UIColor whiteColor].CGColor;
         recordingLight.lineWidth   = 0;
     }
-    if(!layerIds || [layerIds containsObject:@"vertigoObject"]){
-        CAShapeLayer * vertigoObject = self.layers[@"vertigoObject"];
-        vertigoObject.lineCap         = kCALineCapRound;
-        vertigoObject.fillColor       = [UIColor colorWithRed:0.4 green: 0.4 blue:0.4 alpha:1].CGColor;
-        vertigoObject.strokeColor     = [UIColor colorWithRed:0.702 green: 0.702 blue:0.702 alpha:1].CGColor;
-        vertigoObject.lineWidth       = 2;
-        vertigoObject.lineDashPattern = @[@1, @5];
-        vertigoObject.shadowColor     = [UIColor blackColor].CGColor;
-        vertigoObject.shadowOpacity = 1;
-        vertigoObject.shadowOffset  = CGSizeMake(0, -0);
-        vertigoObject.shadowRadius  = 2;
-    }
     
     [CATransaction commit];
 }
@@ -228,7 +210,7 @@
     CABasicAnimation * cameraPositionAnim = [CABasicAnimation animationWithKeyPath:@"position"];
     cameraPositionAnim.fromValue          = [NSValue valueWithCGPoint:CGPointMake(50, 58.25)];
     cameraPositionAnim.toValue            = [NSValue valueWithCGPoint:CGPointMake(50, 240)];
-    cameraPositionAnim.duration           = 1 * totalDuration;
+    cameraPositionAnim.duration           = totalDuration;
     cameraPositionAnim.timingFunction     = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
     
     CAAnimationGroup * cameraPullAnim = [QCMethod groupAnimations:@[cameraPositionAnim] fillMode:fillMode];
@@ -239,19 +221,19 @@
     CABasicAnimation * leftAnchorPointAnim = [CABasicAnimation animationWithKeyPath:@"anchorPoint"];
     leftAnchorPointAnim.fromValue          = [NSValue valueWithCGPoint:CGPointMake(1, 1)];
     leftAnchorPointAnim.toValue            = [NSValue valueWithCGPoint:CGPointMake(1, 1)];
-    leftAnchorPointAnim.duration           = 1 * totalDuration;
+    leftAnchorPointAnim.duration           = totalDuration;
     leftAnchorPointAnim.timingFunction     = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
     
     CABasicAnimation * leftTransformAnim = [CABasicAnimation animationWithKeyPath:@"transform.rotation"];
     leftTransformAnim.fromValue          = @(0);
     leftTransformAnim.toValue            = @(26 * M_PI/180);
-    leftTransformAnim.duration           = 1 * totalDuration;
+    leftTransformAnim.duration           = totalDuration;
     leftTransformAnim.timingFunction     = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
     
     CABasicAnimation * leftLineDashPhaseAnim = [CABasicAnimation animationWithKeyPath:@"lineDashPhase"];
     leftLineDashPhaseAnim.fromValue      = @0;
     leftLineDashPhaseAnim.toValue        = @-40;
-    leftLineDashPhaseAnim.duration       = 1 * totalDuration;
+    leftLineDashPhaseAnim.duration       = totalDuration;
     leftLineDashPhaseAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
     
     CAAnimationGroup * leftPullAnim = [QCMethod groupAnimations:@[leftAnchorPointAnim, leftTransformAnim, leftLineDashPhaseAnim] fillMode:fillMode];
@@ -262,19 +244,19 @@
     CABasicAnimation * rightAnchorPointAnim = [CABasicAnimation animationWithKeyPath:@"anchorPoint"];
     rightAnchorPointAnim.fromValue      = [NSValue valueWithCGPoint:CGPointMake(0, 1)];
     rightAnchorPointAnim.toValue        = [NSValue valueWithCGPoint:CGPointMake(0, 1)];
-    rightAnchorPointAnim.duration       = 1 * totalDuration;
+    rightAnchorPointAnim.duration       = totalDuration;
     rightAnchorPointAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
     
     CABasicAnimation * rightTransformAnim = [CABasicAnimation animationWithKeyPath:@"transform.rotation"];
     rightTransformAnim.fromValue          = @(0);
     rightTransformAnim.toValue            = @(-26 * M_PI/180);
-    rightTransformAnim.duration           = 1 * totalDuration;
+    rightTransformAnim.duration           = totalDuration;
     rightTransformAnim.timingFunction     = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
     
     CABasicAnimation * rightLineDashPhaseAnim = [CABasicAnimation animationWithKeyPath:@"lineDashPhase"];
     rightLineDashPhaseAnim.fromValue      = @0;
     rightLineDashPhaseAnim.toValue        = @-40;
-    rightLineDashPhaseAnim.duration       = 1 * totalDuration;
+    rightLineDashPhaseAnim.duration       = totalDuration;
     rightLineDashPhaseAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
     
     CAAnimationGroup * rightPullAnim = [QCMethod groupAnimations:@[rightAnchorPointAnim, rightTransformAnim, rightLineDashPhaseAnim] fillMode:fillMode];
@@ -285,21 +267,11 @@
     CAKeyframeAnimation * recordingLightOpacityAnim = [CAKeyframeAnimation animationWithKeyPath:@"opacity"];
     recordingLightOpacityAnim.values   = @[@1, @0.2, @1, @0.2, @1];
     recordingLightOpacityAnim.keyTimes = @[@0, @0.25, @0.5, @0.75, @1];
-    recordingLightOpacityAnim.duration = 1 * totalDuration;
+    recordingLightOpacityAnim.duration = totalDuration;
     
     CAAnimationGroup * recordingLightPullAnim = [QCMethod groupAnimations:@[recordingLightOpacityAnim] fillMode:fillMode];
     if (reverseAnimation) recordingLightPullAnim = (CAAnimationGroup *)[QCMethod reverseAnimation:recordingLightPullAnim totalDuration:totalDuration];
     [self.layers[@"recordingLight"] addAnimation:recordingLightPullAnim forKey:@"recordingLightPullAnim"];
-    
-    ////VertigoObject animation
-    CABasicAnimation * vertigoObjectLineDashPhaseAnim = [CABasicAnimation animationWithKeyPath:@"lineDashPhase"];
-    vertigoObjectLineDashPhaseAnim.fromValue = @0;
-    vertigoObjectLineDashPhaseAnim.toValue = @10;
-    vertigoObjectLineDashPhaseAnim.duration = totalDuration;
-    
-    CAAnimationGroup * vertigoObjectPullAnim = [QCMethod groupAnimations:@[vertigoObjectLineDashPhaseAnim] fillMode:fillMode];
-    if (reverseAnimation) vertigoObjectPullAnim = (CAAnimationGroup *)[QCMethod reverseAnimation:vertigoObjectPullAnim totalDuration:totalDuration];
-    [self.layers[@"vertigoObject"] addAnimation:vertigoObjectPullAnim forKey:@"vertigoObjectPullAnim"];
 }
 
 #pragma mark - Animation Cleanup
@@ -322,7 +294,6 @@
         [QCMethod updateValueFromPresentationLayerForAnimation:[self.layers[@"left"] animationForKey:@"leftPullAnim"] theLayer:self.layers[@"left"]];
         [QCMethod updateValueFromPresentationLayerForAnimation:[self.layers[@"right"] animationForKey:@"rightPullAnim"] theLayer:self.layers[@"right"]];
         [QCMethod updateValueFromPresentationLayerForAnimation:[self.layers[@"recordingLight"] animationForKey:@"recordingLightPullAnim"] theLayer:self.layers[@"recordingLight"]];
-        [QCMethod updateValueFromPresentationLayerForAnimation:[self.layers[@"vertigoObject"] animationForKey:@"vertigoObjectPullAnim"] theLayer:self.layers[@"vertigoObject"]];
     }
 }
 
@@ -332,7 +303,6 @@
         [self.layers[@"left"] removeAnimationForKey:@"leftPullAnim"];
         [self.layers[@"right"] removeAnimationForKey:@"rightPullAnim"];
         [self.layers[@"recordingLight"] removeAnimationForKey:@"recordingLightPullAnim"];
-        [self.layers[@"vertigoObject"] removeAnimationForKey:@"vertigoObjectPullAnim"];
     }
 }
 
@@ -373,19 +343,6 @@
 - (UIBezierPath*)recordingLightPath{
     UIBezierPath * recordingLightPath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, 0, 14, 14)];
     return recordingLightPath;
-}
-
-- (UIBezierPath*)vertigoObjectPath{
-    UIBezierPath *vertigoObjectPath = [UIBezierPath bezierPath];
-    [vertigoObjectPath moveToPoint:CGPointMake(15, 0)];
-    [vertigoObjectPath addLineToPoint:CGPointMake(0, 11.459)];
-    [vertigoObjectPath addLineToPoint:CGPointMake(5.729, 30)];
-    [vertigoObjectPath addLineToPoint:CGPointMake(24.271, 30)];
-    [vertigoObjectPath addLineToPoint:CGPointMake(30, 11.459)];
-    [vertigoObjectPath closePath];
-    [vertigoObjectPath moveToPoint:CGPointMake(15, 0)];
-    
-    return vertigoObjectPath;
 }
 
 
