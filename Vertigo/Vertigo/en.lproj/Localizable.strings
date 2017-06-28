@@ -14,3 +14,4 @@
 "SharePanelDiscardTitle" = "Discard Vertigo Video?";
 "SharePanelDiscard" = "Discard";
 "SharePanelCancel" = "Cancel";
+"ZoomLevel" = "%.2fx";

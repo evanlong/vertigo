@@ -33,8 +33,12 @@
     if (self)
     {
         self.userInteractionEnabled = NO;
-        
+
+#if DEBUG
+        _startCount = 0;
+#else
         _startCount = 3;
+#endif
 
         _numberLabel = [[UILabel alloc] init];
         _numberLabel.textColor = [UIColor whiteColor];

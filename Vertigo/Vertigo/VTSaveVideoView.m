@@ -67,10 +67,12 @@
 @property (nonatomic, strong) UISlider *zoomAdjustSlider;
 @property (nonatomic, strong) UILayoutGuide *sliderSpaceGuide;
 @property (nonatomic, strong) UIView *sliderMidpointView;
+@property (nonatomic, strong) UILabel *zoomLevelLabel;
 
 @property (nonatomic, strong) VTTargetAnimationView *targetAnimationView;
 @property (nonatomic, strong) VTPushPullAnimationView *pushAnimationView;
 @property (nonatomic, strong) VTPushPullAnimationView *pullAnimationView;
+@property (nonatomic, assign, getter=isPushPullAnimationRunning) BOOL pushPullAnimationRunning;
 
 @end
 
@@ -124,6 +126,15 @@
         _zoomAdjustSlider.maximumValueImage = [UIImage imageNamed:@"RightIcon"];
         [_zoomAdjustSlider addTarget:self action:@selector(_handleZoomSliderValueChanged) forControlEvents:UIControlEventValueChanged];
         [_controlHostView addSubview:_zoomAdjustSlider];
+        
+        _zoomLevelLabel = [[UILabel alloc] init];
+        _zoomLevelLabel.textAlignment = NSTextAlignmentRight;
+        _zoomLevelLabel.layer.shadowColor = [UIColor blackColor].CGColor;
+        _zoomLevelLabel.layer.shadowRadius = 2.0;
+        _zoomLevelLabel.layer.shadowOpacity = 1.0;
+        _zoomLevelLabel.layer.shadowOffset = CGSizeZero;
+        _zoomLevelLabel.textAlignment = NSTextAlignmentCenter;
+        [_controlHostView addSubview:_zoomLevelLabel];
         
         _targetAnimationView = [[VTTargetAnimationView alloc] init];
         VTAllowAutolayoutForView(_targetAnimationView);
@@ -197,9 +208,9 @@
             [_zoomAdjustSlider.widthAnchor constraintEqualToAnchor:_sliderSpaceGuide.heightAnchor].active = YES;
             _zoomAdjustSlider.transform = CGAffineTransformMakeRotation(-M_PI_2);
             
-            [_sliderMidpointView.widthAnchor constraintEqualToConstant:40.0].active = YES;
+            [_sliderMidpointView.widthAnchor constraintEqualToConstant:20.0].active = YES;
             [_sliderMidpointView.heightAnchor constraintEqualToConstant:4.0].active = YES;
-            [_sliderMidpointView.rightAnchor constraintEqualToAnchor:_sliderSpaceGuide.leftAnchor constant:-20.0].active = YES;
+            [_sliderMidpointView.rightAnchor constraintEqualToAnchor:_controlHostView.rightAnchor constant:-4.0].active = YES;
             [_sliderMidpointView.centerYAnchor constraintEqualToAnchor:_sliderSpaceGuide.centerYAnchor].active = YES;
         }
         
@@ -228,6 +239,12 @@
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_itemDidPlayToEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:_playerItem];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+        
+        [UIView performWithoutAnimation:^{
+            [self _updatePushPullAnimationRunning];
+            [self _updatePushPullAnimationVisibility];
+            [self _updateZoomLevelLabelText];
+        }];
     }
     return self;
 }
@@ -239,6 +256,15 @@
 }
 
 #pragma mark - UIView
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    [UIView performWithoutAnimation:^{
+        [self _updateZoomLevelLabelPosition];
+    }];
+}
 
 - (void)didMoveToSuperview
 {
@@ -337,10 +363,13 @@
 
 - (void)_handleZoomSliderValueChanged
 {
+    [self _updatePushPullAnimationRunning];
     [self _updatePushPullAnimationVisibility];
+    [self _updateZoomLevelLabelText];
+    [self _updateZoomLevelLabelPosition];
 }
 
-# pragma mark - Notifications
+#pragma mark - Notifications
 
 - (void)_itemDidPlayToEnd:(NSNotification *)notification
 {
@@ -358,7 +387,7 @@
 
 - (void)_updatePlayback
 {
-    [self _restartPushPullAnimation];
+    [self _updatePushPullAnimation];
 
     [self.player seekToTime:kCMTimeZero];
 
@@ -381,13 +410,40 @@
 
 #pragma mark - Private
 
-- (void)_restartPushPullAnimation
+- (void)setPushPullAnimationRunning:(BOOL)pushPullAnimationRunning
+{
+    if (_pushPullAnimationRunning != pushPullAnimationRunning)
+    {
+        _pushPullAnimationRunning = pushPullAnimationRunning;
+        
+        if (!pushPullAnimationRunning)
+        {
+            [self.pushAnimationView removeAllAnimations];
+            [self.pullAnimationView removeAllAnimations];
+        }
+        else
+        {
+            // Player will restart animation if allowed when starting from the beginning
+        }
+    }
+}
+
+- (void)_updatePushPullAnimation
 {
     [self.pushAnimationView removeAllAnimations];
     [self.pullAnimationView removeAllAnimations];
-    
-    [self.pushAnimationView addPullAnimationReverse:YES totalDuration:MAX(1.0, self.secondsTotal) completionBlock:NULL];
-    [self.pullAnimationView addPullAnimationReverse:NO totalDuration:MAX(1.0, self.secondsTotal) completionBlock:NULL];
+ 
+    if (self.isPushPullAnimationRunning)
+    {
+        [self.pushAnimationView addPullAnimationReverse:YES totalDuration:MAX(1.0, self.secondsTotal) completionBlock:NULL];
+        [self.pullAnimationView addPullAnimationReverse:NO totalDuration:MAX(1.0, self.secondsTotal) completionBlock:NULL];
+    }
+}
+
+- (void)_updatePushPullAnimationRunning
+{
+    // Run the animation when magnitude isn't 1.0
+    self.pushPullAnimationRunning = !VTFloatIsEqual([self _directionMagnitide].magnitude, 1.0);
 }
 
 - (void)_updatePushPullAnimationVisibility
@@ -409,11 +465,42 @@
 {
     VTDirectionMagnitude dm;
     
-    CGFloat targetScale = VTRoundToNearestFactor(self.zoomAdjustSlider.value, 0.01);
+    CGFloat targetScale = VTRoundToNearestFactor(self.zoomAdjustSlider.value, 0.05);
     dm.direction = targetScale <= 0.0 ? VTVertigoDirectionPull : VTVertigoDirectionPush;
     dm.magnitude = ABS(targetScale) + 1.0;
-    
     return dm;
+}
+
+- (void)_updateZoomLevelLabelText
+{
+    VTDirectionMagnitude dm = [self _directionMagnitide];
+
+    NSDictionary *attributes = @{NSForegroundColorAttributeName : [UIColor whiteColor],
+                                 NSStrokeColorAttributeName : [UIColor colorWithWhite:0.0 alpha:0.5],
+                                 NSStrokeWidthAttributeName : @(-2.0),
+                                 NSFontAttributeName : [UIFont monospacedDigitSystemFontOfSize:22.0 weight:UIFontWeightBold]};
+    NSString *zoomLevelText = [NSString stringWithFormat:NSLocalizedString(@"ZoomLevel", nil), dm.magnitude];
+    self.zoomLevelLabel.attributedText = [[NSAttributedString alloc] initWithString:zoomLevelText attributes:attributes];
+}
+
+- (void)_updateZoomLevelLabelPosition
+{
+    [self.zoomLevelLabel sizeToFit];
+    
+    CGRect trackRect = [self.zoomAdjustSlider trackRectForBounds:self.zoomAdjustSlider.bounds];
+    
+    CGFloat zoomLevelLabelHeight = CGRectGetHeight(self.zoomLevelLabel.bounds);
+    CGRect guideFrame = self.sliderSpaceGuide.layoutFrame;
+    CGFloat sliderHeight = CGRectGetWidth(trackRect) - zoomLevelLabelHeight; // width -> height since slider is rotated 90 degrees
+    CGFloat guideCenterY = CGRectGetMidY(guideFrame);
+    CGFloat minY = guideCenterY - sliderHeight * 0.5;
+    CGFloat maxY = guideCenterY + sliderHeight * 0.5;
+    
+    CGFloat positionY = VTMapValueFromRangeToNewRange(self.zoomAdjustSlider.value, 2.0, -2.0, minY, maxY);
+    
+    [UIView animateWithDuration:0.1 delay:0.0 options:(UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionCurveLinear) animations:^{
+        self.zoomLevelLabel.center = CGPointMake(CGRectGetMaxX(guideFrame) - CGRectGetWidth(self.zoomLevelLabel.bounds), positionY);
+    } completion:NULL];
 }
 
 @end
