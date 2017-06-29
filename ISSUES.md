@@ -4,8 +4,6 @@
     + UI Changes to Save Flow
         * Vertical adjustment slider for zoom editing
             - Animation showing camera movement and zoom level
-                + Try and all white varient instead of the colorized version
-                - Don't animate in middle position of slider. Just leave in static position
             - Tapping the slider up/down arrows indicators should trigger fine grained adjustments
             - Display start->end zoom level that the editing slider is adjusting
     + As slider drags, display the first / final frames and relative zoom adjustments that are takin gplace

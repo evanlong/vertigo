@@ -1,7 +1,7 @@
 //
 //  VTPushPullAnimationView.m
 //
-//  Code generated using QuartzCode 1.56.0 on 6/26/17.
+//  Code generated using QuartzCode 1.56.0 on 6/28/17.
 //  www.quartzcodeapp.com
 //
 
@@ -61,7 +61,7 @@
     self.backgroundColor = [UIColor colorWithRed:1 green: 1 blue:1 alpha:0];
     
     CALayer * camera = [CALayer layer];
-    camera.frame = CGRectMake(5, 4, 90, 108);
+    camera.frame = CGRectMake(5, 5, 90, 108);
     [self.layer addSublayer:camera];
     self.layers[@"camera"] = camera;
     {
@@ -138,7 +138,7 @@
         left.frame           = CGRectMake(0, 0, 40, 60);
         left.lineCap         = kCALineCapRound;
         left.fillColor       = nil;
-        left.strokeColor     = [UIColor colorWithRed:0 green: 0.502 blue:1 alpha:1].CGColor;
+        left.strokeColor     = [UIColor whiteColor].CGColor;
         left.lineWidth       = 3;
         left.lineDashPattern = @[@8, @8];
     }
@@ -148,20 +148,20 @@
         right.frame           = CGRectMake(50, 0, 40, 60);
         right.lineCap         = kCALineCapRound;
         right.fillColor       = nil;
-        right.strokeColor     = [UIColor colorWithRed:0 green: 0.502 blue:1 alpha:1].CGColor;
+        right.strokeColor     = [UIColor whiteColor].CGColor;
         right.lineWidth       = 3;
         right.lineDashPattern = @[@8, @8];
     }
     if(!layerIds || [layerIds containsObject:@"cameraFrame"]){
         CAShapeLayer * cameraFrame = self.layers[@"cameraFrame"];
-        cameraFrame.fillColor   = [UIColor blackColor].CGColor;
-        cameraFrame.strokeColor = [UIColor colorWithRed:0.298 green: 0.298 blue:0.298 alpha:1].CGColor;
+        cameraFrame.fillColor   = [UIColor colorWithRed:0.8 green: 0.8 blue:0.8 alpha:1].CGColor;
+        cameraFrame.strokeColor = [UIColor whiteColor].CGColor;
         cameraFrame.lineWidth   = 3;
     }
     if(!layerIds || [layerIds containsObject:@"cameraLens"]){
         CAShapeLayer * cameraLens = self.layers[@"cameraLens"];
-        cameraLens.fillColor   = [UIColor blackColor].CGColor;
-        cameraLens.strokeColor = [UIColor colorWithRed:0.298 green: 0.298 blue:0.298 alpha:1].CGColor;
+        cameraLens.fillColor   = [UIColor colorWithRed:0.8 green: 0.8 blue:0.8 alpha:1].CGColor;
+        cameraLens.strokeColor = [UIColor whiteColor].CGColor;
         cameraLens.lineWidth   = 3;
     }
     if(!layerIds || [layerIds containsObject:@"recordingText"]){
@@ -208,7 +208,7 @@
     
     ////Camera animation
     CABasicAnimation * cameraPositionAnim = [CABasicAnimation animationWithKeyPath:@"position"];
-    cameraPositionAnim.fromValue          = [NSValue valueWithCGPoint:CGPointMake(50, 58.25)];
+    cameraPositionAnim.fromValue          = [NSValue valueWithCGPoint:CGPointMake(50, 58.75)];
     cameraPositionAnim.toValue            = [NSValue valueWithCGPoint:CGPointMake(50, 240)];
     cameraPositionAnim.duration           = totalDuration;
     cameraPositionAnim.timingFunction     = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
@@ -268,6 +268,7 @@
     recordingLightOpacityAnim.values   = @[@1, @0.2, @1, @0.2, @1];
     recordingLightOpacityAnim.keyTimes = @[@0, @0.25, @0.5, @0.75, @1];
     recordingLightOpacityAnim.duration = totalDuration;
+    recordingLightOpacityAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
     
     CAAnimationGroup * recordingLightPullAnim = [QCMethod groupAnimations:@[recordingLightOpacityAnim] fillMode:fillMode];
     if (reverseAnimation) recordingLightPullAnim = (CAAnimationGroup *)[QCMethod reverseAnimation:recordingLightPullAnim totalDuration:totalDuration];

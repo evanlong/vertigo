@@ -75,7 +75,8 @@
 @property (nonatomic, strong) VTTargetAnimationView *targetAnimationView;
 @property (nonatomic, strong) VTPushPullAnimationView *pushAnimationView;
 @property (nonatomic, strong) VTPushPullAnimationView *pullAnimationView;
-@property (nonatomic, assign, getter=isPushPullAnimationRunning) BOOL pushPullAnimationRunning;
+@property (nonatomic, strong) VTPushPullAnimationView *staticAnimationView;
+@property (nonatomic, assign, getter=isTouchingZoomSlider) BOOL touchingZoomSlider;
 
 @end
 
@@ -127,6 +128,8 @@
         _zoomAdjustSlider.minimumValueImage = [UIImage imageNamed:@"LeftIcon"];
         _zoomAdjustSlider.maximumValueImage = [UIImage imageNamed:@"RightIcon"];
         [_zoomAdjustSlider addTarget:self action:@selector(_handleZoomSliderValueChanged) forControlEvents:UIControlEventValueChanged];
+        [_zoomAdjustSlider addTarget:self action:@selector(_handleZoomSliderTouchDown) forControlEvents:UIControlEventTouchDown];
+        [_zoomAdjustSlider addTarget:self action:@selector(_handleZoomSliderTouchUp) forControlEvents:(UIControlEventTouchUpInside | UIControlEventTouchUpOutside)];
         [_controlHostView addSubview:_zoomAdjustSlider];
         
         _zoomLevelLabel = [[UILabel alloc] init];
@@ -149,6 +152,10 @@
         _pushAnimationView = [[VTPushPullAnimationView alloc] init];
         VTAllowAutolayoutForView(_pushAnimationView);
         [_controlHostView addSubview:_pushAnimationView];
+        
+        _staticAnimationView = [[VTPushPullAnimationView alloc] init];
+        VTAllowAutolayoutForView(_staticAnimationView);
+        [_controlHostView addSubview:_staticAnimationView];
 
         _backArrowButton = [[VTOverlayButton alloc] initWithOverlayImageName:@"BackIcon"];
         VTAllowAutolayoutForView(_backArrowButton);
@@ -224,6 +231,9 @@
 
             [_pullAnimationView.centerYAnchor constraintEqualToAnchor:_controlHostView.centerYAnchor].active = YES;
             [_pullAnimationView.leftAnchor constraintEqualToAnchor:_controlHostView.leftAnchor constant:10.0].active = YES;
+            
+            [_staticAnimationView.centerYAnchor constraintEqualToAnchor:_controlHostView.centerYAnchor].active = YES;
+            [_staticAnimationView.leftAnchor constraintEqualToAnchor:_controlHostView.leftAnchor constant:10.0].active = YES;
         }
         
         {
@@ -234,7 +244,6 @@
         }
         
         [UIView performWithoutAnimation:^{
-            [self _updatePushPullAnimationRunning];
             [self _updatePushPullAnimationVisibility];
             [self _updateZoomLevelLabelText];
         }];
@@ -288,6 +297,15 @@
     {
         _secondsComplete = secondsComplete;
         [self _updateVideoScale];
+    }
+}
+
+- (void)setTouchingZoomSlider:(BOOL)touchingZoomSlider
+{
+    if (_touchingZoomSlider != touchingZoomSlider)
+    {
+        _touchingZoomSlider = touchingZoomSlider;
+        [self _updatePushPullAnimationVisibility];
     }
 }
 
@@ -370,10 +388,19 @@
 
 - (void)_handleZoomSliderValueChanged
 {
-    [self _updatePushPullAnimationRunning];
     [self _updatePushPullAnimationVisibility];
     [self _updateZoomLevelLabelText];
     [self _updateZoomLevelLabelPosition];
+}
+
+- (void)_handleZoomSliderTouchDown
+{
+    self.touchingZoomSlider = YES;
+}
+
+- (void)_handleZoomSliderTouchUp
+{
+    self.touchingZoomSlider = NO;
 }
 
 #pragma mark - Notifications
@@ -417,54 +444,35 @@
 
 #pragma mark - Private
 
-- (void)setPushPullAnimationRunning:(BOOL)pushPullAnimationRunning
-{
-    if (_pushPullAnimationRunning != pushPullAnimationRunning)
-    {
-        _pushPullAnimationRunning = pushPullAnimationRunning;
-        
-        if (!pushPullAnimationRunning)
-        {
-            [self.pushAnimationView removeAllAnimations];
-            [self.pullAnimationView removeAllAnimations];
-        }
-        else
-        {
-            // Player will restart animation if allowed when starting from the beginning
-        }
-    }
-}
-
 - (void)_updatePushPullAnimation
 {
     [self.pushAnimationView removeAllAnimations];
     [self.pullAnimationView removeAllAnimations];
  
-    if (self.isPushPullAnimationRunning)
-    {
-        [self.pushAnimationView addPullAnimationReverse:YES totalDuration:MAX(1.0, self.secondsTotal) completionBlock:NULL];
-        [self.pullAnimationView addPullAnimationReverse:NO totalDuration:MAX(1.0, self.secondsTotal) completionBlock:NULL];
-    }
-}
-
-- (void)_updatePushPullAnimationRunning
-{
-    // Run the animation when magnitude isn't 1.0
-    self.pushPullAnimationRunning = !VTFloatIsEqual([self _directionMagnitide].magnitude, 1.0);
+    [self.pushAnimationView addPullAnimationReverse:YES totalDuration:MAX(1.0, self.secondsTotal) completionBlock:NULL];
+    [self.pullAnimationView addPullAnimationReverse:NO totalDuration:MAX(1.0, self.secondsTotal) completionBlock:NULL];
 }
 
 - (void)_updatePushPullAnimationVisibility
 {
     VTDirectionMagnitude dm = [self _directionMagnitide];
-    if (dm.direction == VTVertigoDirectionPush)
+    if (VTFloatIsEqual(dm.magnitude, 1.0) && !self.isTouchingZoomSlider)
+    {
+        self.pushAnimationView.hidden = YES;
+        self.pullAnimationView.hidden = YES;
+        self.staticAnimationView.hidden = NO;
+    }
+    else if (dm.direction == VTVertigoDirectionPush)
     {
         self.pushAnimationView.hidden = NO;
         self.pullAnimationView.hidden = YES;
+        self.staticAnimationView.hidden = YES;
     }
     else
     {
         self.pushAnimationView.hidden = YES;
         self.pullAnimationView.hidden = NO;
+        self.staticAnimationView.hidden = YES;
     }
 }
 
