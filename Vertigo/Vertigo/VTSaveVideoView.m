@@ -61,6 +61,9 @@
 @property (nonatomic, assign) float secondsComplete;
 @property (nonatomic, assign) float secondsTotal;
 
+@property (nonatomic, strong) NSLayoutConstraint *clippingWidthConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *clippingHeightConstraint;
+
 @property (nonatomic, strong) UIView *controlHostView;
 @property (nonatomic, strong) VTOverlayButton *backArrowButton;
 @property (nonatomic, strong) VTOverlayButton *shareButton;
@@ -89,7 +92,6 @@
         _player.allowsExternalPlayback = NO;
         
         _clippingView = [[UIView alloc] init];
-        VTAllowAutolayoutForView(_clippingView);
         _clippingView.clipsToBounds = YES;
         [self addSubview:_clippingView];
 
@@ -226,25 +228,20 @@
         }
         
         {
-            [_clippingView.centerXAnchor constraintEqualToAnchor:self.centerXAnchor].active = YES;
-            [_clippingView.centerYAnchor constraintEqualToAnchor:self.centerYAnchor].active = YES;
-            [_clippingView.widthAnchor constraintEqualToAnchor:self.widthAnchor multiplier:1.0].active = YES;
-            [_clippingView.heightAnchor constraintEqualToAnchor:self.heightAnchor multiplier:1.0].active = YES;
-            
             [_playerView.centerXAnchor constraintEqualToAnchor:_clippingView.centerXAnchor].active = YES;
             [_playerView.centerYAnchor constraintEqualToAnchor:_clippingView.centerYAnchor].active = YES;
             [_playerView.widthAnchor constraintEqualToAnchor:_clippingView.widthAnchor].active = YES;
             [_playerView.heightAnchor constraintEqualToAnchor:_clippingView.heightAnchor].active = YES;
         }
-
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_itemDidPlayToEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:_playerItem];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
         
         [UIView performWithoutAnimation:^{
             [self _updatePushPullAnimationRunning];
             [self _updatePushPullAnimationVisibility];
             [self _updateZoomLevelLabelText];
         }];
+
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_itemDidPlayToEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:_playerItem];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
     }
     return self;
 }
@@ -260,10 +257,18 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    
+
     [UIView performWithoutAnimation:^{
         [self _updateZoomLevelLabelPosition];
     }];
+
+    CGRect clippingViewFrame = self.bounds;
+    CGSize presentationSize = self.playerItem.presentationSize;
+    if (!CGSizeEqualToSize(presentationSize, CGSizeZero))
+    {
+        clippingViewFrame = AVMakeRectWithAspectRatioInsideRect(presentationSize, self.bounds);
+    }
+    self.clippingView.frame = clippingViewFrame;
 }
 
 - (void)didMoveToSuperview
