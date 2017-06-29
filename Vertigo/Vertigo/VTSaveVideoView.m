@@ -135,7 +135,6 @@
         _zoomLevelLabel.layer.shadowRadius = 2.0;
         _zoomLevelLabel.layer.shadowOpacity = 1.0;
         _zoomLevelLabel.layer.shadowOffset = CGSizeZero;
-        _zoomLevelLabel.textAlignment = NSTextAlignmentCenter;
         [_controlHostView addSubview:_zoomLevelLabel];
         
         _targetAnimationView = [[VTTargetAnimationView alloc] init];
@@ -257,10 +256,9 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-
-    [UIView performWithoutAnimation:^{
-        [self _updateZoomLevelLabelPosition];
-    }];
+    
+    // Update layout of controlHostView now since _updateZoomLevelLabelPosition depends on UISlider being the correct size when it runs
+    [self.controlHostView layoutIfNeeded];
 
     CGRect clippingViewFrame = self.bounds;
     CGSize presentationSize = self.playerItem.presentationSize;
@@ -269,6 +267,10 @@
         clippingViewFrame = AVMakeRectWithAspectRatioInsideRect(presentationSize, self.bounds);
     }
     self.clippingView.frame = clippingViewFrame;
+    
+    [UIView performWithoutAnimation:^{
+        [self _updateZoomLevelLabelPosition];
+    }];
 }
 
 - (void)didMoveToSuperview
@@ -479,7 +481,7 @@
 - (void)_updateZoomLevelLabelText
 {
     VTDirectionMagnitude dm = [self _directionMagnitide];
-
+    
     NSDictionary *attributes = @{NSForegroundColorAttributeName : [UIColor whiteColor],
                                  NSStrokeColorAttributeName : [UIColor colorWithWhite:0.0 alpha:0.5],
                                  NSStrokeWidthAttributeName : @(-2.0),

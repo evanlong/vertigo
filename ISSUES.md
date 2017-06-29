@@ -1,9 +1,5 @@
 # Features
 
-- zoom level y-position issue wrong bug when rotating
-    + also, why does duration version animate on rotating, that this was doesn't seem too?
-    + Seems maybe related to the _controlHostView
-
 - Sharing and Editing 2.0
     + UI Changes to Save Flow
         * Vertical adjustment slider for zoom editing
