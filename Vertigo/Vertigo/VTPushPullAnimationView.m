@@ -210,7 +210,7 @@
     cameraPositionAnim.fromValue          = [NSValue valueWithCGPoint:CGPointMake(50, 58.75)];
     cameraPositionAnim.toValue            = [NSValue valueWithCGPoint:CGPointMake(50, 160.0)];
     cameraPositionAnim.duration           = totalDuration;
-    cameraPositionAnim.timingFunction     = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    cameraPositionAnim.timingFunction     = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
     
     CAAnimationGroup * cameraPullAnim = [QCMethod groupAnimations:@[cameraPositionAnim] fillMode:fillMode];
     if (reverseAnimation) cameraPullAnim = (CAAnimationGroup *)[QCMethod reverseAnimation:cameraPullAnim totalDuration:totalDuration];
@@ -221,19 +221,19 @@
     leftAnchorPointAnim.fromValue          = [NSValue valueWithCGPoint:CGPointMake(1, 1)];
     leftAnchorPointAnim.toValue            = [NSValue valueWithCGPoint:CGPointMake(1, 1)];
     leftAnchorPointAnim.duration           = totalDuration;
-    leftAnchorPointAnim.timingFunction     = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    leftAnchorPointAnim.timingFunction     = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
     
     CABasicAnimation * leftTransformAnim = [CABasicAnimation animationWithKeyPath:@"transform.rotation"];
     leftTransformAnim.fromValue          = @(0);
     leftTransformAnim.toValue            = @(26 * M_PI/180);
     leftTransformAnim.duration           = totalDuration;
-    leftTransformAnim.timingFunction     = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    leftTransformAnim.timingFunction     = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
     
     CABasicAnimation * leftLineDashPhaseAnim = [CABasicAnimation animationWithKeyPath:@"lineDashPhase"];
     leftLineDashPhaseAnim.fromValue      = @0;
     leftLineDashPhaseAnim.toValue        = @-40;
     leftLineDashPhaseAnim.duration       = totalDuration;
-    leftLineDashPhaseAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    leftLineDashPhaseAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
     
     CAAnimationGroup * leftPullAnim = [QCMethod groupAnimations:@[leftAnchorPointAnim, leftTransformAnim, leftLineDashPhaseAnim] fillMode:fillMode];
     if (reverseAnimation) leftPullAnim = (CAAnimationGroup *)[QCMethod reverseAnimation:leftPullAnim totalDuration:totalDuration];
@@ -244,19 +244,19 @@
     rightAnchorPointAnim.fromValue      = [NSValue valueWithCGPoint:CGPointMake(0, 1)];
     rightAnchorPointAnim.toValue        = [NSValue valueWithCGPoint:CGPointMake(0, 1)];
     rightAnchorPointAnim.duration       = totalDuration;
-    rightAnchorPointAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    rightAnchorPointAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
     
     CABasicAnimation * rightTransformAnim = [CABasicAnimation animationWithKeyPath:@"transform.rotation"];
     rightTransformAnim.fromValue          = @(0);
     rightTransformAnim.toValue            = @(-26 * M_PI/180);
     rightTransformAnim.duration           = totalDuration;
-    rightTransformAnim.timingFunction     = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    rightTransformAnim.timingFunction     = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
     
     CABasicAnimation * rightLineDashPhaseAnim = [CABasicAnimation animationWithKeyPath:@"lineDashPhase"];
     rightLineDashPhaseAnim.fromValue      = @0;
     rightLineDashPhaseAnim.toValue        = @-40;
     rightLineDashPhaseAnim.duration       = totalDuration;
-    rightLineDashPhaseAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    rightLineDashPhaseAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
     
     CAAnimationGroup * rightPullAnim = [QCMethod groupAnimations:@[rightAnchorPointAnim, rightTransformAnim, rightLineDashPhaseAnim] fillMode:fillMode];
     if (reverseAnimation) rightPullAnim = (CAAnimationGroup *)[QCMethod reverseAnimation:rightPullAnim totalDuration:totalDuration];
@@ -267,7 +267,7 @@
     recordingLightOpacityAnim.values   = @[@1, @0.2, @1, @0.2, @1];
     recordingLightOpacityAnim.keyTimes = @[@0, @0.25, @0.5, @0.75, @1];
     recordingLightOpacityAnim.duration = totalDuration;
-    recordingLightOpacityAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    recordingLightOpacityAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
     
     CAAnimationGroup * recordingLightPullAnim = [QCMethod groupAnimations:@[recordingLightOpacityAnim] fillMode:fillMode];
     if (reverseAnimation) recordingLightPullAnim = (CAAnimationGroup *)[QCMethod reverseAnimation:recordingLightPullAnim totalDuration:totalDuration];
