@@ -43,18 +43,17 @@
 
 - (CGSize)intrinsicContentSize
 {
-    return CGSizeMake(100.0, 300.0);
+    return CGSizeMake(100.0, 210.0);
 }
 
 - (CGSize)sizeThatFits:(CGSize)size
 {
-    return CGSizeMake(100.0, 300.0);
+    return CGSizeMake(100.0, 210.0);
 }
 
 - (void)setupProperties{
     self.completionBlocks = [NSMapTable mapTableWithKeyOptions:NSPointerFunctionsOpaqueMemory valueOptions:NSPointerFunctionsStrongMemory];;
     self.layers = [NSMutableDictionary dictionary];
-    
 }
 
 - (void)setupLayers{
@@ -209,7 +208,7 @@
     ////Camera animation
     CABasicAnimation * cameraPositionAnim = [CABasicAnimation animationWithKeyPath:@"position"];
     cameraPositionAnim.fromValue          = [NSValue valueWithCGPoint:CGPointMake(50, 58.75)];
-    cameraPositionAnim.toValue            = [NSValue valueWithCGPoint:CGPointMake(50, 240)];
+    cameraPositionAnim.toValue            = [NSValue valueWithCGPoint:CGPointMake(50, 160.0)];
     cameraPositionAnim.duration           = totalDuration;
     cameraPositionAnim.timingFunction     = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
     

@@ -13,7 +13,7 @@
 #import "VTRecordButton.h"
 
 #define DURATION_MIN                        1.0
-#define DURATION_MAX                        8.0
+#define DURATION_MAX                        5.0
 
 #define DURATION_SLIDER_HEIGHT_MULTIPLIER   0.9
 

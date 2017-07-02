@@ -305,9 +305,7 @@ static id commonInit(VTRootViewController *self)
 
 - (void)saveVideoViewDidPressSave:(VTSaveVideoView *)saveVideoView
 {
-    VTLogFunction;
     VTAnalyticsTrackEvent(VTAnalyticsDidPressSaveEvent);
-    VTLogObject(saveVideoView.settings);
 }
 
 - (void)saveVideoViewDidPressDiscard:(VTSaveVideoView *)saveVideoView

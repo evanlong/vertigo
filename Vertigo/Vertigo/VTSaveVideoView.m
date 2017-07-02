@@ -78,6 +78,9 @@
 @property (nonatomic, strong) VTPushPullAnimationView *staticAnimationView;
 @property (nonatomic, assign, getter=isTouchingZoomSlider) BOOL touchingZoomSlider;
 
+@property (nonatomic, copy) NSArray *portraitCameraConstraints;
+@property (nonatomic, copy) NSArray *landscapeCameraConstraints;
+
 @end
 
 @implementation VTSaveVideoView
@@ -198,7 +201,7 @@
             UILayoutGuide *sliderGuideTopInset = [[UILayoutGuide alloc] init];
             [_controlHostView addLayoutGuide:sliderGuideTopInset];
             [sliderGuideTopInset.topAnchor constraintEqualToAnchor:_controlHostView.topAnchor].active = YES;
-            [sliderGuideTopInset.bottomAnchor constraintEqualToAnchor:_backArrowButton.bottomAnchor].active = YES;
+            [sliderGuideTopInset.bottomAnchor constraintEqualToAnchor:_backArrowButton.topAnchor].active = YES;
             
             UILayoutGuide *sliderGuideBottomInset = [[UILayoutGuide alloc] init];
             [_controlHostView addLayoutGuide:sliderGuideBottomInset];
@@ -224,16 +227,22 @@
         
         {
             [_targetAnimationView.centerXAnchor constraintEqualToAnchor:_pushAnimationView.centerXAnchor].active = YES;
-            [_targetAnimationView.bottomAnchor constraintEqualToAnchor:_pushAnimationView.topAnchor].active = YES;
+            [_targetAnimationView.topAnchor constraintEqualToAnchor:_pushAnimationView.topAnchor].active = YES;
             
-            [_pushAnimationView.centerYAnchor constraintEqualToAnchor:_controlHostView.centerYAnchor].active = YES;
             [_pushAnimationView.leftAnchor constraintEqualToAnchor:_controlHostView.leftAnchor constant:10.0].active = YES;
-
-            [_pullAnimationView.centerYAnchor constraintEqualToAnchor:_controlHostView.centerYAnchor].active = YES;
             [_pullAnimationView.leftAnchor constraintEqualToAnchor:_controlHostView.leftAnchor constant:10.0].active = YES;
-            
-            [_staticAnimationView.centerYAnchor constraintEqualToAnchor:_controlHostView.centerYAnchor].active = YES;
             [_staticAnimationView.leftAnchor constraintEqualToAnchor:_controlHostView.leftAnchor constant:10.0].active = YES;
+
+            // Portrait
+            self.portraitCameraConstraints = @[[_pushAnimationView.centerYAnchor constraintEqualToAnchor:_controlHostView.centerYAnchor],
+                                               [_pullAnimationView.centerYAnchor constraintEqualToAnchor:_controlHostView.centerYAnchor],
+                                               [_staticAnimationView.centerYAnchor constraintEqualToAnchor:_controlHostView.centerYAnchor],
+                                               ];
+            // Landscape
+            self.landscapeCameraConstraints = @[[_pullAnimationView.topAnchor constraintEqualToAnchor:_backArrowButton.bottomAnchor constant:20.0],
+                                                [_pushAnimationView.topAnchor constraintEqualToAnchor:_backArrowButton.bottomAnchor constant:20.0],
+                                                [_staticAnimationView.topAnchor constraintEqualToAnchor:_backArrowButton.bottomAnchor constant:20.0],
+                                                ];
         }
         
         {
@@ -265,6 +274,17 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
+    
+    if (CGRectGetWidth(self.bounds) < CGRectGetHeight(self.bounds))
+    {
+        [NSLayoutConstraint deactivateConstraints:self.landscapeCameraConstraints];
+        [NSLayoutConstraint activateConstraints:self.portraitCameraConstraints];
+    }
+    else
+    {
+        [NSLayoutConstraint deactivateConstraints:self.portraitCameraConstraints];
+        [NSLayoutConstraint activateConstraints:self.landscapeCameraConstraints];
+    }
     
     // Update layout of controlHostView now since _updateZoomLevelLabelPosition depends on UISlider being the correct size when it runs
     [self.controlHostView layoutIfNeeded];
