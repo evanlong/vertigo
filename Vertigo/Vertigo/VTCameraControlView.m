@@ -142,7 +142,7 @@
             _percentComplete = 0.0;
 
             [UIView performWithoutAnimation:^{
-                self.duration = 2.0;
+                self.duration = 3.0;
                 [self _updateViewRecordingState];
                 [self _updateProgress];
                 [self _updateDurationLabelTransform];
