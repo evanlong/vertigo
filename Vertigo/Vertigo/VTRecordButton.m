@@ -117,7 +117,7 @@
     CGAffineTransform t = self.isHighlighted ? CGAffineTransformMakeScale(0.85, 0.85) : CGAffineTransformIdentity;
     [UIView animateWithDuration:0.2 delay:0.0 options:(UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowUserInteraction) animations:^{
         self.transform = t;
-    } completion:NULL];
+    } completion:nil];
 }
 
 - (void)_updateRecordingShapePath

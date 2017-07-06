@@ -164,7 +164,7 @@
     [UIView animateWithDuration:0.2 delay:0.0 options:(UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowUserInteraction) animations:^{
         self.overlayImageView.tintColor = tintColor;
         self.transform = transform;
-    } completion:NULL];
+    } completion:nil];
 }
 
 - (void)_updateBackground

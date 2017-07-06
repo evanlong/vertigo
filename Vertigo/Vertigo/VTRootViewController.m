@@ -20,6 +20,7 @@
 #import "VTCameraControlView.h"
 #import "VTCompositeZoomEffectOperation.h"
 #import "VTCountDownView.h"
+#import "VTHelpRootViewController.h"
 #import "VTMath.h"
 #import "VTPieProgressView.h"
 #import "VTRequiresCameraPermissionView.h"
@@ -151,6 +152,9 @@ static id commonInit(VTRootViewController *self)
         BOOL granted = (videoAuthStatus == AVAuthorizationStatusAuthorized);
         [self _setupViewsWithVideoPermissionState:granted];
     }
+    
+    VTHelpRootViewController *helpVC = [[VTHelpRootViewController alloc] init];
+    [self presentViewController:helpVC animated:YES completion:nil];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
@@ -341,7 +345,7 @@ static id commonInit(VTRootViewController *self)
         activityViewController.completionWithItemsHandler = ^(UIActivityType activityType, BOOL completed, NSArray *returnedItems, NSError *activityError) {
             self.didTakeActionOnVideo = completed || self.didTakeActionOnVideo;
         };
-        [self presentViewController:activityViewController animated:YES completion:NULL];
+        [self presentViewController:activityViewController animated:YES completion:nil];
     }];
 }
 
@@ -372,7 +376,7 @@ static id commonInit(VTRootViewController *self)
             // NOP
         }]];
         
-        [self presentViewController:confirmDiscardAlert animated:YES completion:NULL];
+        [self presentViewController:confirmDiscardAlert animated:YES completion:nil];
     }
 }
 

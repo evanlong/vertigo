@@ -298,7 +298,7 @@
             self.durationLabel.alpha = 1.0;
             self.durationSlider.alpha = 1.0;
         }
-    } completion:NULL];
+    } completion:nil];
     
     if (self.isRecording)
     {
@@ -349,7 +349,7 @@
     
     [UIView animateWithDuration:0.1 delay:0.0 options:(UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionCurveLinear) animations:^{
         self.durationLabel.center = CGPointMake(positionX, positionY);
-    } completion:NULL];
+    } completion:nil];
 }
 
 - (void)_updateDurationLabelTransform
@@ -363,7 +363,7 @@
     
     [UIView animateWithDuration:0.18 delay:0.0 options:(UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionCurveEaseOut) animations:^{
         self.durationLabel.transform = t;
-    } completion:NULL];
+    } completion:nil];
 }
 
 - (void)_updateLayoutForCurrentOrientation

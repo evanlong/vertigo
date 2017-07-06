@@ -547,7 +547,7 @@
     
     [UIView animateWithDuration:0.1 delay:0.0 options:(UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionCurveLinear) animations:^{
         self.zoomLevelLabel.center = CGPointMake(CGRectGetMaxX(guideFrame) - CGRectGetWidth(self.zoomLevelLabel.bounds), positionY);
-    } completion:NULL];
+    } completion:nil];
 }
 
 @end
