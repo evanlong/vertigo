@@ -61,9 +61,6 @@
 @property (nonatomic, assign) float secondsComplete;
 @property (nonatomic, assign) float secondsTotal;
 
-@property (nonatomic, strong) NSLayoutConstraint *clippingWidthConstraint;
-@property (nonatomic, strong) NSLayoutConstraint *clippingHeightConstraint;
-
 @property (nonatomic, strong) UIView *controlHostView;
 @property (nonatomic, strong) VTOverlayButton *backArrowButton;
 @property (nonatomic, strong) VTOverlayButton *shareButton;
@@ -71,6 +68,10 @@
 @property (nonatomic, strong) UILayoutGuide *sliderSpaceGuide;
 @property (nonatomic, strong) UIView *sliderMidpointView;
 @property (nonatomic, strong) UILabel *zoomLevelLabel;
+
+@property (nonatomic, strong) UILayoutGuide *shareButtonCenterXGuide;
+@property (nonatomic, strong) NSLayoutConstraint *shareButtonGuidePortraitLeft;
+@property (nonatomic, strong) NSLayoutConstraint *shareButtonGuideLandscapeLeft;
 
 @property (nonatomic, strong) VTTargetAnimationView *targetAnimationView;
 @property (nonatomic, strong) VTPushPullAnimationView *pushAnimationView;
@@ -188,7 +189,14 @@
         }
         
         { // Bottom Share/Save Controls
-            [_shareButton.centerXAnchor constraintEqualToAnchor:_controlHostView.centerXAnchor].active = YES;
+            _shareButtonCenterXGuide = [[UILayoutGuide alloc] init];
+            [self addLayoutGuide:_shareButtonCenterXGuide];
+            
+            _shareButtonGuidePortraitLeft = [_shareButtonCenterXGuide.leftAnchor constraintEqualToAnchor:self.leftAnchor];
+            _shareButtonGuideLandscapeLeft = [_shareButtonCenterXGuide.leftAnchor constraintEqualToAnchor:self.centerXAnchor];
+            
+            [_shareButtonCenterXGuide.rightAnchor constraintEqualToAnchor:self.rightAnchor].active = YES;
+            [_shareButton.centerXAnchor constraintEqualToAnchor:_shareButtonCenterXGuide.centerXAnchor].active = YES;
             [_shareButton.bottomAnchor constraintEqualToAnchor:_controlHostView.bottomAnchor constant:-20.0].active = YES;
         }
         
@@ -277,13 +285,17 @@
     
     if (CGRectGetWidth(self.bounds) < CGRectGetHeight(self.bounds))
     {
+        self.shareButtonGuideLandscapeLeft.active = NO;
         [NSLayoutConstraint deactivateConstraints:self.landscapeCameraConstraints];
         [NSLayoutConstraint activateConstraints:self.portraitCameraConstraints];
+        self.shareButtonGuidePortraitLeft.active = YES;
     }
     else
     {
+        self.shareButtonGuidePortraitLeft.active = NO;
         [NSLayoutConstraint deactivateConstraints:self.portraitCameraConstraints];
         [NSLayoutConstraint activateConstraints:self.landscapeCameraConstraints];
+        self.shareButtonGuideLandscapeLeft.active = YES;
     }
     
     // Update layout of controlHostView now since _updateZoomLevelLabelPosition depends on UISlider being the correct size when it runs

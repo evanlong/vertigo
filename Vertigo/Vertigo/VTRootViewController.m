@@ -157,8 +157,12 @@ static id commonInit(VTRootViewController *self)
 {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     
-    [UIView setAnimationsEnabled:NO];
-    [CATransaction setDisableActions:YES];
+    BOOL isPresentingSaveFlow = self.saveVideoView != nil;
+    if (!isPresentingSaveFlow)
+    {
+        [UIView setAnimationsEnabled:NO];
+        [CATransaction setDisableActions:YES];
+    }
     
     UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
     if (UIDeviceOrientationIsPortrait(deviceOrientation) || UIDeviceOrientationIsLandscape(deviceOrientation))
@@ -169,8 +173,11 @@ static id commonInit(VTRootViewController *self)
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
         [self _updateLayoutForCurrentOrientation];
     } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-        [CATransaction setDisableActions:NO];
-        [UIView setAnimationsEnabled:YES];
+        if (!isPresentingSaveFlow)
+        {
+            [CATransaction setDisableActions:NO];
+            [UIView setAnimationsEnabled:YES];
+        }
     }];
 }
 
