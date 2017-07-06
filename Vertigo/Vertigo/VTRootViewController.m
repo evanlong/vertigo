@@ -88,6 +88,8 @@ static id commonInit(VTRootViewController *self)
     if (self)
     {
         self->_processingQueue = [[NSOperationQueue alloc] init];
+        [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleDeviceOrientationNotification:) name:UIDeviceOrientationDidChangeNotification object:nil];
     }
     return self;
 }
@@ -95,6 +97,16 @@ static id commonInit(VTRootViewController *self)
 - (instancetype)init
 {
     self = [super init];
+    if (self)
+    {
+        self = commonInit(self);
+    }
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
     if (self)
     {
         self = commonInit(self);
@@ -110,6 +122,12 @@ static id commonInit(VTRootViewController *self)
         self = commonInit(self);
     }
     return self;
+}
+
+- (void)dealloc
+{
+    [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
 #pragma mark - UIViewController
@@ -138,11 +156,28 @@ static id commonInit(VTRootViewController *self)
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
 {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    
+    [UIView setAnimationsEnabled:NO];
+    [CATransaction setDisableActions:YES];
+    
     UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
     if (UIDeviceOrientationIsPortrait(deviceOrientation) || UIDeviceOrientationIsLandscape(deviceOrientation))
     {
         self.previewView.videoPreviewLayer.connection.videoOrientation = (AVCaptureVideoOrientation)deviceOrientation;
     }
+
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+        [self _updateLayoutForCurrentOrientation];
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+        [CATransaction setDisableActions:NO];
+        [UIView setAnimationsEnabled:YES];
+    }];
+}
+
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    [self _updateLayoutForCurrentOrientation];
 }
 
 - (BOOL)prefersStatusBarHidden
@@ -398,22 +433,38 @@ static id commonInit(VTRootViewController *self)
     [self.view addSubview:requirePermissionView];
 }
 
+#pragma mark - Notifications
+
+- (void)_handleDeviceOrientationNotification:(NSNotification *)notification
+{
+    // not sure if i need to update on orientation notification if -[UIVC viewDidLayoutSubviews] and -[UIVC viewWillTransitionToSize:withTransitionCoordinator:]
+    // are called for the size changes and rotations as a result
+//    [self _updateLayoutForCurrentOrientation];
+}
+
 #pragma mark - Private
+
+- (void)_updateLayoutForCurrentOrientation
+{
+    UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
+    if (deviceOrientation == UIDeviceOrientationPortrait)
+    {
+        self.cameraControlView.orientation = VTCameraControlViewOrientationPortrait;
+    }
+    else if (deviceOrientation == UIDeviceOrientationLandscapeLeft)
+    {
+        self.cameraControlView.orientation = VTCameraControlViewOrientationLandscapeLeft;
+    }
+    else if (deviceOrientation == UIDeviceOrientationLandscapeRight)
+    {
+        self.cameraControlView.orientation = VTCameraControlViewOrientationLandscapeRight;
+    }
+}
 
 - (VTZoomEffectSettings *)_settingsForCurrentCameraControlViewState
 {
     VTMutableZoomEffectSettings *zoomEffectSettings = [[VTMutableZoomEffectSettings alloc] init];
     zoomEffectSettings.duration = self.cameraControlView.duration;
-    if (self.cameraControlView.direction == VTVertigoDirectionPush)
-    {
-        zoomEffectSettings.initalZoomLevel = self.cameraControlView.pulledZoomLevel;
-        zoomEffectSettings.finalZoomLevel = self.cameraControlView.pushedZoomLevel;
-    }
-    else
-    {
-        zoomEffectSettings.initalZoomLevel = self.cameraControlView.pushedZoomLevel;
-        zoomEffectSettings.finalZoomLevel = self.cameraControlView.pulledZoomLevel;
-    }
     return [zoomEffectSettings copy];
 }
 

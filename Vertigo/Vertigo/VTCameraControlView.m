@@ -9,7 +9,6 @@
 #import "VTCameraControlView.h"
 
 #import "VTMath.h"
-#import "VTPushPullToggleControl.h"
 #import "VTRecordButton.h"
 
 #define DURATION_MIN                        1.0
@@ -24,7 +23,6 @@
 @property (nonatomic, readonly, assign) NSTimeInterval rawDuration;
 
 // Controls
-@property (nonatomic, strong) VTPushPullToggleControl *pushPullToggleControl;
 @property (nonatomic, strong) UISlider *durationSlider;
 @property (nonatomic, strong) UIProgressView *progressView;
 
@@ -34,6 +32,10 @@
 @property (nonatomic, strong) UILayoutGuide *backdropSpaceGuide;
 
 @property (nonatomic, assign, getter=isTouchingDurationSlider) BOOL touchingDurationSlider;
+
+@property (nonatomic, strong) NSArray *portraitConstraints;
+@property (nonatomic, strong) NSArray *landscapeLeftConstraints;
+@property (nonatomic, strong) NSArray *landscapeRightConstraints;
 
 @end
 
@@ -55,7 +57,11 @@
     if (self)
     {
         self.tintColor = [UIColor whiteColor];
-        
+
+        NSMutableArray *portraitConstraints = [NSMutableArray array];
+        NSMutableArray *landscapeLeftConstraints = [NSMutableArray array];
+        NSMutableArray *landscapeRightConstraints = [NSMutableArray array];
+
         { // Record
             _recordButton = [[VTRecordButton alloc] init];
             VTAllowAutolayoutForView(_recordButton);
@@ -63,8 +69,14 @@
             
             [_recordButton addTarget:self action:@selector(_handleRecordButtonPress) forControlEvents:UIControlEventTouchUpInside];
             
-            [_recordButton.centerXAnchor constraintEqualToAnchor:self.centerXAnchor].active = YES;
-            [_recordButton.bottomAnchor constraintEqualToAnchor:self.bottomAnchor constant:-20.0].active = YES;
+            [portraitConstraints addObjectsFromArray:@[[_recordButton.centerXAnchor constraintEqualToAnchor:self.centerXAnchor],
+                                                       [_recordButton.bottomAnchor constraintEqualToAnchor:self.bottomAnchor constant:-20.0]]];
+
+            [landscapeLeftConstraints addObjectsFromArray:@[[_recordButton.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
+                                                            [_recordButton.rightAnchor constraintEqualToAnchor:self.rightAnchor constant:-20.0]]];
+            
+            [landscapeRightConstraints addObjectsFromArray:@[[_recordButton.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
+                                                             [_recordButton.leftAnchor constraintEqualToAnchor:self.leftAnchor constant:20.0]]];
         }
         
         { // Progress View
@@ -82,6 +94,7 @@
         
         { // Slider Adjustment Controls
             _durationSlider = [[UISlider alloc] init];
+            VTAllowAutolayoutForView(_durationSlider);
             _durationSlider.layer.shadowColor = [UIColor blackColor].CGColor;
             _durationSlider.layer.shadowRadius = 2.0;
             _durationSlider.layer.shadowOpacity = 0.75;
@@ -90,29 +103,36 @@
             _durationSlider.maximumValue = DURATION_MAX;
             _durationSlider.minimumTrackTintColor = [UIColor whiteColor];
             _durationSlider.maximumTrackTintColor = [UIColor whiteColor];
-            VTAllowAutolayoutForView(_durationSlider);
+            _durationSlider.transform = CGAffineTransformMakeRotation(-M_PI_2);
             [self addSubview:_durationSlider];
             
             [_durationSlider addTarget:self action:@selector(_handleDurationSliderChange) forControlEvents:UIControlEventValueChanged];
-            
             [_durationSlider addTarget:self action:@selector(_handleDurationSliderTouchDown) forControlEvents:UIControlEventTouchDown];
-            [_durationSlider addTarget:self action:@selector(_handleDurationSliderClear) forControlEvents:UIControlEventTouchCancel];
-            [_durationSlider addTarget:self action:@selector(_handleDurationSliderClear) forControlEvents:UIControlEventTouchUpInside];
-            [_durationSlider addTarget:self action:@selector(_handleDurationSliderClear) forControlEvents:UIControlEventTouchUpOutside];
+            [_durationSlider addTarget:self action:@selector(_handleDurationSliderClear) forControlEvents:(UIControlEventTouchCancel | UIControlEventTouchUpInside | UIControlEventTouchUpOutside)];
             
             _backdropSpaceGuide = [[UILayoutGuide alloc] init];
             [self addLayoutGuide:_backdropSpaceGuide];
 
             // backdropSpaceGuide guide height and centerY represent the area between the backdrop and bottom host views
-            [_backdropSpaceGuide.topAnchor constraintEqualToAnchor:self.topAnchor].active = YES;
-            [_backdropSpaceGuide.bottomAnchor constraintEqualToAnchor:_recordButton.topAnchor].active = YES;
-            [_backdropSpaceGuide.leftAnchor constraintEqualToAnchor:_durationSlider.centerXAnchor].active = YES;
+            [portraitConstraints addObjectsFromArray:@[[_backdropSpaceGuide.topAnchor constraintEqualToAnchor:self.topAnchor],
+                                                       [_backdropSpaceGuide.bottomAnchor constraintEqualToAnchor:_recordButton.topAnchor],
+                                                       [_durationSlider.centerXAnchor constraintEqualToAnchor:self.rightAnchor constant:-40.0],
+                                                       ]];
 
-            [_durationSlider.centerXAnchor constraintEqualToAnchor:self.rightAnchor constant:-40.0].active = YES;
+            [landscapeLeftConstraints addObjectsFromArray:@[[_backdropSpaceGuide.topAnchor constraintEqualToAnchor:self.topAnchor],
+                                                            [_backdropSpaceGuide.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+                                                            [_durationSlider.centerXAnchor constraintEqualToAnchor:self.leftAnchor constant:40.0],
+                                                            ]];
+            
+            [landscapeRightConstraints addObjectsFromArray:@[[_backdropSpaceGuide.topAnchor constraintEqualToAnchor:self.topAnchor],
+                                                             [_backdropSpaceGuide.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+                                                             [_durationSlider.centerXAnchor constraintEqualToAnchor:self.rightAnchor constant:-40.0],
+                                                             ]];
+
+            [_backdropSpaceGuide.leftAnchor constraintEqualToAnchor:_durationSlider.centerXAnchor].active = YES;
             [_durationSlider.centerYAnchor constraintEqualToAnchor:_backdropSpaceGuide.centerYAnchor].active = YES;
             [_durationSlider.widthAnchor constraintEqualToAnchor:_backdropSpaceGuide.heightAnchor multiplier:DURATION_SLIDER_HEIGHT_MULTIPLIER].active = YES;
-            _durationSlider.transform = CGAffineTransformMakeRotation(-M_PI_2);
-            
+
             // Duration Label
             _durationLabel = [[UILabel alloc] init];
             _durationLabel.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -122,18 +142,10 @@
             _durationLabel.textAlignment = NSTextAlignmentCenter;
             [self addSubview:_durationLabel];
         }
-        
-        { // Push/Pull Buttons
-            _pushPullToggleControl = [[VTPushPullToggleControl alloc] init];
-            _pushPullToggleControl.hidden = YES;
-            VTAllowAutolayoutForView(_pushPullToggleControl);
-            [self addSubview:_pushPullToggleControl];
-            
-            [_pushPullToggleControl addTarget:self action:@selector(_handleDirectionChange) forControlEvents:UIControlEventValueChanged];
-            
-            [_pushPullToggleControl.rightAnchor constraintEqualToAnchor:self.rightAnchor constant:-40.0].active = YES;
-            [_pushPullToggleControl.centerYAnchor constraintEqualToAnchor:_backdropSpaceGuide.centerYAnchor].active = YES;
-        }
+
+        self.portraitConstraints = portraitConstraints;
+        self.landscapeLeftConstraints = landscapeLeftConstraints;
+        self.landscapeRightConstraints = landscapeRightConstraints;
         
         { // Configure Default Property and View State
             _recording = NO;
@@ -145,6 +157,7 @@
                 self.duration = 3.0;
                 [self _updateViewRecordingState];
                 [self _updateProgress];
+                [self _updateLayoutForCurrentOrientation];
                 [self _updateDurationLabelTransform];
             }];
         }
@@ -155,7 +168,8 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-
+    
+    [self _updateLayoutForCurrentOrientation];
     [UIView performWithoutAnimation:^{
         [self _updateDurationLabelPosition];
     }];
@@ -191,11 +205,6 @@
     }
 }
 
-- (VTVertigoDirection)direction
-{
-    return (VTVertigoDirection)self.pushPullToggleControl.direction;
-}
-
 - (void)setDuration:(NSTimeInterval)duration
 {
     // EL NOTE: To reduce number of _update* calls we could round in this setter intead of getter. Doing so would require
@@ -228,6 +237,16 @@
     {
         _touchingDurationSlider = touchingDurationSlider;
         [self _updateDurationLabelTransform];
+    }
+}
+
+- (void)setOrientation:(VTCameraControlViewOrientation)orientation
+{
+    if (_orientation != orientation)
+    {
+        _orientation = orientation;
+        [self _updateLayoutForCurrentOrientation];
+        [self _updateDurationLabelPosition];
     }
 }
 
@@ -271,13 +290,11 @@
     [UIView animateWithDuration:0.2 delay:0.0 options:(UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowUserInteraction) animations:^{
         if (self.isRecording)
         {
-            self.pushPullToggleControl.alpha = 0.0;
             self.durationLabel.alpha = 0.0;
             self.durationSlider.alpha = 0.0;
         }
         else
         {
-            self.pushPullToggleControl.alpha = 1.0;
             self.durationLabel.alpha = 1.0;
             self.durationSlider.alpha = 1.0;
         }
@@ -326,10 +343,12 @@
     CGFloat minY = guideCenterY - sliderHeight * 0.5;
     CGFloat maxY = guideCenterY + sliderHeight * 0.5;
 
+    CGFloat xOffset = ((self.orientation == VTCameraControlViewOrientationLandscapeLeft) ? 1.0 : -1.0) * CGRectGetWidth(self.durationLabel.bounds);
+    CGFloat positionX = CGRectGetMaxX(guideFrame) + xOffset;
     CGFloat positionY = VTMapValueFromRangeToNewRange(self.rawDuration, DURATION_MAX, DURATION_MIN, minY, maxY);
     
     [UIView animateWithDuration:0.1 delay:0.0 options:(UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionCurveLinear) animations:^{
-        self.durationLabel.center = CGPointMake(CGRectGetMaxX(guideFrame) - CGRectGetWidth(self.durationLabel.bounds), positionY);
+        self.durationLabel.center = CGPointMake(positionX, positionY);
     } completion:NULL];
 }
 
@@ -345,6 +364,28 @@
     [UIView animateWithDuration:0.18 delay:0.0 options:(UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowUserInteraction|UIViewAnimationOptionCurveEaseOut) animations:^{
         self.durationLabel.transform = t;
     } completion:NULL];
+}
+
+- (void)_updateLayoutForCurrentOrientation
+{
+    if (self.orientation == VTCameraControlViewOrientationPortrait)
+    {
+        [NSLayoutConstraint deactivateConstraints:self.landscapeLeftConstraints];
+        [NSLayoutConstraint deactivateConstraints:self.landscapeRightConstraints];
+        [NSLayoutConstraint activateConstraints:self.portraitConstraints];
+    }
+    else if (self.orientation == VTCameraControlViewOrientationLandscapeLeft)
+    {
+        [NSLayoutConstraint deactivateConstraints:self.landscapeRightConstraints];
+        [NSLayoutConstraint deactivateConstraints:self.portraitConstraints];
+        [NSLayoutConstraint activateConstraints:self.landscapeLeftConstraints];
+    }
+    else // VTCameraControlViewOrientationLandscapeRight
+    {
+        [NSLayoutConstraint deactivateConstraints:self.landscapeLeftConstraints];
+        [NSLayoutConstraint deactivateConstraints:self.portraitConstraints];
+        [NSLayoutConstraint activateConstraints:self.landscapeRightConstraints];
+    }
 }
 
 @end

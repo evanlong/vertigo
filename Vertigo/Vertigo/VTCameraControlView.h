@@ -10,6 +10,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSInteger, VTCameraControlViewOrientation) {
+    VTCameraControlViewOrientationPortrait,
+    VTCameraControlViewOrientationLandscapeLeft, // Device turned left, home button on the right
+    VTCameraControlViewOrientationLandscapeRight, // Device turned right, home button on the left
+};
+
 @protocol VTCameraControlViewDelegate;
 
 @interface VTCameraControlView : UIView
@@ -20,7 +26,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, getter=isRecording) BOOL recording;
 @property (nonatomic, assign) CGFloat percentComplete;
 
-@property (nonatomic, readonly, assign) VTVertigoDirection direction;
 @property (nonatomic, readonly, assign) NSTimeInterval duration;
 
 // EL NOTE: The pulled zoom level should always be greater than the pushed... how to enforce this
@@ -28,6 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 // For the view, any zoom setting is OK, or the view can ask delegate "is zoom OK" or for the "limits" it should be rendering...
 @property (nonatomic, readonly, assign) CGFloat pushedZoomLevel; // default 1.0x
 @property (nonatomic, readonly, assign) CGFloat pulledZoomLevel; // default 2.0x
+
+@property (nonatomic, assign) VTCameraControlViewOrientation orientation;
 
 @end
 

@@ -35,6 +35,8 @@
 		FF74E2621E85951B00C6969F /* VTCameraController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF74E2611E85951B00C6969F /* VTCameraController.m */; };
 		FF8111AD1E8B2781004E87B4 /* HFKVOBlocks.m in Sources */ = {isa = PBXBuildFile; fileRef = FF8111AC1E8B2781004E87B4 /* HFKVOBlocks.m */; };
 		FF84B7171E92FB7400F79413 /* VTZoomEffectSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = FF84B7161E92FB7400F79413 /* VTZoomEffectSettings.m */; };
+		FF9634411F09DACF00626456 /* VTHelpRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF9634401F09DACF00626456 /* VTHelpRootViewController.m */; };
+		FF9634481F09DC5D00626456 /* UIView+VTUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = FF9634471F09DC5D00626456 /* UIView+VTUtil.m */; };
 		FFA05F601E89A344009137DA /* VTZoomEffect.m in Sources */ = {isa = PBXBuildFile; fileRef = FFA05F5F1E89A344009137DA /* VTZoomEffect.m */; };
 		FFA4536E1F01BF9800C5C3E5 /* VTTargetAnimationView.m in Sources */ = {isa = PBXBuildFile; fileRef = FFA4536D1F01BF9800C5C3E5 /* VTTargetAnimationView.m */; };
 		FFA556FD1F005FF400B2E35A /* QCMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = FFA556FA1F005FF400B2E35A /* QCMethod.m */; };
@@ -95,6 +97,10 @@
 		FF8111AC1E8B2781004E87B4 /* HFKVOBlocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HFKVOBlocks.m; sourceTree = "<group>"; };
 		FF84B7151E92FB7400F79413 /* VTZoomEffectSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTZoomEffectSettings.h; sourceTree = "<group>"; };
 		FF84B7161E92FB7400F79413 /* VTZoomEffectSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTZoomEffectSettings.m; sourceTree = "<group>"; };
+		FF96343F1F09DACF00626456 /* VTHelpRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTHelpRootViewController.h; sourceTree = "<group>"; };
+		FF9634401F09DACF00626456 /* VTHelpRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTHelpRootViewController.m; sourceTree = "<group>"; };
+		FF9634461F09DC5D00626456 /* UIView+VTUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+VTUtil.h"; sourceTree = "<group>"; };
+		FF9634471F09DC5D00626456 /* UIView+VTUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+VTUtil.m"; sourceTree = "<group>"; };
 		FFA05F5E1E89A344009137DA /* VTZoomEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTZoomEffect.h; sourceTree = "<group>"; };
 		FFA05F5F1E89A344009137DA /* VTZoomEffect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTZoomEffect.m; sourceTree = "<group>"; };
 		FFA4536C1F01BF9800C5C3E5 /* VTTargetAnimationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTTargetAnimationView.h; sourceTree = "<group>"; };
@@ -169,6 +175,7 @@
 				FF0B62251E20567B003BCDB3 /* VTAppDelegate.m */,
 				FF01864F1EAB89D3005AEB06 /* Analytics */,
 				FF74E25F1E8594EB00C6969F /* Controller */,
+				FF96343E1F09DA9500626456 /* HelpFlow */,
 				FF2EE31C1E24AB7D007D5E6C /* Model */,
 				FFEC7DE61EFD891F00005151 /* Processing */,
 				FF0F26F61E241B4800D98C90 /* Views */,
@@ -264,6 +271,7 @@
 		FF1F2F5B1E81B668009F4510 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				FF9634421F09DC0000626456 /* Categories */,
 				FF8111AA1E8B275B004E87B4 /* NonVendor */,
 				FF1F2F5C1E81B67A009F4510 /* VTMath.h */,
 				FF1F2F5D1E81B67A009F4510 /* VTMath.m */,
@@ -300,6 +308,24 @@
 				FF8111AC1E8B2781004E87B4 /* HFKVOBlocks.m */,
 			);
 			name = NonVendor;
+			sourceTree = "<group>";
+		};
+		FF96343E1F09DA9500626456 /* HelpFlow */ = {
+			isa = PBXGroup;
+			children = (
+				FF96343F1F09DACF00626456 /* VTHelpRootViewController.h */,
+				FF9634401F09DACF00626456 /* VTHelpRootViewController.m */,
+			);
+			name = HelpFlow;
+			sourceTree = "<group>";
+		};
+		FF9634421F09DC0000626456 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				FF9634461F09DC5D00626456 /* UIView+VTUtil.h */,
+				FF9634471F09DC5D00626456 /* UIView+VTUtil.m */,
+			);
+			name = Categories;
 			sourceTree = "<group>";
 		};
 		FFA556F81F005FE900B2E35A /* Animation */ = {
@@ -398,6 +424,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FF84B7171E92FB7400F79413 /* VTZoomEffectSettings.m in Sources */,
+				FF9634411F09DACF00626456 /* VTHelpRootViewController.m in Sources */,
 				FF0B62261E20567B003BCDB3 /* VTAppDelegate.m in Sources */,
 				FF54F7D81E9C901600D84F2C /* VTCountDownView.m in Sources */,
 				FF1F2F8F1E82F86C009F4510 /* VTCameraControlView.m in Sources */,
@@ -420,6 +447,7 @@
 				FF0185FD1EAA774F005AEB06 /* VTRecordButton.m in Sources */,
 				FF54F7D51E9C302B00D84F2C /* VTPushPullToggleControl.m in Sources */,
 				FFA4536E1F01BF9800C5C3E5 /* VTTargetAnimationView.m in Sources */,
+				FF9634481F09DC5D00626456 /* UIView+VTUtil.m in Sources */,
 				FF717B831EFB2ABF00902AAA /* VTOverlayButton.m in Sources */,
 				FF54C3F41EFC33B8002CA48A /* VTPieProgressView.m in Sources */,
 			);
