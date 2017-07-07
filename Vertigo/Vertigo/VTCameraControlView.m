@@ -9,7 +9,10 @@
 #import "VTCameraControlView.h"
 
 #import "VTMath.h"
+#import "VTOverlayButton.h"
 #import "VTRecordButton.h"
+
+#import "UIView+VTUtil.h"
 
 #define DURATION_MIN                        1.0
 #define DURATION_MAX                        5.0
@@ -26,6 +29,7 @@
 @property (nonatomic, strong) UISlider *durationSlider;
 @property (nonatomic, strong) UIProgressView *progressView;
 
+@property (nonatomic, strong) VTOverlayButton *helpButton;
 @property (nonatomic, strong) VTRecordButton *recordButton;
 @property (nonatomic, strong) UILabel *durationLabel;
 
@@ -43,6 +47,7 @@
 {
     struct {
         unsigned int delegateDidPressRecordButton:1;
+        unsigned int delegateDidPressHelpButton:1;
         unsigned int delegateDidChangeDirection:1;
     } _flags;
 }
@@ -61,7 +66,7 @@
         NSMutableArray *portraitConstraints = [NSMutableArray array];
         NSMutableArray *landscapeLeftConstraints = [NSMutableArray array];
         NSMutableArray *landscapeRightConstraints = [NSMutableArray array];
-
+        
         { // Record
             _recordButton = [[VTRecordButton alloc] init];
             VTAllowAutolayoutForView(_recordButton);
@@ -77,6 +82,26 @@
             
             [landscapeRightConstraints addObjectsFromArray:@[[_recordButton.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
                                                              [_recordButton.leftAnchor constraintEqualToAnchor:self.leftAnchor constant:20.0]]];
+        }
+        
+        { // Help
+            _helpButton = [[VTOverlayButton alloc] initWithOverlayImageName:@"HelpIcon"];
+            VTAllowAutolayoutForView(_helpButton);
+            [self addSubview:_helpButton];
+            
+            [_helpButton addTarget:self action:@selector(_handleHelpButtonPress) forControlEvents:UIControlEventTouchUpInside];
+            
+            [portraitConstraints addObjectsFromArray:@[[_helpButton.leftAnchor constraintEqualToAnchor:self.leftAnchor constant:24.0],
+                                                       [_helpButton.centerYAnchor constraintEqualToAnchor:_recordButton.centerYAnchor],
+                                                       ]];
+            
+            [landscapeLeftConstraints addObjectsFromArray:@[[_helpButton.bottomAnchor constraintEqualToAnchor:self.bottomAnchor constant:-24.0],
+                                                            [_helpButton.centerXAnchor constraintEqualToAnchor:_recordButton.centerXAnchor],
+                                                            ]];
+            
+            [landscapeRightConstraints addObjectsFromArray:@[[_helpButton.topAnchor constraintEqualToAnchor:self.topAnchor constant:24.0],
+                                                             [_helpButton.centerXAnchor constraintEqualToAnchor:_recordButton.centerXAnchor],
+                                                             ]];
         }
         
         { // Progress View
@@ -173,16 +198,21 @@
     [UIView performWithoutAnimation:^{
         [self _updateDurationLabelPosition];
     }];
+    
+    UIImage *i = [self renderedAsImage];
+    NSString *f = [NSTemporaryDirectory() stringByAppendingPathComponent:@"screenshot.png"];
+    [UIImagePNGRepresentation(i) writeToFile:f atomically:YES];
 }
 
 #pragma mark - VTCameraControlView
 
-- (void)setDelegate:(id<VTCameraControlViewDelegate>)delegate
+- (void)setDelegate:(id<VTCameraControlViewDelegate>)delegate   
 {
     if (_delegate != delegate)
     {
         _delegate = delegate;
         _flags.delegateDidPressRecordButton = [delegate respondsToSelector:@selector(cameraControlViewDidPressRecordButton:)];
+        _flags.delegateDidPressHelpButton = [delegate respondsToSelector:@selector(cameraControlViewDidPressHelpButton:)];
         _flags.delegateDidChangeDirection = [delegate respondsToSelector:@selector(cameraControlViewDidChangeDirection:)];
     }
 }
@@ -260,6 +290,14 @@
     }
 }
 
+- (void)_handleHelpButtonPress
+{
+    if (_flags.delegateDidPressHelpButton)
+    {
+        [self.delegate cameraControlViewDidPressHelpButton:self];
+    }
+}
+
 - (void)_handleDirectionChange
 {
     if (_flags.delegateDidChangeDirection)
@@ -292,11 +330,13 @@
         {
             self.durationLabel.alpha = 0.0;
             self.durationSlider.alpha = 0.0;
+            self.helpButton.alpha = 0.0;
         }
         else
         {
             self.durationLabel.alpha = 1.0;
             self.durationSlider.alpha = 1.0;
+            self.helpButton.alpha = 1.0;
         }
     } completion:nil];
     

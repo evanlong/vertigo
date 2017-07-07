@@ -64,6 +64,7 @@
 @property (nonatomic, strong) UIView *controlHostView;
 @property (nonatomic, strong) VTOverlayButton *backArrowButton;
 @property (nonatomic, strong) VTOverlayButton *shareButton;
+@property (nonatomic, strong) VTOverlayButton *helpButton;
 @property (nonatomic, strong) UISlider *zoomAdjustSlider;
 @property (nonatomic, strong) UILayoutGuide *sliderSpaceGuide;
 @property (nonatomic, strong) UIView *sliderMidpointView;
@@ -171,6 +172,11 @@
         [_shareButton addTarget:self action:@selector(_handleShareButtonPress) forControlEvents:UIControlEventTouchUpInside];
         [_controlHostView addSubview:_shareButton];
         
+        _helpButton = [[VTOverlayButton alloc] initWithOverlayImageName:@"HelpIcon"];
+        VTAllowAutolayoutForView(_helpButton);
+        [_helpButton addTarget:self action:@selector(_handleHelpButtonPress) forControlEvents:UIControlEventTouchUpInside];
+        [_controlHostView addSubview:_helpButton];
+        
         VTWeakifySelf(weakSelf);
         [_player addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1.0/60.0, 60) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
             VTStrongifySelf(strongSelf, weakSelf);
@@ -203,6 +209,11 @@
         { // Back Arrow
             [_backArrowButton.leftAnchor constraintEqualToAnchor:_controlHostView.leftAnchor constant:24.0].active = YES;
             [_backArrowButton.topAnchor constraintEqualToAnchor:_controlHostView.topAnchor constant:24.0].active = YES;
+        }
+        
+        {
+            [_helpButton.leftAnchor constraintEqualToAnchor:self.leftAnchor constant:24.0].active = YES;
+            [_helpButton.centerYAnchor constraintEqualToAnchor:_shareButton.centerYAnchor].active = YES;
         }
         
         {
@@ -397,6 +408,15 @@
     if ([delegate respondsToSelector:@selector(saveVideoViewDidPressShare:)])
     {
         [delegate saveVideoViewDidPressShare:self];
+    }
+}
+
+- (void)_handleHelpButtonPress
+{
+    id<VTSaveVideoViewDelegate> delegate = self.delegate;
+    if ([delegate respondsToSelector:@selector(saveVideoViewDidPressHelp:)])
+    {
+        [delegate saveVideoViewDidPressHelp:self];
     }
 }
 

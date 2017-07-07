@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface VTHelpRootViewController : UIViewController
+@interface VTHelpRootViewController : UITableViewController
 
 @end

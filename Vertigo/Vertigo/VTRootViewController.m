@@ -27,6 +27,23 @@
 #import "VTSaveVideoView.h"
 #import "VTZoomEffectSettings.h"
 
+@interface _VTPortraitNavigationController : UINavigationController
+@end
+
+@implementation _VTPortraitNavigationController
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (BOOL)shouldAutorotate
+{
+    return NO;
+}
+
+@end
+
 typedef void(^VTViewWillDisappear)(void);
 @interface _VTDismissActivityViewController : UIActivityViewController
 @property (nonatomic, copy) VTViewWillDisappear viewWillDisappear;
@@ -152,17 +169,14 @@ static id commonInit(VTRootViewController *self)
         BOOL granted = (videoAuthStatus == AVAuthorizationStatusAuthorized);
         [self _setupViewsWithVideoPermissionState:granted];
     }
-    
-    VTHelpRootViewController *helpVC = [[VTHelpRootViewController alloc] init];
-    [self presentViewController:helpVC animated:YES completion:nil];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
 {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     
-    BOOL isPresentingSaveFlow = self.saveVideoView != nil;
-    if (!isPresentingSaveFlow)
+    BOOL shouldAllowAnimation = [self _shouldAllowRotationAnimation];
+    if (!shouldAllowAnimation)
     {
         [UIView setAnimationsEnabled:NO];
         [CATransaction setDisableActions:YES];
@@ -177,7 +191,7 @@ static id commonInit(VTRootViewController *self)
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
         [self _updateLayoutForCurrentOrientation];
     } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-        if (!isPresentingSaveFlow)
+        if (!shouldAllowAnimation)
         {
             [CATransaction setDisableActions:NO];
             [UIView setAnimationsEnabled:YES];
@@ -250,6 +264,11 @@ static id commonInit(VTRootViewController *self)
         self.recordingState = VTRecordingStateTransitionToWaiting;
     }
     // else: nop transitioning between recording <-> waiting states
+}
+
+- (void)cameraControlViewDidPressHelpButton:(VTCameraControlView *)cameraControlView
+{
+    [self _presentHelp];
 }
 
 #pragma mark - VTCameraControllerDelegate
@@ -380,6 +399,11 @@ static id commonInit(VTRootViewController *self)
     }
 }
 
+- (void)saveVideoViewDidPressHelp:(VTSaveVideoView *)saveVideoView
+{
+    [self _presentHelp];
+}
+
 #pragma mark - Private (Setup)
 
 - (void)_setupViewsWithVideoPermissionState:(BOOL)granted
@@ -453,7 +477,30 @@ static id commonInit(VTRootViewController *self)
 //    [self _updateLayoutForCurrentOrientation];
 }
 
+#pragma mark - Events
+
+- (void)_handleHelpClose
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 #pragma mark - Private
+
+- (void)_presentHelp
+{
+    VTHelpRootViewController *helpVC = [[VTHelpRootViewController alloc] init];
+    helpVC.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"HelpClose", nil) style:UIBarButtonItemStylePlain target:self action:@selector(_handleHelpClose)];
+    UINavigationController *nav = [[_VTPortraitNavigationController alloc] initWithRootViewController:helpVC];
+    [self presentViewController:nav animated:YES completion:nil];
+}
+
+- (BOOL)_shouldAllowRotationAnimation
+{
+    BOOL isPresentingSave = self.saveVideoView != nil;
+    BOOL isPresentingOther = self.presentedViewController != nil;
+    
+    return (isPresentingSave || isPresentingOther);
+}
 
 - (void)_updateLayoutForCurrentOrientation
 {

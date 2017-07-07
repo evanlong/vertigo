@@ -1,14 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>StringsTable</key>
-	<string>Acknowledgements</string>
-	<key>PreferenceSpecifiers</key>
-	<array>
-		<dict>
-			<key>Title</key>
-			<string>
 The Hockey SDK is provided under the following license:
 
 The MIT License
@@ -17,7 +6,7 @@ All rights reserved.
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
-files (the &quot;Software&quot;), to deal in the Software without
+files (the "Software"), to deal in the Software without
 restriction, including without limitation the rights to use,
 copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the
@@ -27,7 +16,7 @@ conditions:
 The above copyright notice and this permission notice shall be
 included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
@@ -35,15 +24,10 @@ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
-</string>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-		</dict>
-		<dict>
-			<key>Title</key>
-			<string>
 
-Except as noted below, PLCrashReporter 
+=======================================
+
+Except as noted below, PLCrashReporter
 is provided under the following license:
 
 Copyright (c) 2008 - 2015 Plausible Labs Cooperative, Inc.
@@ -52,7 +36,7 @@ All rights reserved.
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
-files (the &quot;Software&quot;), to deal in the Software without
+files (the "Software"), to deal in the Software without
 restriction, including without limitation the rights to use,
 copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the
@@ -62,7 +46,7 @@ conditions:
 The above copyright notice and this permission notice shall be
 included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
@@ -70,42 +54,34 @@ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
-</string>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-		</dict>
-		<dict>
-			<key>Title</key>
-			<string>
+
+=======================================
+
 The protobuf-c library, as well as the PLCrashLogWriterEncoding.c
 file are licensed as follows:
 
 Copyright 2008, Dave Benson.
 
-Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with
 the License. You may obtain a copy of the License
 at http://www.apache.org/licenses/LICENSE-2.0 Unless
 required by applicable law or agreed to in writing,
 software distributed under the License is distributed on
-an &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 KIND, either express or implied. See the License for the
 specific language governing permissions and limitations
 under the License.
-</string>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-		</dict>
-		<dict>
-			<key>Title</key>
-			<string>
+
+=======================================
+
 TTTAttributedLabel is licensed as follows:
 
 Copyright (c) 2011 Mattt Thompson (http://mattt.me/)
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
-files (the &quot;Software&quot;), to deal in the Software without
+files (the "Software"), to deal in the Software without
 restriction, including without limitation the rights to use,
 copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the
@@ -115,7 +91,7 @@ conditions:
 The above copyright notice and this permission notice shall be
 included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
@@ -123,13 +99,9 @@ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
-</string>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-		</dict>
-		<dict>
-			<key>Title</key>
-			<string>
+
+=======================================
+
 SFHFKeychainUtils is licensed as follows:
 
 Created by Buzz Andersen on 10/20/08.
@@ -138,7 +110,7 @@ Copyright 2008 Sci-Fi Hi-Fi. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
-files (the &quot;Software&quot;), to deal in the Software without
+files (the "Software"), to deal in the Software without
 restriction, including without limitation the rights to use,
 copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the
@@ -148,7 +120,7 @@ conditions:
 The above copyright notice and this permission notice shall be
 included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
@@ -156,13 +128,9 @@ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
-</string>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-		</dict>
-		<dict>
-			<key>Title</key>
-			<string>
+
+=======================================
+
 GZIP is licensed as follow:
 
 Created by Nick Lockwood on 03/06/2012.
@@ -173,7 +141,7 @@ Get the latest version from here:
 
 https://github.com/nicklockwood/GZIP
 
-This software is provided &apos;as-is&apos;, without any express or implied
+This software is provided 'as-is', without any express or implied
 warranty.  In no event will the authors be held liable for any damages
 arising from the use of this software.
 
@@ -190,19 +158,15 @@ appreciated but is not required.
 misrepresented as being the original software.
 
 3. This notice may not be removed or altered from any source distribution.
-</string>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-		</dict>
-		<dict>
-			<key>Title</key>
-			<string>
+
+=======================================
+
 Vertigo Camera makes use of modified AVCamPreviewView.(h|m)
 Sample code project: AVCam-iOS: Using AVFoundation to Capture Images and Movies
 Version: 6.1
 
 IMPORTANT:  This Apple software is supplied to you by Apple
-Inc. (&quot;Apple&quot;) in consideration of your agreement to the following
+Inc. ("Apple") in consideration of your agreement to the following
 terms, and your use, installation, modification or redistribution of
 this Apple software constitutes acceptance of these terms.  If you do
 not agree with these terms, please do not use, install, modify or
@@ -210,8 +174,8 @@ redistribute this Apple software.
 
 In consideration of your agreement to abide by the following terms, and
 subject to these terms, Apple grants you a personal, non-exclusive
-license, under Apple&apos;s copyrights in this original Apple software (the
-&quot;Apple Software&quot;), to use, reproduce, modify and redistribute the Apple
+license, under Apple's copyrights in this original Apple software (the
+"Apple Software"), to use, reproduce, modify and redistribute the Apple
 Software, with or without modifications, in source and/or binary forms;
 provided that if you redistribute the Apple Software in its entirety and
 without modifications, you must retain this notice and the following
@@ -224,7 +188,7 @@ implied, are granted by Apple herein, including but not limited to any
 patent rights that may be infringed by your derivative works or by other
 works in which the Apple Software may be incorporated.
 
-The Apple Software is provided by Apple on an &quot;AS IS&quot; basis.  APPLE
+The Apple Software is provided by Apple on an "AS IS" basis.  APPLE
 MAKES NO WARRANTIES, EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION
 THE IMPLIED WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY AND FITNESS
 FOR A PARTICULAR PURPOSE, REGARDING THE APPLE SOFTWARE OR ITS USE AND
@@ -240,10 +204,3 @@ STRICT LIABILITY OR OTHERWISE, EVEN IF APPLE HAS BEEN ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 
 Copyright (C) 2016 Apple Inc. All Rights Reserved.
-</string>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-		</dict>
-	</array>
-</dict>
-</plist>

@@ -15,3 +15,11 @@
 "SharePanelDiscard" = "Discard";
 "SharePanelCancel" = "Cancel";
 "ZoomLevel" = "%.2fx";
+
+// Help
+"HelpClose" = "Close";
+"HelpTitle" = "Help";
+"HelpIntro" = "Introduction";
+"HelpUsingTheApp" = "Using the App";
+"HelpCredits" = "Credits";
+"HelpWhatIsIt"="What is the Vertigo Effect?";

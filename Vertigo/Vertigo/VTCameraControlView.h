@@ -42,6 +42,7 @@ typedef NS_ENUM(NSInteger, VTCameraControlViewOrientation) {
 
 @optional
 - (void)cameraControlViewDidPressRecordButton:(VTCameraControlView *)cameraControlView;
+- (void)cameraControlViewDidPressHelpButton:(VTCameraControlView *)cameraControlView;
 - (void)cameraControlViewDidChangeDirection:(VTCameraControlView *)cameraControlView;
 
 /**

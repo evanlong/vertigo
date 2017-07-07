@@ -8,29 +8,85 @@
 
 #import "VTHelpRootViewController.h"
 
+#import "VTHelpCreditsViewController.h"
+#import "VTHelpIntroViewController.h"
+#import "VTHelpStepByStepViewController.h"
+
+static NSString *const VTHelpTitleKey = @"VTHelpTitleKey";
+static NSString *const VTHelpViewControllerClassKey = @"VTHelpViewControllerClassKey";
+
 @interface VTHelpRootViewController ()
+
+@property (nonatomic, copy) NSArray<NSDictionary<NSString *, Class> *> *helpViewControllers;
 
 @end
 
 @implementation VTHelpRootViewController
+
+- (instancetype)init
+{
+    self = [super initWithStyle:UITableViewStylePlain];
+    if (self)
+    {
+        _helpViewControllers = @[@{VTHelpTitleKey : NSLocalizedString(@"HelpIntro", nil), VTHelpViewControllerClassKey : [VTHelpIntroViewController class]},
+                                 @{VTHelpTitleKey : NSLocalizedString(@"HelpUsingTheApp", nil), VTHelpViewControllerClassKey : [VTHelpStepByStepViewController class]},
+                                 @{VTHelpTitleKey : NSLocalizedString(@"HelpCredits", nil), VTHelpViewControllerClassKey : [VTHelpCreditsViewController class]},
+                                 ];
+    }
+    return self;
+}
 
 #pragma mark - UIViewController
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    self.view.backgroundColor = [UIColor lightGrayColor];
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations
-{
-    return UIInterfaceOrientationMaskPortrait;
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
 }
 
 - (BOOL)prefersStatusBarHidden
 {
     return NO;
+}
+
+- (NSString *)title
+{
+    return NSLocalizedString(@"HelpTitle", nil);
+}
+
+#pragma mark - UITableViewDelegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSDictionary *element = self.helpViewControllers[indexPath.row];
+    Class helpVCClass = element[VTHelpViewControllerClassKey];
+    
+    UIViewController *helpVC = [[helpVCClass alloc] init];
+    [self.navigationController pushViewController:helpVC animated:YES];
+}
+
+#pragma mark - UITableViewDataSource
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return self.helpViewControllers.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
+    NSDictionary *element = self.helpViewControllers[indexPath.row];
+    NSString *title = element[VTHelpTitleKey];
+    
+    cell.textLabel.text = title;
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    
+    return cell;
 }
 
 @end

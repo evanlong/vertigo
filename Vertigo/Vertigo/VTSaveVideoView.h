@@ -36,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)saveVideoViewDidPressShare:(VTSaveVideoView *)saveVideoView;
 - (void)saveVideoViewDidPressSave:(VTSaveVideoView *)saveVideoView;
 - (void)saveVideoViewDidPressDiscard:(VTSaveVideoView *)saveVideoView;
+- (void)saveVideoViewDidPressHelp:(VTSaveVideoView *)saveVideoView;
 
 @end
 
