@@ -11,6 +11,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AVKit/AVKit.h>
 
+#import "HFKVOBlocks.h"
 #import "VTCaptureTypes.h"
 #import "VTOverlayButton.h"
 #import "VTMath.h"
@@ -25,6 +26,9 @@
 
 @property (nonatomic, strong) AVPlayer *player;
 @property (nonatomic, strong) AVPlayerItem *playerItem;
+
+@property (nonatomic, strong) id playerTimeObserver;
+@property (nonatomic, strong) id playerItemStatusObserver;
 
 @property (nonatomic, strong) UIView *clippingView;
 
@@ -150,7 +154,16 @@
         [_controlHostView addSubview:_helpButton];
         
         VTWeakifySelf(weakSelf);
-        [_player addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1.0/60.0, 60) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+        
+        _playerItemStatusObserver = [_playerItem hf_addBlockObserver:^(id  _Nonnull object, NSDictionary * _Nonnull change) {
+            VTStrongifySelf(strongSelf, weakSelf);
+            if (strongSelf)
+            {
+                [self _handePlayerItemStatusChange];
+            }
+        } forKeyPath:VTKeyPath(_playerItem, status)];
+        
+        _playerTimeObserver = [_player addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1.0/60.0, 60) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
             VTStrongifySelf(strongSelf, weakSelf);
             if (strongSelf)
             {
@@ -175,7 +188,7 @@
             
             [_shareButtonCenterXGuide.rightAnchor constraintEqualToAnchor:self.rightAnchor].active = YES;
             [_shareButton.centerXAnchor constraintEqualToAnchor:_shareButtonCenterXGuide.centerXAnchor].active = YES;
-            [_shareButton.bottomAnchor constraintEqualToAnchor:_controlHostView.bottomAnchor constant:-20.0].active = YES;
+            [_shareButton.centerYAnchor constraintEqualToAnchor:_controlHostView.bottomAnchor constant:-54.0].active = YES;
         }
         
         { // Back Arrow
@@ -220,19 +233,22 @@
             [_targetAnimationView.centerXAnchor constraintEqualToAnchor:_pushAnimationView.centerXAnchor].active = YES;
             [_targetAnimationView.topAnchor constraintEqualToAnchor:_pushAnimationView.topAnchor].active = YES;
             
-            [_pushAnimationView.leftAnchor constraintEqualToAnchor:_controlHostView.leftAnchor constant:10.0].active = YES;
-            [_pullAnimationView.leftAnchor constraintEqualToAnchor:_controlHostView.leftAnchor constant:10.0].active = YES;
-            [_staticAnimationView.leftAnchor constraintEqualToAnchor:_controlHostView.leftAnchor constant:10.0].active = YES;
 
             // Portrait
             self.portraitCameraConstraints = @[[_pushAnimationView.centerYAnchor constraintEqualToAnchor:_controlHostView.centerYAnchor],
                                                [_pullAnimationView.centerYAnchor constraintEqualToAnchor:_controlHostView.centerYAnchor],
                                                [_staticAnimationView.centerYAnchor constraintEqualToAnchor:_controlHostView.centerYAnchor],
+                                               [_pushAnimationView.leftAnchor constraintEqualToAnchor:_controlHostView.leftAnchor constant:10.0],
+                                               [_pullAnimationView.leftAnchor constraintEqualToAnchor:_controlHostView.leftAnchor constant:10.0],
+                                               [_staticAnimationView.leftAnchor constraintEqualToAnchor:_controlHostView.leftAnchor constant:10.0],
                                                ];
             // Landscape
             self.landscapeCameraConstraints = @[[_pullAnimationView.topAnchor constraintEqualToAnchor:_backArrowButton.bottomAnchor constant:20.0],
                                                 [_pushAnimationView.topAnchor constraintEqualToAnchor:_backArrowButton.bottomAnchor constant:20.0],
                                                 [_staticAnimationView.topAnchor constraintEqualToAnchor:_backArrowButton.bottomAnchor constant:20.0],
+                                                [_pushAnimationView.leftAnchor constraintEqualToAnchor:_backArrowButton.rightAnchor constant:10.0],
+                                                [_pullAnimationView.leftAnchor constraintEqualToAnchor:_backArrowButton.rightAnchor constant:10.0],
+                                                [_staticAnimationView.leftAnchor constraintEqualToAnchor:_backArrowButton.rightAnchor constant:10.0],
                                                 ];
         }
         
@@ -256,6 +272,8 @@
 
 - (void)dealloc
 {
+    [_player removeTimeObserver:_playerTimeObserver];
+    [_playerItem hf_removeBlockObserverWithToken:_playerItemStatusObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:_playerItem];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
 }
@@ -300,6 +318,7 @@
 - (void)didMoveToSuperview
 {
     [super didMoveToSuperview];
+
     [self _updatePlayback];
     [self _updatePushPullAnimationVisibility];
 }
@@ -410,6 +429,11 @@
     }
 }
 
+- (void)_handePlayerItemStatusChange
+{
+    [self _updatePlayback];
+}
+
 - (void)_handleZoomSliderValueChanged
 {
     [self _updatePushPullAnimationVisibility];
@@ -449,7 +473,7 @@
 
     [self.player seekToTime:kCMTimeZero];
 
-    if (self.superview && [UIApplication sharedApplication].applicationState == UIApplicationStateActive)
+    if (self.playerItem.status == AVPlayerStatusReadyToPlay && self.superview && [UIApplication sharedApplication].applicationState == UIApplicationStateActive)
     {
         [self.player play];
     }

@@ -75,13 +75,13 @@
             [_recordButton addTarget:self action:@selector(_handleRecordButtonPress) forControlEvents:UIControlEventTouchUpInside];
             
             [portraitConstraints addObjectsFromArray:@[[_recordButton.centerXAnchor constraintEqualToAnchor:self.centerXAnchor],
-                                                       [_recordButton.bottomAnchor constraintEqualToAnchor:self.bottomAnchor constant:-20.0]]];
+                                                       [_recordButton.centerYAnchor constraintEqualToAnchor:self.bottomAnchor constant:-54.0]]];
 
             [landscapeLeftConstraints addObjectsFromArray:@[[_recordButton.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
-                                                            [_recordButton.rightAnchor constraintEqualToAnchor:self.rightAnchor constant:-20.0]]];
+                                                            [_recordButton.centerXAnchor constraintEqualToAnchor:self.rightAnchor constant:-54.0]]];
             
             [landscapeRightConstraints addObjectsFromArray:@[[_recordButton.centerYAnchor constraintEqualToAnchor:self.centerYAnchor],
-                                                             [_recordButton.leftAnchor constraintEqualToAnchor:self.leftAnchor constant:20.0]]];
+                                                             [_recordButton.centerXAnchor constraintEqualToAnchor:self.leftAnchor constant:54.0]]];
         }
         
         { // Help
