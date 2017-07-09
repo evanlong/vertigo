@@ -26,6 +26,7 @@
 "HelpWhatIsIt"="What is the Vertigo Effect?";
 
 "PushEffect" = "Push Effect";
-"PushEffectDetail" = "Camera moves towards the subject while zooming out";
+"PushEffectDetail" = "Maintain the subject's size by moving the camera forward while zooming out";
 "PullEffect" = "Pull Effect";
-"PullEffectDetail" = "Camera moves away from subject while zooming in";
+"PullEffectDetail" = "Maintain the subject's size by moving the camera away while zooming in";
+

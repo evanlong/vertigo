@@ -49,7 +49,7 @@
 		FFDC7A2B1F11960D0042A92A /* VTPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = FFDC7A2A1F11960D0042A92A /* VTPlayerView.m */; };
 		FFEAAC621F120D4D00906AD0 /* plane_push_720_pull.m4v in Resources */ = {isa = PBXBuildFile; fileRef = FFEAAC601F120D4D00906AD0 /* plane_push_720_pull.m4v */; };
 		FFEAAC631F120D4D00906AD0 /* plane_push_720_push.m4v in Resources */ = {isa = PBXBuildFile; fileRef = FFEAAC611F120D4D00906AD0 /* plane_push_720_push.m4v */; };
-		FFEAAC661F120F6600906AD0 /* VTHelpIntroPushViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFEAAC651F120F6600906AD0 /* VTHelpIntroPushViewController.m */; };
+		FFEAAC691F120FDF00906AD0 /* VTHelpIntroPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFEAAC681F120FDF00906AD0 /* VTHelpIntroPageViewController.m */; };
 		FFEC7DE91EFD896F00005151 /* VTCompositeZoomEffectOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = FFEC7DE81EFD896F00005151 /* VTCompositeZoomEffectOperation.m */; };
 /* End PBXBuildFile section */
 
@@ -129,8 +129,8 @@
 		FFDC7A2A1F11960D0042A92A /* VTPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTPlayerView.m; sourceTree = "<group>"; };
 		FFEAAC601F120D4D00906AD0 /* plane_push_720_pull.m4v */ = {isa = PBXFileReference; lastKnownFileType = file; path = plane_push_720_pull.m4v; sourceTree = "<group>"; };
 		FFEAAC611F120D4D00906AD0 /* plane_push_720_push.m4v */ = {isa = PBXFileReference; lastKnownFileType = file; path = plane_push_720_push.m4v; sourceTree = "<group>"; };
-		FFEAAC641F120F6600906AD0 /* VTHelpIntroPushViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTHelpIntroPushViewController.h; sourceTree = "<group>"; };
-		FFEAAC651F120F6600906AD0 /* VTHelpIntroPushViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTHelpIntroPushViewController.m; sourceTree = "<group>"; };
+		FFEAAC671F120FDF00906AD0 /* VTHelpIntroPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTHelpIntroPageViewController.h; sourceTree = "<group>"; };
+		FFEAAC681F120FDF00906AD0 /* VTHelpIntroPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTHelpIntroPageViewController.m; sourceTree = "<group>"; };
 		FFEC7DE71EFD896F00005151 /* VTCompositeZoomEffectOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTCompositeZoomEffectOperation.h; sourceTree = "<group>"; };
 		FFEC7DE81EFD896F00005151 /* VTCompositeZoomEffectOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTCompositeZoomEffectOperation.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -321,8 +321,8 @@
 				FF3888D81F10046F0059E838 /* VTHelpIntroViewController.m */,
 				FF3888D41F1002CA0059E838 /* VTHelpStepByStepViewController.h */,
 				FF3888D51F1002CA0059E838 /* VTHelpStepByStepViewController.m */,
-				FFEAAC641F120F6600906AD0 /* VTHelpIntroPushViewController.h */,
-				FFEAAC651F120F6600906AD0 /* VTHelpIntroPushViewController.m */,
+				FFEAAC671F120FDF00906AD0 /* VTHelpIntroPageViewController.h */,
+				FFEAAC681F120FDF00906AD0 /* VTHelpIntroPageViewController.m */,
 			);
 			name = HelpVCs;
 			sourceTree = "<group>";
@@ -486,6 +486,7 @@
 				FF1E036C1E8443110015A004 /* VTToggleButton.m in Sources */,
 				FF0F26F91E241B5500D98C90 /* VTCameraPreviewView.m in Sources */,
 				FF4440491E7AEFFA002B6F67 /* VTRootViewController.m in Sources */,
+				FFEAAC691F120FDF00906AD0 /* VTHelpIntroPageViewController.m in Sources */,
 				FFEC7DE91EFD896F00005151 /* VTCompositeZoomEffectOperation.m in Sources */,
 				FF0B623A1E2057A4003BCDB3 /* VTMainViewController.m in Sources */,
 				FF8111AD1E8B2781004E87B4 /* HFKVOBlocks.m in Sources */,
@@ -496,7 +497,6 @@
 				FFCAB58F1EA7DB3F00290390 /* VTSaveVideoView.m in Sources */,
 				FF1F2F5E1E81B67A009F4510 /* VTMath.m in Sources */,
 				FF3888D91F10046F0059E838 /* VTHelpIntroViewController.m in Sources */,
-				FFEAAC661F120F6600906AD0 /* VTHelpIntroPushViewController.m in Sources */,
 				FF0185FD1EAA774F005AEB06 /* VTRecordButton.m in Sources */,
 				FF54F7D51E9C302B00D84F2C /* VTPushPullToggleControl.m in Sources */,
 				FFA4536E1F01BF9800C5C3E5 /* VTTargetAnimationView.m in Sources */,
