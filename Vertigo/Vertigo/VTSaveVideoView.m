@@ -14,40 +14,12 @@
 #import "VTCaptureTypes.h"
 #import "VTOverlayButton.h"
 #import "VTMath.h"
+#import "VTPlayerView.h"
 #import "VTPushPullAnimationView.h"
 #import "VTTargetAnimationView.h"
 #import "VTZoomEffect.h"
 
 #define CONTROL_BACKDROP_COLOR          [UIColor colorWithWhite:0.1 alpha:0.70]
-
-@interface _VTPlayerView : UIView
-@property (nonatomic, strong) AVPlayer *player;
-@property (nonatomic, strong, readonly) AVPlayerLayer *playerLayer;
-@end
-
-@implementation _VTPlayerView
-
-+ (Class)layerClass
-{
-    return [AVPlayerLayer class];
-}
-
-- (AVPlayerLayer *)playerLayer
-{
-    return (AVPlayerLayer *)self.layer;
-}
-
-- (AVPlayer *)player
-{
-    return self.playerLayer.player;
-}
-
-- (void)setPlayer:(AVPlayer *)player
-{
-    self.playerLayer.player = player;
-}
-
-@end
 
 @interface VTSaveVideoView ()
 
@@ -56,7 +28,7 @@
 
 @property (nonatomic, strong) UIView *clippingView;
 
-@property (nonatomic, strong) _VTPlayerView *playerView;
+@property (nonatomic, strong) VTPlayerView *playerView;
 
 @property (nonatomic, assign) float secondsComplete;
 @property (nonatomic, assign) float secondsTotal;
@@ -101,7 +73,7 @@
         _clippingView.clipsToBounds = YES;
         [self addSubview:_clippingView];
 
-        _playerView = [[_VTPlayerView alloc] init];
+        _playerView = [[VTPlayerView alloc] init];
         VTAllowAutolayoutForView(_playerView);
         _playerView.player = _player;
         [_clippingView addSubview:_playerView];
@@ -501,8 +473,8 @@
     [self.pushAnimationView removeAllAnimations];
     [self.pullAnimationView removeAllAnimations];
  
-    [self.pushAnimationView addPullAnimationReverse:YES totalDuration:MAX(1.0, self.secondsTotal) completionBlock:NULL];
-    [self.pullAnimationView addPullAnimationReverse:NO totalDuration:MAX(1.0, self.secondsTotal) completionBlock:NULL];
+    [self.pushAnimationView addPullAnimationReverse:YES totalDuration:MAX(1.0, self.secondsTotal) completionBlock:nil];
+    [self.pullAnimationView addPullAnimationReverse:NO totalDuration:MAX(1.0, self.secondsTotal) completionBlock:nil];
 }
 
 - (void)_updatePushPullAnimationVisibility

@@ -46,6 +46,10 @@
 		FFA556FD1F005FF400B2E35A /* QCMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = FFA556FA1F005FF400B2E35A /* QCMethod.m */; };
 		FFA556FE1F005FF400B2E35A /* VTPushPullAnimationView.m in Sources */ = {isa = PBXBuildFile; fileRef = FFA556FC1F005FF400B2E35A /* VTPushPullAnimationView.m */; };
 		FFCAB58F1EA7DB3F00290390 /* VTSaveVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = FFCAB58E1EA7DB3F00290390 /* VTSaveVideoView.m */; };
+		FFDC7A2B1F11960D0042A92A /* VTPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = FFDC7A2A1F11960D0042A92A /* VTPlayerView.m */; };
+		FFEAAC621F120D4D00906AD0 /* plane_push_720_pull.m4v in Resources */ = {isa = PBXBuildFile; fileRef = FFEAAC601F120D4D00906AD0 /* plane_push_720_pull.m4v */; };
+		FFEAAC631F120D4D00906AD0 /* plane_push_720_push.m4v in Resources */ = {isa = PBXBuildFile; fileRef = FFEAAC611F120D4D00906AD0 /* plane_push_720_push.m4v */; };
+		FFEAAC661F120F6600906AD0 /* VTHelpIntroPushViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFEAAC651F120F6600906AD0 /* VTHelpIntroPushViewController.m */; };
 		FFEC7DE91EFD896F00005151 /* VTCompositeZoomEffectOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = FFEC7DE81EFD896F00005151 /* VTCompositeZoomEffectOperation.m */; };
 /* End PBXBuildFile section */
 
@@ -121,6 +125,12 @@
 		FFA556FC1F005FF400B2E35A /* VTPushPullAnimationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTPushPullAnimationView.m; sourceTree = "<group>"; };
 		FFCAB58D1EA7DB3F00290390 /* VTSaveVideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTSaveVideoView.h; sourceTree = "<group>"; };
 		FFCAB58E1EA7DB3F00290390 /* VTSaveVideoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTSaveVideoView.m; sourceTree = "<group>"; };
+		FFDC7A291F11960D0042A92A /* VTPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTPlayerView.h; sourceTree = "<group>"; };
+		FFDC7A2A1F11960D0042A92A /* VTPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTPlayerView.m; sourceTree = "<group>"; };
+		FFEAAC601F120D4D00906AD0 /* plane_push_720_pull.m4v */ = {isa = PBXFileReference; lastKnownFileType = file; path = plane_push_720_pull.m4v; sourceTree = "<group>"; };
+		FFEAAC611F120D4D00906AD0 /* plane_push_720_push.m4v */ = {isa = PBXFileReference; lastKnownFileType = file; path = plane_push_720_push.m4v; sourceTree = "<group>"; };
+		FFEAAC641F120F6600906AD0 /* VTHelpIntroPushViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTHelpIntroPushViewController.h; sourceTree = "<group>"; };
+		FFEAAC651F120F6600906AD0 /* VTHelpIntroPushViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTHelpIntroPushViewController.m; sourceTree = "<group>"; };
 		FFEC7DE71EFD896F00005151 /* VTCompositeZoomEffectOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTCompositeZoomEffectOperation.h; sourceTree = "<group>"; };
 		FFEC7DE81EFD896F00005151 /* VTCompositeZoomEffectOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTCompositeZoomEffectOperation.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -220,6 +230,7 @@
 		FF0B623C1E2057CA003BCDB3 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				FFDC7A261F1192AF0042A92A /* Video */,
 				FF0B622D1E20567B003BCDB3 /* Assets.xcassets */,
 				FF0B622F1E20567B003BCDB3 /* LaunchScreen.storyboard */,
 				FF0B62321E20567B003BCDB3 /* Info.plist */,
@@ -254,6 +265,8 @@
 				FF717B821EFB2ABF00902AAA /* VTOverlayButton.m */,
 				FF54C3F21EFC33B8002CA48A /* VTPieProgressView.h */,
 				FF54C3F31EFC33B8002CA48A /* VTPieProgressView.m */,
+				FFDC7A291F11960D0042A92A /* VTPlayerView.h */,
+				FFDC7A2A1F11960D0042A92A /* VTPlayerView.m */,
 				FF1F2F581E81ACF0009F4510 /* VTRequiresCameraPermissionView.h */,
 				FF1F2F591E81ACF0009F4510 /* VTRequiresCameraPermissionView.m */,
 				FFCAB58D1EA7DB3F00290390 /* VTSaveVideoView.h */,
@@ -308,6 +321,8 @@
 				FF3888D81F10046F0059E838 /* VTHelpIntroViewController.m */,
 				FF3888D41F1002CA0059E838 /* VTHelpStepByStepViewController.h */,
 				FF3888D51F1002CA0059E838 /* VTHelpStepByStepViewController.m */,
+				FFEAAC641F120F6600906AD0 /* VTHelpIntroPushViewController.h */,
+				FFEAAC651F120F6600906AD0 /* VTHelpIntroPushViewController.m */,
 			);
 			name = HelpVCs;
 			sourceTree = "<group>";
@@ -362,6 +377,15 @@
 				FFA4536D1F01BF9800C5C3E5 /* VTTargetAnimationView.m */,
 			);
 			name = Animation;
+			sourceTree = "<group>";
+		};
+		FFDC7A261F1192AF0042A92A /* Video */ = {
+			isa = PBXGroup;
+			children = (
+				FFEAAC601F120D4D00906AD0 /* plane_push_720_pull.m4v */,
+				FFEAAC611F120D4D00906AD0 /* plane_push_720_push.m4v */,
+			);
+			name = Video;
 			sourceTree = "<group>";
 		};
 		FFEC7DE61EFD891F00005151 /* Processing */ = {
@@ -433,8 +457,10 @@
 			files = (
 				FF0B62311E20567B003BCDB3 /* LaunchScreen.storyboard in Resources */,
 				FF01864E1EAB8051005AEB06 /* HockeySDKResources.bundle in Resources */,
+				FFEAAC631F120D4D00906AD0 /* plane_push_720_push.m4v in Resources */,
 				FF0B622E1E20567B003BCDB3 /* Assets.xcassets in Resources */,
 				FF3888DC1F100E320059E838 /* LICENSE.txt in Resources */,
+				FFEAAC621F120D4D00906AD0 /* plane_push_720_pull.m4v in Resources */,
 				FF1F2F671E81BEE7009F4510 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -446,6 +472,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FFDC7A2B1F11960D0042A92A /* VTPlayerView.m in Sources */,
 				FF84B7171E92FB7400F79413 /* VTZoomEffectSettings.m in Sources */,
 				FF9634411F09DACF00626456 /* VTHelpRootViewController.m in Sources */,
 				FF0B62261E20567B003BCDB3 /* VTAppDelegate.m in Sources */,
@@ -469,6 +496,7 @@
 				FFCAB58F1EA7DB3F00290390 /* VTSaveVideoView.m in Sources */,
 				FF1F2F5E1E81B67A009F4510 /* VTMath.m in Sources */,
 				FF3888D91F10046F0059E838 /* VTHelpIntroViewController.m in Sources */,
+				FFEAAC661F120F6600906AD0 /* VTHelpIntroPushViewController.m in Sources */,
 				FF0185FD1EAA774F005AEB06 /* VTRecordButton.m in Sources */,
 				FF54F7D51E9C302B00D84F2C /* VTPushPullToggleControl.m in Sources */,
 				FFA4536E1F01BF9800C5C3E5 /* VTTargetAnimationView.m in Sources */,
@@ -545,7 +573,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -590,7 +618,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;

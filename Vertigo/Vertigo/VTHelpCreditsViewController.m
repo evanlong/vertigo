@@ -26,4 +26,9 @@
     [self.view addSubview:textView];
 }
 
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
+}
+
 @end

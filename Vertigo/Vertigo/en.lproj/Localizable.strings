@@ -20,6 +20,12 @@
 "HelpClose" = "Close";
 "HelpTitle" = "Help";
 "HelpIntro" = "Introduction";
+"HelpIntroDetail" = "Introduction to the Vertigo Effect";
 "HelpUsingTheApp" = "Using the App";
 "HelpCredits" = "Credits";
 "HelpWhatIsIt"="What is the Vertigo Effect?";
+
+"PushEffect" = "Push Effect";
+"PushEffectDetail" = "Camera moves towards the subject while zooming out";
+"PullEffect" = "Pull Effect";
+"PullEffectDetail" = "Camera moves away from subject while zooming in";

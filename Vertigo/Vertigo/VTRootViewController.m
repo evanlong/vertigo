@@ -106,8 +106,6 @@ static id commonInit(VTRootViewController *self)
     if (self)
     {
         self->_processingQueue = [[NSOperationQueue alloc] init];
-        [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_handleDeviceOrientationNotification:) name:UIDeviceOrientationDidChangeNotification object:nil];
     }
     return self;
 }
@@ -140,12 +138,6 @@ static id commonInit(VTRootViewController *self)
         self = commonInit(self);
     }
     return self;
-}
-
-- (void)dealloc
-{
-    [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
 #pragma mark - UIViewController
@@ -466,15 +458,6 @@ static id commonInit(VTRootViewController *self)
     VTRequiresCameraPermissionView *requirePermissionView = [[VTRequiresCameraPermissionView alloc] initWithFrame:self.view.bounds];
     requirePermissionView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
     [self.view addSubview:requirePermissionView];
-}
-
-#pragma mark - Notifications
-
-- (void)_handleDeviceOrientationNotification:(NSNotification *)notification
-{
-    // not sure if i need to update on orientation notification if -[UIVC viewDidLayoutSubviews] and -[UIVC viewWillTransitionToSize:withTransitionCoordinator:]
-    // are called for the size changes and rotations as a result
-//    [self _updateLayoutForCurrentOrientation];
 }
 
 #pragma mark - Events

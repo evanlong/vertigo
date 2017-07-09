@@ -28,8 +28,8 @@ static NSString *const VTHelpViewControllerClassKey = @"VTHelpViewControllerClas
     self = [super initWithStyle:UITableViewStylePlain];
     if (self)
     {
-        _helpViewControllers = @[@{VTHelpTitleKey : NSLocalizedString(@"HelpIntro", nil), VTHelpViewControllerClassKey : [VTHelpIntroViewController class]},
-                                 @{VTHelpTitleKey : NSLocalizedString(@"HelpUsingTheApp", nil), VTHelpViewControllerClassKey : [VTHelpStepByStepViewController class]},
+        _helpViewControllers = @[@{VTHelpTitleKey : NSLocalizedString(@"HelpIntroDetail", nil), VTHelpViewControllerClassKey : [VTHelpIntroViewController class]},
+//                                 @{VTHelpTitleKey : NSLocalizedString(@"HelpUsingTheApp", nil), VTHelpViewControllerClassKey : [VTHelpStepByStepViewController class]},
                                  @{VTHelpTitleKey : NSLocalizedString(@"HelpCredits", nil), VTHelpViewControllerClassKey : [VTHelpCreditsViewController class]},
                                  ];
     }
@@ -46,7 +46,7 @@ static NSString *const VTHelpViewControllerClassKey = @"VTHelpViewControllerClas
 
 - (BOOL)prefersStatusBarHidden
 {
-    return NO;
+    return YES;
 }
 
 - (NSString *)title
