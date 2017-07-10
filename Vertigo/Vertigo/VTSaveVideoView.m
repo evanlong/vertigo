@@ -20,6 +20,8 @@
 #import "VTTargetAnimationView.h"
 #import "VTZoomEffect.h"
 
+#import "UIView+VTUtil.h"
+
 #define CONTROL_BACKDROP_COLOR          [UIColor colorWithWhite:0.1 alpha:0.70]
 
 @interface VTSaveVideoView ()
@@ -232,7 +234,6 @@
         {
             [_targetAnimationView.centerXAnchor constraintEqualToAnchor:_pushAnimationView.centerXAnchor].active = YES;
             [_targetAnimationView.topAnchor constraintEqualToAnchor:_pushAnimationView.topAnchor].active = YES;
-            
 
             // Portrait
             self.portraitCameraConstraints = @[[_pushAnimationView.centerYAnchor constraintEqualToAnchor:_controlHostView.centerYAnchor],
@@ -313,6 +314,14 @@
     [UIView performWithoutAnimation:^{
         [self _updateZoomLevelLabelPosition];
     }];
+    
+#if 0
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        UIImage *i = [self renderedAsImage];
+        NSString *f = [NSTemporaryDirectory() stringByAppendingPathComponent:@"save_video_view_screenshot.png"];
+        [UIImagePNGRepresentation(i) writeToFile:f atomically:YES];
+    });
+#endif
 }
 
 - (void)didMoveToSuperview

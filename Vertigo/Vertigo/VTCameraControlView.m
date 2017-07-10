@@ -199,9 +199,13 @@
         [self _updateDurationLabelPosition];
     }];
     
-    UIImage *i = [self renderedAsImage];
-    NSString *f = [NSTemporaryDirectory() stringByAppendingPathComponent:@"screenshot.png"];
-    [UIImagePNGRepresentation(i) writeToFile:f atomically:YES];
+#if 0
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        UIImage *i = [self renderedAsImage];
+        NSString *f = [NSTemporaryDirectory() stringByAppendingPathComponent:@"cam_control_view_screenshot.png"];
+        [UIImagePNGRepresentation(i) writeToFile:f atomically:YES];
+    });
+#endif
 }
 
 #pragma mark - VTCameraControlView
