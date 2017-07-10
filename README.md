@@ -101,3 +101,25 @@ New flow for recording the Vertigo Effect:
 2. Record your video while moving forward or backward
 3. Apply the Zoom Effect
 4. Share or Save the video
+
+
+### Beta-14
+
+- Fix bug where share screen would sometimes display a blank/black screen
+- Fix landscape layout issues on smaller iOS devices
+
+This build Includes a new Help button. Offers quick explanation of Vertigo Effect and Open Source Credits. Rotation on the recording screen keeps the recording button fixed near the iPhone's home button.
+
+Bug fixes and enhancements from previous betas:
+
+- Background audio continues playing while using Vertigo Camera
+- Share screen includes an animation indicating camera movement through the scene relative to a stationary object
+
+Instead of locking the user to a 1x -> 2x or 2x -> 1x zoom level, it is now possible to record the video, and adjust the Vertigo Effect on the post processing / share screen.
+
+New flow for recording the Vertigo Effect:
+
+1. Select a duration
+2. Record your video while moving forward or backward
+3. Apply the Zoom Effect
+4. Share or Save the video
